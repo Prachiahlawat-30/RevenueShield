@@ -179,24 +179,6 @@ Frontend application will be live at: [**http://localhost:5173**](http://localho
 
 ---
 
-## ☁️ Deployment Guide
-
-### Deploy Backend on **Render** (1-Click Blueprint)
-1. Go to [**render.com**](https://render.com) → **New +** → **Blueprint**.
-2. Connect your GitHub repo (`Recover-AI`).
-3. Render will read **`render.yaml`** and automatically provision:
-   - `recoverai-backend` (FastAPI Web Service)
-   - `recoverai-db` (PostgreSQL Database)
-4. Click **Apply**.
-
-### Deploy Frontend on **Vercel**
-1. Go to [**vercel.com/new**](https://vercel.com/new) and import the repository.
-2. Set **Root Directory** to `frontend`.
-3. Add Environment Variable:
-   - `VITE_API_URL`: `https://<YOUR-RENDER-BACKEND-URL>.onrender.com`
-4. Click **Deploy**.
-
----
-
 ## 📄 License
 This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+
