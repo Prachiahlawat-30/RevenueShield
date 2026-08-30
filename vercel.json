@@ -3,6 +3,10 @@
   "outputDirectory": "frontend/dist",
   "rewrites": [
     {
+      "source": "/api/(.*)",
+      "destination": "https://recover-ai-1-jwzz.onrender.com/api/$1"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
