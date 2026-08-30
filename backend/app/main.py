@@ -56,6 +56,16 @@ def create_application() -> FastAPI:
         allow_headers=["*"],
     )
 
+    @app.get("/", summary="Root Health & Service Status")
+    def root():
+        return {
+            "service": "RecoverAI Payment Intelligence & Revenue Recovery Platform",
+            "version": settings.VERSION,
+            "status": "online",
+            "documentation": "/docs",
+            "health_check": f"{settings.API_V1_STR}/health",
+        }
+
     # Register API routers
     app.include_router(health_router, prefix=settings.API_V1_STR)
     app.include_router(dashboard_router, prefix=settings.API_V1_STR)
