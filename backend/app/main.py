@@ -91,13 +91,17 @@ def create_application() -> FastAPI:
     @app.on_event("startup")
     def on_startup():
         try:
-            from app.core.database import Base, engine
+            from app.core.database import Base, engine, SessionLocal
+            from app.data.seed_data import seed_database
             Base.metadata.create_all(bind=engine)
+            with SessionLocal() as db:
+                seed_database(db=db, reset=False)
         except Exception as e:
-            print(f"Database startup notice: {e}")
+            print(f"Database startup/seed notice: {e}")
 
     return app
 
 
 app = create_application()
+
 

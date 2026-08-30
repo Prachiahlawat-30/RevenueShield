@@ -6,12 +6,20 @@ from sqlalchemy.orm import DeclarativeBase, sessionmaker, Session
 
 from app.core.config import settings
 
+db_uri = settings.sqlalchemy_database_uri
 
-engine = create_engine(
-    settings.sqlalchemy_database_uri,
-    pool_pre_ping=True,
-    echo=False,
-)
+if db_uri.startswith("sqlite"):
+    engine = create_engine(
+        db_uri,
+        connect_args={"check_same_thread": False},
+        echo=False,
+    )
+else:
+    engine = create_engine(
+        db_uri,
+        pool_pre_ping=True,
+        echo=False,
+    )
 
 SessionLocal = sessionmaker(
     autocommit=False,
