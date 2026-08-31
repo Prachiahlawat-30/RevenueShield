@@ -3,18 +3,14 @@ import {
   Search,
   Sun,
   Moon,
-  Laptop,
   Bell,
   Play,
   Database,
   RefreshCw,
-  ShieldCheck,
-  CheckCircle2,
   ChevronRight,
-  User,
-  Sliders,
   PanelLeftOpen,
   PanelLeftClose,
+  Sparkles,
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { NavTab } from './Sidebar';
@@ -38,18 +34,17 @@ export const Navbar: React.FC<NavbarProps> = ({
   isSidebarCollapsed = false,
   onToggleSidebar,
 }) => {
-  const { theme, setTheme } = useTheme();
-  const [showThemeMenu, setShowThemeMenu] = useState(false);
+  const { isDark, setTheme } = useTheme();
   const [showNotifications, setShowNotifications] = useState(false);
 
   // Tab Breadcrumb mapping
   const breadcrumbMap: Record<NavTab, { section: string; title: string }> = {
     dashboard: { section: 'Overview', title: 'Executive Dashboard' },
     'control-center': { section: 'Overview', title: 'Recovery Control Center' },
-    intelligence: { section: 'Revenue Intelligence', title: 'Recovery Intelligence' },
-    leakage: { section: 'Revenue Intelligence', title: 'Revenue Leakage Radar' },
-    predictive: { section: 'Revenue Intelligence', title: 'Predictive Risk & Forecast' },
-    recommendations: { section: 'Revenue Intelligence', title: 'Action Recommendations' },
+    intelligence: { section: 'Intelligence', title: 'Recovery Intelligence' },
+    leakage: { section: 'Intelligence', title: 'Revenue Leakage Radar' },
+    predictive: { section: 'Intelligence', title: 'Predictive Risk & Forecast' },
+    recommendations: { section: 'Intelligence', title: 'Action Recommendations' },
     risks: { section: 'Recovery', title: 'Revenue at Risk' },
     workflow: { section: 'Recovery', title: 'Recovery Workflow' },
     customers: { section: 'Recovery', title: 'Customers 360' },
@@ -72,14 +67,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   const breadcrumb = breadcrumbMap[currentTab] || { section: 'Console', title: 'Overview' };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-fintech-border bg-fintech-surface/90 px-6 backdrop-blur-md transition-colors">
-      {/* Left: Breadcrumbs & Dynamic Page Context */}
-      <div className="flex items-center gap-2 text-xs font-medium text-fintech-muted">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-fintech-border bg-fintech-surface/95 px-5 md:px-6 backdrop-blur-md transition-colors">
+      {/* Left: Sidebar Toggle & Clean Breadcrumb Hierarchy */}
+      <div className="flex items-center gap-3 min-w-0">
         {onToggleSidebar && (
           <button
             onClick={onToggleSidebar}
             title={isSidebarCollapsed ? 'Expand sidebar (Ctrl+B)' : 'Collapse sidebar (Ctrl+B)'}
-            className="mr-1 p-1.5 rounded-fintech-sm text-fintech-muted hover:text-fintech-primary hover:bg-fintech-surface-subtle border border-fintech-border transition-colors flex items-center justify-center"
+            className="p-1.5 rounded-fintech-sm text-fintech-muted hover:text-fintech-primary hover:bg-fintech-surface-subtle border border-fintech-border transition-colors flex items-center justify-center shrink-0"
           >
             {isSidebarCollapsed ? (
               <PanelLeftOpen className="h-4 w-4 text-brand-500" />
@@ -88,38 +83,41 @@ export const Navbar: React.FC<NavbarProps> = ({
             )}
           </button>
         )}
-        <span className="text-fintech-secondary">{breadcrumb.section}</span>
-        <ChevronRight className="h-3.5 w-3.5 text-fintech-muted" />
-        <span className="font-semibold text-fintech-primary">{breadcrumb.title}</span>
 
-        {/* Environment Status Badge */}
-        <span className="ml-3 hidden sm:inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-mono font-bold text-emerald-600 dark:text-emerald-400">
+        <div className="flex items-center gap-1.5 text-xs truncate">
+          <span className="text-fintech-muted font-medium hidden sm:inline">{breadcrumb.section}</span>
+          <ChevronRight className="h-3 w-3 text-fintech-muted hidden sm:inline shrink-0" />
+          <span className="font-bold text-fintech-primary truncate">{breadcrumb.title}</span>
+        </div>
+
+        {/* Subtle Live Badge */}
+        <span className="hidden xl:inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-mono font-bold text-emerald-600 dark:text-emerald-400 shrink-0">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span>Simulation Active</span>
+          <span>Live Sim</span>
         </span>
       </div>
 
-      {/* Center: Command Palette Trigger */}
-      <div className="hidden md:flex items-center">
+      {/* Center: Sleek Universal Search Bar */}
+      <div className="hidden md:flex items-center justify-center flex-1 max-w-md mx-4">
         <button
           onClick={onOpenSearch}
-          className="flex items-center gap-3 w-64 lg:w-80 rounded-fintech-md border border-fintech-border bg-fintech-surface-subtle px-3 py-1.5 text-xs text-fintech-muted hover:border-slate-400 dark:hover:border-slate-600 transition-colors"
+          className="flex items-center gap-2.5 w-full rounded-fintech-md border border-fintech-border bg-fintech-surface-subtle px-3 py-1.5 text-xs text-fintech-muted hover:border-slate-400 dark:hover:border-slate-600 transition-colors shadow-sm"
         >
           <Search className="h-3.5 w-3.5 shrink-0 text-fintech-muted" />
-          <span className="flex-1 text-left truncate">Search risks, customers, policies...</span>
-          <kbd className="hidden lg:inline-flex items-center gap-0.5 rounded border border-fintech-border bg-fintech-surface px-1.5 py-0.5 text-[10px] font-mono text-fintech-muted shadow-fintech-sm">
+          <span className="flex-1 text-left truncate text-[11px]">Search risks, policies, telemetry...</span>
+          <kbd className="hidden lg:inline-flex items-center rounded border border-fintech-border bg-fintech-surface px-1.5 py-0.5 text-[10px] font-mono text-fintech-muted shadow-fintech-sm">
             ⌘K
           </kbd>
         </button>
       </div>
 
-      {/* Right: Quick Action Controls, Theme Toggle, Profile */}
-      <div className="flex items-center gap-2.5">
-        {/* Seed Scenarios Action */}
+      {/* Right: Actions, 1-Click Theme Toggle & Profile */}
+      <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+        {/* Seed Data Button */}
         <button
           onClick={onSeedData}
           disabled={isSeeding}
-          title="Reset and seed synthetic test scenarios"
+          title="Reset and seed realistic test scenarios"
           className="hidden sm:flex items-center gap-1.5 rounded-fintech-md border border-fintech-border bg-fintech-surface px-3 py-1.5 text-xs font-semibold text-fintech-secondary hover:text-fintech-primary hover:bg-fintech-surface-subtle transition-all disabled:opacity-50"
         >
           {isSeeding ? (
@@ -130,7 +128,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <span>{isSeeding ? 'Seeding...' : 'Seed Data'}</span>
         </button>
 
-        {/* Run Recovery Batch Button */}
+        {/* Batch Recovery Primary Action */}
         <button
           onClick={onOpenBatchRunner}
           className="flex items-center gap-1.5 rounded-fintech-md bg-brand-500 hover:bg-brand-600 text-white px-3.5 py-1.5 text-xs font-bold shadow-fintech-sm shadow-brand-500/20 transition-all hover:scale-[1.01] active:scale-[0.99]"
@@ -139,59 +137,20 @@ export const Navbar: React.FC<NavbarProps> = ({
           <span>Batch Recovery</span>
         </button>
 
-        {/* Theme Switcher Toggle */}
-        <div className="relative">
-          <button
-            onClick={() => setShowThemeMenu(!showThemeMenu)}
-            title="Toggle theme (Light / Dark / System)"
-            className="flex h-8 w-8 items-center justify-center rounded-fintech-md border border-fintech-border bg-fintech-surface text-fintech-secondary hover:text-fintech-primary hover:bg-fintech-surface-subtle transition-colors"
-          >
-            {theme === 'dark' ? (
-              <Moon className="h-4 w-4 text-brand-400" />
-            ) : theme === 'light' ? (
-              <Sun className="h-4 w-4 text-amber-500" />
-            ) : (
-              <Laptop className="h-4 w-4 text-brand-500" />
-            )}
-          </button>
-
-          {showThemeMenu && (
-            <div
-              className="absolute right-0 mt-2 w-36 rounded-fintech-lg border border-fintech-border bg-fintech-surface p-1.5 shadow-fintech-lg z-50 text-xs font-medium text-fintech-secondary animate-fintech-fade"
-              onClick={() => setShowThemeMenu(false)}
-            >
-              <button
-                onClick={() => setTheme('light')}
-                className={`flex w-full items-center gap-2 px-2.5 py-1.5 rounded-fintech-sm hover:bg-fintech-surface-subtle ${
-                  theme === 'light' ? 'text-brand-500 font-bold bg-brand-500/10' : ''
-                }`}
-              >
-                <Sun className="h-3.5 w-3.5" />
-                <span>Light</span>
-              </button>
-              <button
-                onClick={() => setTheme('dark')}
-                className={`flex w-full items-center gap-2 px-2.5 py-1.5 rounded-fintech-sm hover:bg-fintech-surface-subtle ${
-                  theme === 'dark' ? 'text-brand-400 font-bold bg-brand-500/10' : ''
-                }`}
-              >
-                <Moon className="h-3.5 w-3.5" />
-                <span>Dark</span>
-              </button>
-              <button
-                onClick={() => setTheme('system')}
-                className={`flex w-full items-center gap-2 px-2.5 py-1.5 rounded-fintech-sm hover:bg-fintech-surface-subtle ${
-                  theme === 'system' ? 'text-brand-500 font-bold bg-brand-500/10' : ''
-                }`}
-              >
-                <Laptop className="h-3.5 w-3.5" />
-                <span>System</span>
-              </button>
-            </div>
+        {/* 1-Click Fast Theme Switcher */}
+        <button
+          onClick={() => setTheme(isDark ? 'light' : 'dark')}
+          title={`Switch to ${isDark ? 'Light' : 'Dark'} mode`}
+          className="flex h-8 w-8 items-center justify-center rounded-fintech-md border border-fintech-border bg-fintech-surface text-fintech-secondary hover:text-fintech-primary hover:bg-fintech-surface-subtle transition-colors"
+        >
+          {isDark ? (
+            <Sun className="h-4 w-4 text-amber-500" />
+          ) : (
+            <Moon className="h-4 w-4 text-brand-500" />
           )}
-        </div>
+        </button>
 
-        {/* Notifications Popover Toggle */}
+        {/* Notifications Popover */}
         <div className="relative">
           <button
             onClick={() => setShowNotifications(!showNotifications)}
@@ -225,14 +184,13 @@ export const Navbar: React.FC<NavbarProps> = ({
           )}
         </div>
 
-        {/* Human Operator Avatar Profile */}
-        <div className="flex items-center gap-2 pl-2 border-l border-fintech-border">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-500/10 text-brand-500 dark:text-brand-300 font-bold border border-brand-500/20 text-xs">
+        {/* Operator Profile Tag */}
+        <div className="flex items-center pl-1 sm:pl-2 border-l border-fintech-border">
+          <div
+            title="Operator: Active Session"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-500/10 text-brand-500 dark:text-brand-300 font-bold border border-brand-500/20 text-xs cursor-default"
+          >
             OP
-          </div>
-          <div className="hidden xl:block text-left text-xs leading-tight">
-            <span className="font-semibold text-fintech-primary block">Human Operator</span>
-            <span className="text-[10px] text-fintech-muted font-mono">Risk & Policy Lead</span>
           </div>
         </div>
       </div>
