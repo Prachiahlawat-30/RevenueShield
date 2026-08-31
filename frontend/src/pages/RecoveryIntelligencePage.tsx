@@ -9,6 +9,10 @@ import {
   CheckCircle2,
   Database,
   DollarSign,
+  LayoutGrid,
+  Table as TableIcon,
+  BarChart3,
+  SlidersHorizontal,
 } from 'lucide-react';
 import {
   getIntelligenceSummary,
@@ -35,6 +39,9 @@ export const RecoveryIntelligencePage: React.FC = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [recalculating, setRecalculating] = useState(false);
+
+  // View Mode: 'split' (Both Charts + Table) | 'table' (Focus on Queue) | 'charts' (Focus on Analytics)
+  const [viewMode, setViewMode] = useState<'split' | 'table' | 'charts'>('split');
 
   // Filters & Sorting
   const [selectedBand, setSelectedBand] = useState<string>('all');
@@ -118,27 +125,27 @@ export const RecoveryIntelligencePage: React.FC = () => {
     switch (band) {
       case 'CRITICAL':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-fintech-sm text-xs font-bold font-mono bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/30">
-            <Flame className="w-3.5 h-3.5 text-rose-500" />
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/30">
+            <Flame className="w-3 h-3 text-rose-500" />
             <span>{score} • CRITICAL</span>
           </span>
         );
       case 'HIGH':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-fintech-sm text-xs font-bold font-mono bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/30">
-            <Flame className="w-3.5 h-3.5 text-amber-500" />
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/30">
+            <Flame className="w-3 h-3 text-amber-500" />
             <span>{score} • HIGH</span>
           </span>
         );
       case 'MEDIUM':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-fintech-sm text-xs font-bold font-mono bg-brand-500/10 text-brand-700 dark:text-brand-400 border border-brand-500/30">
-            <span>{score} • MEDIUM</span>
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-brand-500/10 text-brand-700 dark:text-brand-400 border border-brand-500/30">
+            <span>{score} • MED</span>
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-fintech-sm text-xs font-medium font-mono bg-fintech-surface-subtle text-fintech-muted border border-fintech-border">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono text-fintech-muted bg-fintech-surface-subtle border border-fintech-border">
             <span>{score} • LOW</span>
           </span>
         );
@@ -146,44 +153,75 @@ export const RecoveryIntelligencePage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 animate-fintech-fade pb-12">
-      {/* Top Banner / Notification */}
+    <div className="space-y-4 animate-fintech-fade pb-8">
+      {/* Toast Notification */}
       {notification && (
-        <div className="p-4 rounded-fintech-md bg-brand-500/10 border border-brand-500/30 text-brand-700 dark:text-brand-300 text-xs flex items-center justify-between shadow-fintech-sm animate-in fade-in">
-          <div className="flex items-center gap-2.5">
-            <CheckCircle2 className="w-4 h-4 text-brand-500" />
-            <p className="font-semibold">{notification}</p>
-          </div>
+        <div className="p-3 rounded-fintech-md bg-brand-500/10 border border-brand-500/30 text-brand-700 dark:text-brand-300 text-xs flex items-center gap-2 shadow-fintech-sm animate-in fade-in">
+          <CheckCircle2 className="w-4 h-4 text-brand-500 shrink-0" />
+          <p className="font-semibold">{notification}</p>
         </div>
       )}
 
-      {/* Header & Control Bar */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-fintech-surface p-6 rounded-fintech-lg border border-fintech-border shadow-fintech-sm">
-        <div>
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-fintech-sm bg-brand-500/10 border border-brand-500/20 text-brand-500">
-              <Sparkles className="w-5 h-5" />
-            </div>
-            <h1 className="text-2xl font-black text-fintech-primary tracking-tight">Recovery Intelligence</h1>
-            <span className="px-2.5 py-0.5 text-[10px] font-bold rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 uppercase tracking-wider font-mono">
-              Live Engine
-            </span>
+      {/* Header & Controls Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-fintech-surface px-5 py-3.5 rounded-fintech-lg border border-fintech-border shadow-fintech-sm">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-fintech-sm bg-brand-500/10 border border-brand-500/20 text-brand-500">
+            <Sparkles className="w-4 h-4" />
           </div>
-          <p className="text-xs text-fintech-secondary mt-1 max-w-2xl">
-            Predict recovery probability, estimate expected financial yields, select next-best interventions, and execute under deterministic policy enforcement.
-          </p>
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-lg font-bold text-fintech-primary tracking-tight">Recovery Intelligence</h1>
+              <span className="px-2 py-0.2 text-[9px] font-bold rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 uppercase tracking-wider font-mono">
+                Multi-Engine
+              </span>
+            </div>
+            <p className="text-xs text-fintech-secondary">
+              Predictive yields, causal ranking, and deterministic policy execution.
+            </p>
+          </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            icon={Database}
-            isLoading={recalculating}
-            onClick={handleSeedDemoData}
-          >
-            Reset Demo Personas
-          </Button>
+        {/* View Mode Switcher + Actions */}
+        <div className="flex items-center gap-2 flex-wrap">
+          {/* View Mode Toggle */}
+          <div className="flex items-center gap-1 bg-fintech-surface-subtle p-1 rounded-fintech-md border border-fintech-border text-xs">
+            <button
+              onClick={() => setViewMode('split')}
+              title="Split Matrix View"
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-fintech-sm font-semibold transition-all text-xs ${
+                viewMode === 'split'
+                  ? 'bg-brand-500 text-white shadow-fintech-sm'
+                  : 'text-fintech-muted hover:text-fintech-primary'
+              }`}
+            >
+              <LayoutGrid className="w-3.5 h-3.5" />
+              <span>Split View</span>
+            </button>
+            <button
+              onClick={() => setViewMode('table')}
+              title="Focus on Opportunities Queue"
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-fintech-sm font-semibold transition-all text-xs ${
+                viewMode === 'table'
+                  ? 'bg-brand-500 text-white shadow-fintech-sm'
+                  : 'text-fintech-muted hover:text-fintech-primary'
+              }`}
+            >
+              <TableIcon className="w-3.5 h-3.5" />
+              <span>Table ({filteredOpportunities.length})</span>
+            </button>
+            <button
+              onClick={() => setViewMode('charts')}
+              title="Focus on Visual Analytics"
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-fintech-sm font-semibold transition-all text-xs ${
+                viewMode === 'charts'
+                  ? 'bg-brand-500 text-white shadow-fintech-sm'
+                  : 'text-fintech-muted hover:text-fintech-primary'
+              }`}
+            >
+              <BarChart3 className="w-3.5 h-3.5" />
+              <span>Charts</span>
+            </button>
+          </div>
 
           <Button
             variant="outline"
@@ -192,7 +230,7 @@ export const RecoveryIntelligencePage: React.FC = () => {
             isLoading={loading}
             onClick={() => fetchData()}
           >
-            Recalculate
+            Refresh
           </Button>
 
           <Button
@@ -201,55 +239,50 @@ export const RecoveryIntelligencePage: React.FC = () => {
             icon={Zap}
             onClick={() => setIsBatchModalOpen(true)}
           >
-            Run Priority Recovery
+            Batch Run
           </Button>
         </div>
       </div>
 
-      {/* Hero KPI Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Main Hero Card */}
-        <div className="p-6 rounded-fintech-lg bg-brand-500/5 border border-brand-500/30 relative overflow-hidden shadow-fintech-sm">
-          <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
-            <DollarSign className="w-24 h-24 text-brand-500" />
+      {/* Compact 4-Metric KPI Strip */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {/* KPI 1: Expected Recoverable */}
+        <div className="p-3.5 rounded-fintech-lg bg-brand-500/5 border border-brand-500/25 shadow-fintech-sm space-y-1">
+          <div className="flex items-center justify-between text-[11px] font-mono text-brand-600 dark:text-brand-400 font-bold uppercase">
+            <span>Expected Recoverable</span>
+            <DollarSign className="w-3.5 h-3.5 text-brand-500" />
           </div>
-          <p className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider font-mono">
-            Expected Recoverable Revenue
-          </p>
-          <p className="text-3xl font-black text-fintech-primary mt-2 font-mono tracking-tight">
+          <p className="text-xl font-black text-fintech-primary font-mono tracking-tight">
             {formatCurrency(summary?.expected_recoverable_revenue || 0)}
           </p>
-          <div className="mt-3 flex items-center gap-2 text-xs text-fintech-muted">
-            <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1 font-mono">
-              <TrendingUp className="w-3.5 h-3.5" />
-              {formatPercent((summary?.average_recovery_probability || 0) * 100)}
-            </span>
-            <span>weighted yield across portfolio</span>
+          <div className="flex items-center gap-1.5 text-[10px] text-emerald-700 dark:text-emerald-400 font-mono font-semibold">
+            <TrendingUp className="w-3 h-3" />
+            <span>{formatPercent((summary?.average_recovery_probability || 0) * 100)} weighted yield</span>
           </div>
         </div>
 
-        {/* Revenue At Risk */}
-        <div className="p-6 rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm">
-          <p className="text-xs font-bold text-fintech-muted uppercase tracking-wider font-mono">
-            Total Revenue At Risk
-          </p>
-          <p className="text-3xl font-black text-rose-600 dark:text-rose-400 mt-2 font-mono tracking-tight">
+        {/* KPI 2: Revenue At Risk */}
+        <div className="p-3.5 rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm space-y-1">
+          <span className="text-[11px] font-bold text-fintech-muted uppercase font-mono block">
+            Total Exposure at Risk
+          </span>
+          <p className="text-xl font-black text-rose-600 dark:text-rose-400 font-mono tracking-tight">
             {formatCurrency(summary?.total_revenue_at_risk || 0)}
           </p>
-          <p className="text-xs text-fintech-muted mt-3">
-            Across <span className="text-fintech-primary font-bold font-mono">{summary?.total_risks || 0}</span> failed transaction cases
-          </p>
+          <span className="text-[10px] text-fintech-muted font-mono block">
+            Across {summary?.total_risks || 0} failed transaction cases
+          </span>
         </div>
 
-        {/* Average Probability */}
-        <div className="p-6 rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm">
-          <p className="text-xs font-bold text-fintech-muted uppercase tracking-wider font-mono">
-            Portfolio Recovery Probability
-          </p>
-          <p className="text-3xl font-black text-brand-600 dark:text-brand-400 mt-2 font-mono tracking-tight">
+        {/* KPI 3: Average Probability */}
+        <div className="p-3.5 rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm space-y-1">
+          <span className="text-[11px] font-bold text-fintech-muted uppercase font-mono block">
+            Portfolio Recovery Rate
+          </span>
+          <p className="text-xl font-black text-brand-600 dark:text-brand-400 font-mono tracking-tight">
             {formatPercent((summary?.average_recovery_probability || 0) * 100)}
           </p>
-          <div className="mt-3 w-full bg-slate-200 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
+          <div className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden mt-1">
             <div
               className="bg-brand-500 h-1.5 rounded-full"
               style={{ width: `${(summary?.average_recovery_probability || 0) * 100}%` }}
@@ -257,285 +290,281 @@ export const RecoveryIntelligencePage: React.FC = () => {
           </div>
         </div>
 
-        {/* High / Critical Opportunities */}
-        <div className="p-6 rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm">
-          <p className="text-xs font-bold text-fintech-muted uppercase tracking-wider font-mono">
-            High Priority Pipeline
+        {/* KPI 4: High / Critical Pipeline */}
+        <div className="p-3.5 rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm space-y-1">
+          <span className="text-[11px] font-bold text-fintech-muted uppercase font-mono block">
+            Urgent Priority Pipeline
+          </span>
+          <p className="text-xl font-black text-amber-600 dark:text-amber-400 font-mono tracking-tight">
+            {(summary?.critical_opportunities || 0) + (summary?.high_priority_opportunities || 0)} cases
           </p>
-          <div className="flex items-baseline gap-2 mt-2">
-            <p className="text-3xl font-black text-amber-600 dark:text-amber-400 font-mono">
-              {(summary?.critical_opportunities || 0) + (summary?.high_priority_opportunities || 0)}
-            </p>
-            <span className="text-xs text-fintech-muted font-medium">urgent cases</span>
-          </div>
-          <div className="flex items-center gap-3 mt-3 text-xs">
-            <span className="text-rose-600 dark:text-rose-400 font-mono font-bold">
-              {summary?.critical_opportunities || 0} Critical
-            </span>
-            <span className="text-slate-300 dark:text-slate-700">•</span>
-            <span className="text-amber-600 dark:text-amber-400 font-mono font-bold">
-              {summary?.high_priority_opportunities || 0} High
-            </span>
+          <div className="flex items-center gap-2 text-[10px] font-mono font-bold">
+            <span className="text-rose-600 dark:text-rose-400">{summary?.critical_opportunities || 0} Critical</span>
+            <span className="text-slate-400">•</span>
+            <span className="text-amber-600 dark:text-amber-400">{summary?.high_priority_opportunities || 0} High</span>
           </div>
         </div>
       </div>
 
-      {/* Visualizations Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Chart 1: Expected Recovery by Failure Type */}
-        <div className="lg:col-span-2 p-6 rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm flex flex-col justify-between">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-sm font-bold text-fintech-primary uppercase tracking-wider">
-                Expected Recovery Yield by Failure Type
-              </h3>
-              <p className="text-xs text-fintech-secondary mt-0.5">
-                Comparison between total exposure and probabilistic recoverable revenue.
-              </p>
-            </div>
-            <span className="text-xs px-2.5 py-0.5 rounded bg-fintech-surface-subtle text-fintech-muted font-mono border border-fintech-border font-semibold">
-              Recharts Analytics
-            </span>
-          </div>
-          <ExpectedRecoveryByTypeChart data={summary?.expected_by_failure_type || []} />
-        </div>
-
-        {/* Chart 2 & 3: Priority & Value Funnel */}
-        <div className="space-y-6">
-          {/* Priority Distribution Card */}
-          <div className="p-6 rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-bold text-fintech-primary uppercase tracking-wider">
-                Priority Distribution
-              </h3>
-              {selectedBand !== 'all' && (
-                <button
-                  onClick={() => setSelectedBand('all')}
-                  className="text-[11px] text-brand-600 dark:text-brand-400 hover:underline font-semibold"
-                >
-                  Clear filter
-                </button>
-              )}
-            </div>
-            <p className="text-xs text-fintech-secondary mb-2">Click a bar to filter opportunities table.</p>
-            <PriorityDistributionChart
-              data={summary?.priority_distribution || {}}
-              selectedBand={selectedBand}
-              onSelectBand={(band) => setSelectedBand(band === selectedBand ? 'all' : band)}
-            />
-          </div>
-
-          {/* Recovery Funnel Card */}
-          <div className="p-6 rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-bold text-fintech-primary uppercase tracking-wider">
-                Recovery Value Funnel
-              </h3>
-              <span className="text-xs text-emerald-600 dark:text-emerald-400 font-mono font-bold">
-                {summary?.recovery_funnel?.[3]?.amount
-                  ? formatCurrency(summary.recovery_funnel[3].amount)
-                  : '$0.00'}{' '}
-                settled
+      {/* Visual Analytics Grid (Shown in 'split' or 'charts' mode) */}
+      {(viewMode === 'split' || viewMode === 'charts') && (
+        <div className={`grid grid-cols-1 ${viewMode === 'split' ? 'lg:grid-cols-3' : 'lg:grid-cols-3'} gap-4`}>
+          {/* Chart 1: Expected Recovery Yield by Failure Type */}
+          <div className={`${viewMode === 'split' ? 'lg:col-span-2' : 'lg:col-span-2'} p-4 rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm flex flex-col justify-between`}>
+            <div className="flex items-center justify-between mb-2">
+              <div>
+                <h3 className="text-xs font-bold text-fintech-primary uppercase tracking-wider font-mono">
+                  Expected Recovery Yield by Failure Type
+                </h3>
+                <p className="text-[11px] text-fintech-secondary">
+                  Total exposure vs probabilistic recoverable amount.
+                </p>
+              </div>
+              <span className="text-[10px] px-2 py-0.2 rounded bg-fintech-surface-subtle text-fintech-muted font-mono border border-fintech-border">
+                Recharts
               </span>
             </div>
-            <RecoveryFunnelChart data={summary?.recovery_funnel || []} />
-          </div>
-        </div>
-      </div>
-
-      {/* Priority Opportunities Table */}
-      <div className="p-6 rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm space-y-5">
-        {/* Table Header & Controls */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h2 className="text-base font-bold text-fintech-primary tracking-tight flex items-center gap-2">
-              <span>Top Recovery Opportunities</span>
-              <span className="text-xs px-2.5 py-0.5 rounded-full bg-fintech-surface-subtle text-fintech-muted font-mono font-semibold border border-fintech-border">
-                {filteredOpportunities.length} opportunities
-              </span>
-            </h2>
-            <p className="text-xs text-fintech-secondary mt-0.5">
-              Ranked dynamically by Composite Priority Score (Probability + Value + Urgency + Customer Health).
-            </p>
+            <div className="h-56">
+              <ExpectedRecoveryByTypeChart data={summary?.expected_by_failure_type || []} />
+            </div>
           </div>
 
-          {/* Toolbar */}
-          <div className="flex flex-wrap items-center gap-2.5">
-            {/* Search */}
-            <div className="relative">
-              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-fintech-muted" />
-              <input
-                type="text"
-                placeholder="Search customer, failure..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8 pr-3 py-1.5 bg-fintech-surface-subtle border border-fintech-border rounded-fintech-md text-xs text-fintech-primary placeholder-fintech-muted focus:outline-none focus:border-brand-500 w-48"
+          {/* Chart 2 & 3: Priority & Funnel */}
+          <div className="space-y-4">
+            {/* Priority Distribution */}
+            <div className="p-4 rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm">
+              <div className="flex items-center justify-between mb-1.5">
+                <h3 className="text-xs font-bold text-fintech-primary uppercase tracking-wider font-mono">
+                  Priority Distribution
+                </h3>
+                {selectedBand !== 'all' && (
+                  <button
+                    onClick={() => setSelectedBand('all')}
+                    className="text-[10px] text-brand-600 dark:text-brand-400 hover:underline font-semibold"
+                  >
+                    Reset Filter
+                  </button>
+                )}
+              </div>
+              <PriorityDistributionChart
+                data={summary?.priority_distribution || {}}
+                selectedBand={selectedBand}
+                onSelectBand={(band) => setSelectedBand(band === selectedBand ? 'all' : band)}
               />
             </div>
 
-            {/* Priority Filter */}
-            <select
-              value={selectedBand}
-              onChange={(e) => setSelectedBand(e.target.value)}
-              className="px-3 py-1.5 bg-fintech-surface-subtle border border-fintech-border rounded-fintech-md text-xs text-fintech-secondary focus:outline-none focus:border-brand-500"
-            >
-              <option value="all">All Priorities</option>
-              <option value="CRITICAL">Critical</option>
-              <option value="HIGH">High</option>
-              <option value="MEDIUM">Medium</option>
-              <option value="LOW">Low</option>
-            </select>
-
-            {/* Failure Type Filter */}
-            <select
-              value={selectedFailureType}
-              onChange={(e) => setSelectedFailureType(e.target.value)}
-              className="px-3 py-1.5 bg-fintech-surface-subtle border border-fintech-border rounded-fintech-md text-xs text-fintech-secondary focus:outline-none focus:border-brand-500"
-            >
-              <option value="all">All Failures</option>
-              <option value="temporary_decline">Temporary Decline</option>
-              <option value="insufficient_funds">Insufficient Funds</option>
-              <option value="expired_card">Expired Card</option>
-              <option value="network_error">Network Error</option>
-              <option value="unknown_failure">Unknown Failure</option>
-            </select>
-
-            {/* Sort Filter */}
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="px-3 py-1.5 bg-fintech-surface-subtle border border-fintech-border rounded-fintech-md text-xs text-fintech-secondary focus:outline-none focus:border-brand-500"
-            >
-              <option value="priority_score">Sort by Priority Score</option>
-              <option value="expected_recovery_value">Sort by Expected Recovery</option>
-              <option value="recovery_probability">Sort by Probability</option>
-              <option value="amount_at_risk">Sort by Failed Amount</option>
-            </select>
+            {/* Recovery Funnel */}
+            <div className="p-4 rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm">
+              <div className="flex items-center justify-between mb-1.5">
+                <h3 className="text-xs font-bold text-fintech-primary uppercase tracking-wider font-mono">
+                  Recovery Value Funnel
+                </h3>
+                <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-mono font-bold">
+                  {summary?.recovery_funnel?.[3]?.amount
+                    ? formatCurrency(summary.recovery_funnel[3].amount)
+                    : '$0.00'}{' '}
+                  settled
+                </span>
+              </div>
+              <RecoveryFunnelChart data={summary?.recovery_funnel || []} />
+            </div>
           </div>
         </div>
+      )}
 
-        {/* Table View */}
-        <div className="overflow-x-auto rounded-fintech-md border border-fintech-border">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-fintech-surface-subtle text-fintech-muted font-semibold border-b border-fintech-border uppercase tracking-wider text-[10px]">
-              <tr>
-                <th className="py-3 px-4">Priority</th>
-                <th className="py-3 px-4">Customer</th>
-                <th className="py-3 px-4 text-right">Amount</th>
-                <th className="py-3 px-4">Failure Category</th>
-                <th className="py-3 px-4">Probability</th>
-                <th className="py-3 px-4 text-right">Expected Recovery</th>
-                <th className="py-3 px-4">Recommended Next Step</th>
-                <th className="py-3 px-4">Timing</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4 text-center">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-fintech-border text-fintech-secondary">
-              {filteredOpportunities.length === 0 ? (
+      {/* Priority Opportunities Table (Shown in 'split' or 'table' mode) */}
+      {(viewMode === 'split' || viewMode === 'table') && (
+        <div className="rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm p-4 space-y-3">
+          {/* Table Header & Responsive Filter Strip */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-fintech-border pb-3">
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm font-bold text-fintech-primary tracking-tight">
+                Opportunity Priority Queue
+              </h2>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-brand-500/10 text-brand-700 dark:text-brand-300 font-mono font-bold border border-brand-500/20">
+                {filteredOpportunities.length} Active
+              </span>
+            </div>
+
+            {/* Inline Filter Controls */}
+            <div className="flex flex-wrap items-center gap-2 text-xs">
+              {/* Search Bar */}
+              <div className="relative">
+                <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-fintech-muted" />
+                <input
+                  type="text"
+                  placeholder="Search customer, failure..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-8 pr-2.5 py-1 bg-fintech-surface-subtle border border-fintech-border rounded-fintech-md text-xs text-fintech-primary placeholder-fintech-muted focus:outline-none focus:border-brand-500 w-44"
+                />
+              </div>
+
+              {/* Priority Filter */}
+              <select
+                value={selectedBand}
+                onChange={(e) => setSelectedBand(e.target.value)}
+                className="px-2 py-1 bg-fintech-surface-subtle border border-fintech-border rounded-fintech-md text-xs text-fintech-secondary focus:outline-none focus:border-brand-500"
+              >
+                <option value="all">All Priorities</option>
+                <option value="CRITICAL">Critical</option>
+                <option value="HIGH">High</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="LOW">Low</option>
+              </select>
+
+              {/* Failure Type Filter */}
+              <select
+                value={selectedFailureType}
+                onChange={(e) => setSelectedFailureType(e.target.value)}
+                className="px-2 py-1 bg-fintech-surface-subtle border border-fintech-border rounded-fintech-md text-xs text-fintech-secondary focus:outline-none focus:border-brand-500"
+              >
+                <option value="all">All Failures</option>
+                <option value="temporary_decline">Temporary Decline</option>
+                <option value="insufficient_funds">Insufficient Funds</option>
+                <option value="expired_card">Expired Card</option>
+                <option value="network_error">Network Error</option>
+              </select>
+
+              {/* Sort Filter */}
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="px-2 py-1 bg-fintech-surface-subtle border border-fintech-border rounded-fintech-md text-xs text-fintech-secondary focus:outline-none focus:border-brand-500"
+              >
+                <option value="priority_score">Sort: Priority Score</option>
+                <option value="expected_recovery_value">Sort: Expected Yield</option>
+                <option value="recovery_probability">Sort: Probability</option>
+                <option value="amount_at_risk">Sort: Failed Amount</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Scroll-Contained Interactive Table */}
+          <div className="overflow-x-auto overflow-y-auto max-h-[380px] rounded-fintech-md border border-fintech-border relative">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead className="bg-fintech-surface-subtle text-fintech-muted font-bold border-b border-fintech-border uppercase tracking-wider text-[10px] sticky top-0 z-10">
                 <tr>
-                  <td colSpan={10} className="py-8 text-center text-fintech-muted">
-                    No matching recovery opportunities found.
-                  </td>
+                  <th className="py-2.5 px-3">Priority</th>
+                  <th className="py-2.5 px-3">Customer</th>
+                  <th className="py-2.5 px-3 text-right">Exposure</th>
+                  <th className="py-2.5 px-3">Failure Reason</th>
+                  <th className="py-2.5 px-3">Probability</th>
+                  <th className="py-2.5 px-3 text-right">Expected Yield</th>
+                  <th className="py-2.5 px-3">Next Best Action</th>
+                  <th className="py-2.5 px-3">Timing</th>
+                  <th className="py-2.5 px-3">Status</th>
+                  <th className="py-2.5 px-3 text-center">Inspect</th>
                 </tr>
-              ) : (
-                filteredOpportunities.map((opp) => (
-                  <tr
-                    key={opp.risk_id}
-                    onClick={() => handleInspectOpportunity(opp)}
-                    className="hover:bg-fintech-surface-subtle cursor-pointer transition group"
-                  >
-                    <td className="py-3.5 px-4 whitespace-nowrap">
-                      {getPriorityBadge(opp.priority_band, opp.priority_score)}
-                    </td>
-
-                    <td className="py-3.5 px-4">
-                      <div>
-                        <p className="font-bold text-fintech-primary group-hover:text-brand-600 dark:group-hover:text-brand-400 transition">
-                          {opp.customer_name}
-                        </p>
-                        <p className="text-[11px] text-fintech-muted font-mono">{opp.customer_email}</p>
-                      </div>
-                    </td>
-
-                    <td className="py-3.5 px-4 text-right font-mono font-bold text-fintech-primary whitespace-nowrap">
-                      {formatCurrency(opp.transaction_amount)}
-                    </td>
-
-                    <td className="py-3.5 px-4 whitespace-nowrap">
-                      <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-fintech-surface-subtle text-fintech-secondary border border-fintech-border font-mono">
-                        {opp.failure_type_label}
-                      </span>
-                    </td>
-
-                    <td className="py-3.5 px-4 whitespace-nowrap">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono font-bold text-brand-600 dark:text-brand-400">
-                          {formatPercent(opp.recovery_probability * 100)}
-                        </span>
-                        <div className="w-12 bg-slate-200 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                          <div
-                            className={`h-1.5 rounded-full ${
-                              opp.recovery_probability >= 0.75
-                                ? 'bg-emerald-500'
-                                : opp.recovery_probability >= 0.5
-                                ? 'bg-amber-500'
-                                : 'bg-rose-500'
-                            }`}
-                            style={{ width: `${opp.recovery_probability * 100}%` }}
-                          />
-                        </div>
-                      </div>
-                    </td>
-
-                    <td className="py-3.5 px-4 text-right font-mono font-bold text-emerald-600 dark:text-emerald-400 whitespace-nowrap">
-                      {formatCurrency(opp.expected_recovery_value)}
-                    </td>
-
-                    <td className="py-3.5 px-4 whitespace-nowrap">
-                      <span className="px-2.5 py-1 rounded-fintech-sm text-[11px] font-semibold bg-brand-500/10 text-brand-700 dark:text-brand-300 border border-brand-500/20">
-                        {opp.recommended_action_label}
-                      </span>
-                    </td>
-
-                    <td className="py-3.5 px-4 whitespace-nowrap text-fintech-muted font-mono text-[11px]">
-                      {opp.recommended_delay_label}
-                    </td>
-
-                    <td className="py-3.5 px-4 whitespace-nowrap">
-                      <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider font-mono ${
-                          opp.status === 'recovered'
-                            ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30'
-                            : opp.status === 'stopped'
-                            ? 'bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/30'
-                            : opp.status === 'escalated'
-                            ? 'bg-purple-500/10 text-purple-700 dark:text-purple-400 border border-purple-500/30'
-                            : 'bg-fintech-surface-subtle text-fintech-muted border border-fintech-border'
-                        }`}
-                      >
-                        {opp.status}
-                      </span>
-                    </td>
-
-                    <td className="py-3.5 px-4 text-center whitespace-nowrap">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleInspectOpportunity(opp);
-                        }}
-                        className="px-2.5 py-1 text-[11px] font-semibold text-fintech-secondary hover:text-fintech-primary bg-fintech-surface-subtle hover:bg-slate-200 dark:hover:bg-slate-800 rounded-fintech-sm border border-fintech-border transition"
-                      >
-                        Inspect
-                      </button>
+              </thead>
+              <tbody className="divide-y divide-fintech-border text-fintech-secondary">
+                {filteredOpportunities.length === 0 ? (
+                  <tr>
+                    <td colSpan={10} className="py-8 text-center text-fintech-muted">
+                      No matching recovery opportunities found.
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  filteredOpportunities.map((opp) => (
+                    <tr
+                      key={opp.risk_id}
+                      onClick={() => handleInspectOpportunity(opp)}
+                      className="hover:bg-fintech-surface-subtle cursor-pointer transition group"
+                    >
+                      <td className="py-2.5 px-3 whitespace-nowrap">
+                        {getPriorityBadge(opp.priority_band, opp.priority_score)}
+                      </td>
+
+                      <td className="py-2.5 px-3">
+                        <div>
+                          <p className="font-bold text-fintech-primary group-hover:text-brand-600 dark:group-hover:text-brand-400 transition truncate max-w-[140px]">
+                            {opp.customer_name}
+                          </p>
+                          <p className="text-[10px] text-fintech-muted font-mono truncate max-w-[140px]">
+                            {opp.customer_email}
+                          </p>
+                        </div>
+                      </td>
+
+                      <td className="py-2.5 px-3 text-right font-mono font-bold text-fintech-primary whitespace-nowrap">
+                        {formatCurrency(opp.transaction_amount)}
+                      </td>
+
+                      <td className="py-2.5 px-3 whitespace-nowrap">
+                        <span className="px-1.5 py-0.2 rounded text-[10px] font-medium bg-fintech-surface-subtle text-fintech-secondary border border-fintech-border font-mono">
+                          {opp.failure_type_label}
+                        </span>
+                      </td>
+
+                      <td className="py-2.5 px-3 whitespace-nowrap">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-mono font-bold text-brand-600 dark:text-brand-400 text-xs">
+                            {formatPercent(opp.recovery_probability * 100)}
+                          </span>
+                          <div className="w-10 bg-slate-200 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                            <div
+                              className={`h-1.5 rounded-full ${
+                                opp.recovery_probability >= 0.75
+                                  ? 'bg-emerald-500'
+                                  : opp.recovery_probability >= 0.5
+                                  ? 'bg-amber-500'
+                                  : 'bg-rose-500'
+                              }`}
+                              style={{ width: `${opp.recovery_probability * 100}%` }}
+                            />
+                          </div>
+                        </div>
+                      </td>
+
+                      <td className="py-2.5 px-3 text-right font-mono font-bold text-emerald-600 dark:text-emerald-400 whitespace-nowrap">
+                        {formatCurrency(opp.expected_recovery_value)}
+                      </td>
+
+                      <td className="py-2.5 px-3 whitespace-nowrap">
+                        <span className="px-2 py-0.5 rounded-fintech-sm text-[10px] font-semibold bg-brand-500/10 text-brand-700 dark:text-brand-300 border border-brand-500/20">
+                          {opp.recommended_action_label}
+                        </span>
+                      </td>
+
+                      <td className="py-2.5 px-3 whitespace-nowrap text-fintech-muted font-mono text-[10px]">
+                        {opp.recommended_delay_label}
+                      </td>
+
+                      <td className="py-2.5 px-3 whitespace-nowrap">
+                        <span
+                          className={`px-1.5 py-0.2 rounded text-[9px] font-bold uppercase tracking-wider font-mono ${
+                            opp.status === 'recovered'
+                              ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30'
+                              : opp.status === 'stopped'
+                              ? 'bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/30'
+                              : opp.status === 'escalated'
+                              ? 'bg-purple-500/10 text-purple-700 dark:text-purple-400 border border-purple-500/30'
+                              : 'bg-fintech-surface-subtle text-fintech-muted border border-fintech-border'
+                          }`}
+                        >
+                          {opp.status}
+                        </span>
+                      </td>
+
+                      <td className="py-2.5 px-3 text-center whitespace-nowrap">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleInspectOpportunity(opp);
+                          }}
+                          className="px-2 py-0.5 text-[10px] font-semibold text-fintech-secondary hover:text-fintech-primary bg-fintech-surface-subtle hover:bg-slate-200 dark:hover:bg-slate-800 rounded-fintech-sm border border-fintech-border transition"
+                        >
+                          Inspect →
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Opportunity Detail Drawer */}
       <OpportunityDetailDrawer
