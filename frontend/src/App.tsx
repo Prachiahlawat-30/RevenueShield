@@ -89,7 +89,7 @@ const AppContent: React.FC = () => {
 
       {/* Main Content Area */}
       <div
-        className={`flex flex-1 flex-col transition-all duration-200 ${
+        className={`flex flex-1 flex-col transition-all duration-200 min-w-0 overflow-x-hidden ${
           isSidebarCollapsed ? 'pl-16' : 'pl-64'
         }`}
       >
@@ -110,8 +110,8 @@ const AppContent: React.FC = () => {
           </div>
         )}
 
-        {/* Constrained Max-Width Responsive Workspace */}
-        <main className="flex-1 w-full max-w-[1600px] mx-auto p-6 md:p-8 space-y-6">
+        {/* Constrained Responsive Workspace */}
+        <main className="flex-1 w-full max-w-[1600px] p-4 sm:p-5 md:p-6 space-y-5 min-w-0">
           {currentTab === 'control-center' && (
             <RecoveryControlCenterPage onNavigateToWorkflow={handleNavigateToRisk} />
           )}

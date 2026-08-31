@@ -14,12 +14,14 @@ interface Props {
   data: Record<string, number>;
   selectedBand?: string;
   onSelectBand?: (band: string) => void;
+  height?: number;
 }
 
 export const PriorityDistributionChart: React.FC<Props> = ({
   data,
   selectedBand,
   onSelectBand,
+  height = 140,
 }) => {
   const { isDark } = useTheme();
 
@@ -38,20 +40,22 @@ export const PriorityDistributionChart: React.FC<Props> = ({
   }));
 
   return (
-    <div className="w-full h-72">
+    <div style={{ width: '100%', height }} className="min-w-0">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+        <BarChart data={chartData} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
           <XAxis
             dataKey="label"
             stroke={isDark ? '#64748b' : '#94a3b8'}
-            fontSize={11}
+            fontSize={10}
             tickLine={false}
+            tick={{ fill: isDark ? '#94a3b8' : '#64748b' }}
           />
           <YAxis
             stroke={isDark ? '#64748b' : '#94a3b8'}
-            fontSize={11}
+            fontSize={10}
             tickLine={false}
             allowDecimals={false}
+            tick={{ fill: isDark ? '#94a3b8' : '#64748b' }}
           />
           <Tooltip
             cursor={{ fill: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)' }}
@@ -59,12 +63,12 @@ export const PriorityDistributionChart: React.FC<Props> = ({
               if (active && payload && payload.length) {
                 const item = payload[0].payload;
                 return (
-                  <div className={`p-2.5 rounded-fintech-md shadow-xl text-xs border ${
+                  <div className={`p-2 rounded-fintech-sm shadow-md text-xs border ${
                     isDark ? 'bg-[#0f1420] border-[#263247] text-white' : 'bg-white border-slate-200 text-slate-900'
                   }`}>
                     <p className="font-bold">{item.label} Priority</p>
-                    <p className="text-fintech-muted mt-0.5">
-                      Opportunities: <span className="font-bold font-mono text-fintech-primary">{item.count}</span>
+                    <p className="font-mono text-fintech-muted">
+                      Count: <strong className="text-fintech-primary">{item.count}</strong>
                     </p>
                   </div>
                 );
@@ -74,15 +78,21 @@ export const PriorityDistributionChart: React.FC<Props> = ({
           />
           <Bar
             dataKey="count"
-            radius={[4, 4, 0, 0]}
-            onClick={(entry: any) => onSelectBand && onSelectBand(entry.band || entry.payload?.band)}
+            radius={[3, 3, 0, 0]}
+            maxBarSize={28}
+            onClick={(entry: any) => {
+              const bandKey = entry?.band || entry?.payload?.band;
+              if (onSelectBand && bandKey) {
+                onSelectBand(bandKey);
+              }
+            }}
             className="cursor-pointer"
           >
             {chartData.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
                 fill={entry.color}
-                opacity={selectedBand && selectedBand !== entry.band ? 0.35 : 1}
+                opacity={selectedBand === 'all' || selectedBand === entry.band ? 1 : 0.35}
               />
             ))}
           </Bar>

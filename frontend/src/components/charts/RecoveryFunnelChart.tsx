@@ -1,7 +1,6 @@
 import React from 'react';
 import { RecoveryFunnelItem } from '../../types';
 import { formatCurrency } from '../../utils/formatters';
-import { ArrowDown, DollarSign } from 'lucide-react';
 
 interface Props {
   data: RecoveryFunnelItem[];
@@ -10,56 +9,58 @@ interface Props {
 export const RecoveryFunnelChart: React.FC<Props> = ({ data }) => {
   const maxAmount = Math.max(...data.map((d) => Number(d.amount) || 1));
 
-  const getStageColor = (index: number) => {
+  const getStageBadgeStyle = (index: number) => {
     switch (index) {
       case 0:
-        return 'from-rose-600 to-rose-700 text-rose-300 border-rose-500/40';
+        return 'bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/30';
       case 1:
-        return 'from-amber-600 to-amber-700 text-amber-300 border-amber-500/40';
+        return 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/30';
       case 2:
-        return 'from-indigo-600 to-indigo-700 text-indigo-300 border-indigo-500/40';
+        return 'bg-brand-500/10 text-brand-700 dark:text-brand-400 border-brand-500/30';
       default:
-        return 'from-emerald-600 to-emerald-700 text-emerald-300 border-emerald-500/40';
+        return 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30';
+    }
+  };
+
+  const getProgressColor = (index: number) => {
+    switch (index) {
+      case 0:
+        return 'bg-rose-500';
+      case 1:
+        return 'bg-amber-500';
+      case 2:
+        return 'bg-brand-500';
+      default:
+        return 'bg-emerald-500';
     }
   };
 
   return (
-    <div className="space-y-3 py-1">
+    <div className="space-y-2 py-0.5">
       {data.map((item, index) => {
         const amountNum = Number(item.amount);
-        const percentage = Math.max(12, Math.round((amountNum / maxAmount) * 100));
+        const percentage = Math.max(10, Math.round((amountNum / maxAmount) * 100));
 
         return (
           <div key={index} className="space-y-1">
-            <div className="flex items-center justify-between text-xs">
-              <span className="font-semibold text-slate-300 flex items-center gap-1.5">
-                <span className="w-4 h-4 rounded-full bg-slate-800 text-[10px] text-slate-400 flex items-center justify-center font-mono">
+            <div className="flex items-center justify-between text-[11px]">
+              <span className="font-semibold text-fintech-primary flex items-center gap-1.5 truncate">
+                <span className={`w-4 h-4 rounded-full text-[9px] flex items-center justify-center font-mono font-bold border ${getStageBadgeStyle(index)}`}>
                   {index + 1}
                 </span>
-                {item.stage}
+                <span className="truncate">{item.stage}</span>
               </span>
-              <span className="font-mono font-bold text-white">
+              <span className="font-mono font-bold text-fintech-primary text-xs shrink-0">
                 {formatCurrency(item.amount)}
               </span>
             </div>
 
-            <div className="w-full bg-slate-800/80 rounded-lg h-7 overflow-hidden p-0.5 border border-slate-700/50">
+            <div className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
               <div
-                className={`h-full rounded-md bg-gradient-to-r ${getStageColor(
-                  index
-                )} flex items-center justify-between px-3 text-[11px] font-medium text-white transition-all duration-500 shadow-sm`}
+                className={`h-full rounded-full ${getProgressColor(index)} transition-all duration-500`}
                 style={{ width: `${percentage}%` }}
-              >
-                <span className="truncate pr-2">{item.description}</span>
-                <span className="font-mono shrink-0">{percentage}%</span>
-              </div>
+              />
             </div>
-
-            {index < data.length - 1 && (
-              <div className="flex justify-center -my-1 text-slate-600">
-                <ArrowDown className="w-3.5 h-3.5" />
-              </div>
-            )}
           </div>
         );
       })}

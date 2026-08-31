@@ -15,9 +15,10 @@ import { useTheme } from '../../context/ThemeContext';
 
 interface Props {
   data: ExpectedByFailureTypeItem[];
+  height?: number;
 }
 
-export const ExpectedRecoveryByTypeChart: React.FC<Props> = ({ data }) => {
+export const ExpectedRecoveryByTypeChart: React.FC<Props> = ({ data, height = 200 }) => {
   const { isDark } = useTheme();
 
   const chartData = data.map((d) => ({
@@ -32,7 +33,7 @@ export const ExpectedRecoveryByTypeChart: React.FC<Props> = ({ data }) => {
     if (active && payload && payload.length) {
       const item = payload[0].payload;
       return (
-        <div className={`p-3 rounded-fintech-md shadow-xl text-xs space-y-1 border ${
+        <div className={`p-2.5 rounded-fintech-md shadow-xl text-xs space-y-1 border ${
           isDark ? 'bg-[#0f1420] border-[#263247] text-white' : 'bg-white border-slate-200 text-slate-900'
         }`}>
           <p className="font-bold">{label}</p>
@@ -58,36 +59,36 @@ export const ExpectedRecoveryByTypeChart: React.FC<Props> = ({ data }) => {
   };
 
   return (
-    <div className="w-full h-72">
+    <div style={{ width: '100%', height }} className="min-w-0">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 20 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#263247' : '#E2E8F0'} />
+        <BarChart data={chartData} margin={{ top: 5, right: 10, left: -15, bottom: 0 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#1e293b' : '#E2E8F0'} vertical={false} />
           <XAxis
             dataKey="name"
             stroke={isDark ? '#64748b' : '#94a3b8'}
-            fontSize={11}
+            fontSize={10}
             tickLine={false}
             interval={0}
-            angle={-15}
-            textAnchor="end"
+            tick={{ fill: isDark ? '#94a3b8' : '#64748b' }}
           />
           <YAxis
             stroke={isDark ? '#64748b' : '#94a3b8'}
-            fontSize={11}
+            fontSize={10}
             tickLine={false}
             tickFormatter={(v) => `$${v}`}
+            tick={{ fill: isDark ? '#94a3b8' : '#64748b' }}
           />
           <Tooltip content={<CustomTooltip />} />
           <Legend
-            wrapperStyle={{ fontSize: '11px', paddingTop: '12px' }}
+            wrapperStyle={{ fontSize: '10px', paddingTop: '4px' }}
             formatter={(value) => (
-              <span className={isDark ? 'text-slate-300' : 'text-slate-700 font-medium'}>
+              <span className={isDark ? 'text-slate-300 font-medium' : 'text-slate-700 font-medium'}>
                 {value === 'amount_at_risk' ? 'Amount at Risk' : 'Expected Recovery'}
               </span>
             )}
           />
-          <Bar dataKey="amount_at_risk" fill="#f59e0b" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="expected_recovery" fill="#10b981" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="amount_at_risk" fill="#f59e0b" radius={[3, 3, 0, 0]} maxBarSize={32} />
+          <Bar dataKey="expected_recovery" fill="#10b981" radius={[3, 3, 0, 0]} maxBarSize={32} />
         </BarChart>
       </ResponsiveContainer>
     </div>
