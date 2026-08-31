@@ -8,15 +8,12 @@ import {
   Search,
   CheckCircle2,
   DollarSign,
-  ArrowRight,
-  ShieldCheck,
 } from 'lucide-react';
 import {
   getIntelligenceSummary,
   getOpportunities,
   getOpportunityDetail,
 } from '../api/intelligence';
-import { seedDemoDatabase } from '../api/simulation';
 import {
   RecoveryIntelligenceSummary,
   RecoveryOpportunityItem,
@@ -34,7 +31,6 @@ export const RecoveryIntelligencePage: React.FC = () => {
   const [summary, setSummary] = useState<RecoveryIntelligenceSummary | null>(null);
   const [opportunities, setOpportunities] = useState<RecoveryOpportunityItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [recalculating, setRecalculating] = useState(false);
 
   // Filters & Sorting
   const [selectedBand, setSelectedBand] = useState<string>('all');
@@ -47,7 +43,6 @@ export const RecoveryIntelligencePage: React.FC = () => {
   const [selectedOpportunity, setSelectedOpportunity] = useState<RecoveryOpportunityItem | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isBatchModalOpen, setIsBatchModalOpen] = useState(false);
-  const [notification, setNotification] = useState<string | null>(null);
 
   const fetchData = async () => {
     try {
@@ -131,15 +126,7 @@ export const RecoveryIntelligencePage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-4 animate-fintech-fade w-full min-w-0 max-w-full overflow-hidden">
-      {/* Toast Notification */}
-      {notification && (
-        <div className="p-3 rounded-fintech-md bg-brand-500/10 border border-brand-500/30 text-brand-700 dark:text-brand-300 text-xs flex items-center gap-2 shadow-fintech-sm animate-in fade-in">
-          <CheckCircle2 className="w-4 h-4 text-brand-500 shrink-0" />
-          <p className="font-semibold">{notification}</p>
-        </div>
-      )}
-
+    <div className="space-y-4 animate-fintech-fade w-full min-w-0 max-w-full overflow-hidden pb-6">
       {/* Header & Controls Bar */}
       <div className="flex flex-wrap items-center justify-between gap-3 bg-fintech-surface px-4 py-3 rounded-fintech-lg border border-fintech-border shadow-fintech-sm">
         <div className="flex items-center gap-2.5 min-w-0">
@@ -150,7 +137,7 @@ export const RecoveryIntelligencePage: React.FC = () => {
             <div className="flex items-center gap-2">
               <h1 className="text-base font-bold text-fintech-primary tracking-tight">Recovery Intelligence</h1>
               <span className="px-2 py-0.2 text-[9px] font-bold rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 uppercase tracking-wider font-mono shrink-0">
-                Multi-Engine
+                Live Intelligence
               </span>
             </div>
             <p className="text-[11px] text-fintech-secondary truncate">
@@ -207,7 +194,7 @@ export const RecoveryIntelligencePage: React.FC = () => {
             {formatCurrency(summary?.total_revenue_at_risk || 0)}
           </p>
           <span className="text-[10px] text-fintech-muted font-mono block truncate">
-            Across {summary?.total_risks || 0} failed transaction cases
+            Across {summary?.total_risks || 0} failed cases
           </span>
         </div>
 
@@ -243,11 +230,11 @@ export const RecoveryIntelligencePage: React.FC = () => {
         </div>
       </div>
 
-      {/* Visual Analytics Strip: Compact 2-Column Grid */}
+      {/* Visual Analytics Strip: Compact 2-Column Grid with Contained Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 w-full">
         {/* Left: Expected Recovery Yield by Failure Reason */}
-        <div className="lg:col-span-7 p-3.5 rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm flex flex-col justify-between min-w-0">
-          <div className="flex items-center justify-between mb-2">
+        <div className="lg:col-span-7 p-3.5 rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm flex flex-col justify-between min-w-0 overflow-hidden">
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
             <div>
               <h3 className="text-xs font-bold text-fintech-primary uppercase tracking-wider font-mono">
                 Expected Recovery Yield by Failure Reason
@@ -256,9 +243,17 @@ export const RecoveryIntelligencePage: React.FC = () => {
                 Total exposure vs probabilistic recoverable yield.
               </p>
             </div>
-            <span className="text-[9px] px-1.5 py-0.2 rounded bg-fintech-surface-subtle text-fintech-muted font-mono border border-fintech-border">
-              Recharts
-            </span>
+            {/* Inline Crisp Legend */}
+            <div className="flex items-center gap-3 text-[10px] font-mono font-semibold">
+              <span className="flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-xs bg-amber-500 inline-block shrink-0" />
+                <span className="text-fintech-secondary">Exposure</span>
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-xs bg-emerald-500 inline-block shrink-0" />
+                <span className="text-fintech-secondary">Expected Yield</span>
+              </span>
+            </div>
           </div>
 
           <div className="w-full min-w-0">
@@ -269,7 +264,7 @@ export const RecoveryIntelligencePage: React.FC = () => {
         {/* Right: Priority Distribution & Recovery Funnel */}
         <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 min-w-0">
           {/* Priority Breakdown */}
-          <div className="p-3 rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm space-y-1 min-w-0">
+          <div className="p-3 rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm space-y-1 min-w-0 overflow-hidden">
             <div className="flex items-center justify-between">
               <h3 className="text-xs font-bold text-fintech-primary uppercase tracking-wider font-mono">
                 Priority Distribution
@@ -288,13 +283,13 @@ export const RecoveryIntelligencePage: React.FC = () => {
                 data={summary?.priority_distribution || {}}
                 selectedBand={selectedBand}
                 onSelectBand={(band) => setSelectedBand(band === selectedBand ? 'all' : band)}
-                height={110}
+                height={100}
               />
             </div>
           </div>
 
           {/* Recovery Value Funnel */}
-          <div className="p-3 rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm space-y-1 min-w-0">
+          <div className="p-3 rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm space-y-1 min-w-0 overflow-hidden">
             <div className="flex items-center justify-between">
               <h3 className="text-xs font-bold text-fintech-primary uppercase tracking-wider font-mono">
                 Recovery Value Funnel
@@ -314,7 +309,7 @@ export const RecoveryIntelligencePage: React.FC = () => {
       </div>
 
       {/* Screen-Fitted High-Density Opportunities Queue (Zero Horizontal Scroll) */}
-      <div className="rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm p-3.5 space-y-2.5 w-full min-w-0">
+      <div className="rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm p-3.5 space-y-2.5 w-full min-w-0 overflow-hidden">
         {/* Table Header & Inline Filter Strip */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-fintech-border pb-2.5">
           <div className="flex items-center gap-2 min-w-0">
@@ -377,7 +372,7 @@ export const RecoveryIntelligencePage: React.FC = () => {
         </div>
 
         {/* 5-Column High Density Table (Strictly Contained, Zero Horizontal Scroll) */}
-        <div className="overflow-y-auto max-h-[320px] rounded-fintech-md border border-fintech-border relative w-full">
+        <div className="overflow-y-auto max-h-[320px] rounded-fintech-md border border-fintech-border relative w-full overflow-x-hidden">
           <table className="w-full text-left text-xs border-collapse table-fixed">
             <thead className="bg-fintech-surface-subtle text-fintech-muted font-bold border-b border-fintech-border uppercase tracking-wider text-[10px] sticky top-0 z-10">
               <tr>
