@@ -230,11 +230,11 @@ export const RecoveryIntelligencePage: React.FC = () => {
         </div>
       </div>
 
-      {/* Visual Analytics Strip: Compact 2-Column Grid with Contained Layout */}
+      {/* Visual Analytics Strip: Compact 2-Column Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 w-full">
         {/* Left: Expected Recovery Yield by Failure Reason */}
-        <div className="lg:col-span-7 p-3.5 rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm flex flex-col justify-between min-w-0 overflow-hidden">
-          <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+        <div className="lg:col-span-7 p-3.5 rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm space-y-2 min-w-0 overflow-hidden">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-fintech-border pb-2">
             <div>
               <h3 className="text-xs font-bold text-fintech-primary uppercase tracking-wider font-mono">
                 Expected Recovery Yield by Failure Reason
@@ -243,7 +243,7 @@ export const RecoveryIntelligencePage: React.FC = () => {
                 Total exposure vs probabilistic recoverable yield.
               </p>
             </div>
-            {/* Inline Crisp Legend */}
+            {/* Inline Legend */}
             <div className="flex items-center gap-3 text-[10px] font-mono font-semibold">
               <span className="flex items-center gap-1">
                 <span className="w-2.5 h-2.5 rounded-xs bg-amber-500 inline-block shrink-0" />
@@ -256,8 +256,8 @@ export const RecoveryIntelligencePage: React.FC = () => {
             </div>
           </div>
 
-          <div className="w-full min-w-0">
-            <ExpectedRecoveryByTypeChart data={summary?.expected_by_failure_type || []} height={180} />
+          <div className="w-full min-w-0 pt-1">
+            <ExpectedRecoveryByTypeChart data={summary?.expected_by_failure_type || []} height={200} />
           </div>
         </div>
 
@@ -265,7 +265,7 @@ export const RecoveryIntelligencePage: React.FC = () => {
         <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 min-w-0">
           {/* Priority Breakdown */}
           <div className="p-3 rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm space-y-1 min-w-0 overflow-hidden">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between border-b border-fintech-border pb-1.5">
               <h3 className="text-xs font-bold text-fintech-primary uppercase tracking-wider font-mono">
                 Priority Distribution
               </h3>
@@ -278,7 +278,7 @@ export const RecoveryIntelligencePage: React.FC = () => {
                 </button>
               )}
             </div>
-            <div className="w-full min-w-0">
+            <div className="w-full min-w-0 pt-1">
               <PriorityDistributionChart
                 data={summary?.priority_distribution || {}}
                 selectedBand={selectedBand}
@@ -290,7 +290,7 @@ export const RecoveryIntelligencePage: React.FC = () => {
 
           {/* Recovery Value Funnel */}
           <div className="p-3 rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm space-y-1 min-w-0 overflow-hidden">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between border-b border-fintech-border pb-1.5">
               <h3 className="text-xs font-bold text-fintech-primary uppercase tracking-wider font-mono">
                 Recovery Value Funnel
               </h3>
@@ -301,7 +301,7 @@ export const RecoveryIntelligencePage: React.FC = () => {
                 settled
               </span>
             </div>
-            <div className="w-full min-w-0">
+            <div className="w-full min-w-0 pt-1">
               <RecoveryFunnelChart data={summary?.recovery_funnel || []} />
             </div>
           </div>

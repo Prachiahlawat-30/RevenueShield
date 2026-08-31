@@ -17,16 +17,17 @@ interface Props {
   height?: number;
 }
 
-export const ExpectedRecoveryByTypeChart: React.FC<Props> = ({ data, height = 200 }) => {
+export const ExpectedRecoveryByTypeChart: React.FC<Props> = ({ data, height = 220 }) => {
   const { isDark } = useTheme();
 
-  // Shorten label for clean horizontal presentation without rotation overflow
+  // Shorten failure category labels to fit cleanly without overlap
   const formatShortLabel = (label: string) => {
     if (!label) return '';
-    if (label.toLowerCase().includes('temporary') || label.toLowerCase().includes('decline')) return 'Temp Decline';
-    if (label.toLowerCase().includes('insufficient') || label.toLowerCase().includes('funds')) return 'Insuff Funds';
-    if (label.toLowerCase().includes('expired')) return 'Expired Card';
-    if (label.toLowerCase().includes('network') || label.toLowerCase().includes('timeout')) return 'Network Err';
+    const l = label.toLowerCase();
+    if (l.includes('temporary') || l.includes('decline')) return 'Temp Decline';
+    if (l.includes('insufficient') || l.includes('funds')) return 'Insuff Funds';
+    if (l.includes('expired')) return 'Expired Card';
+    if (l.includes('network') || l.includes('timeout') || l.includes('gateway')) return 'Network Err';
     return 'Other';
   };
 
@@ -51,15 +52,15 @@ export const ExpectedRecoveryByTypeChart: React.FC<Props> = ({ data, height = 20
             Cases: <span className="font-mono font-bold text-fintech-primary">{item.count}</span>
           </p>
           <p className="text-fintech-muted">
-            Revenue At Risk:{' '}
-            <span className="text-rose-600 dark:text-rose-400 font-mono font-bold">{formatCurrency(item.amount_at_risk)}</span>
+            Exposure:{' '}
+            <span className="text-amber-600 dark:text-amber-400 font-mono font-bold">{formatCurrency(item.amount_at_risk)}</span>
           </p>
           <p className="text-fintech-muted">
-            Expected Recovery:{' '}
+            Expected Yield:{' '}
             <span className="text-emerald-600 dark:text-emerald-400 font-mono font-bold">{formatCurrency(item.expected_recovery)}</span>
           </p>
           <p className="text-fintech-muted">
-            Avg Probability:{' '}
+            Probability:{' '}
             <span className="text-brand-600 dark:text-brand-400 font-mono font-bold">{formatPercent(item.average_probability * 100)}</span>
           </p>
         </div>
@@ -71,15 +72,15 @@ export const ExpectedRecoveryByTypeChart: React.FC<Props> = ({ data, height = 20
   return (
     <div style={{ width: '100%', height }} className="min-w-0 overflow-hidden">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#1e293b' : '#E2E8F0'} vertical={false} />
+        <BarChart data={chartData} margin={{ top: 12, right: 10, left: -15, bottom: 4 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#1e293b' : '#f1f5f9'} vertical={false} />
           <XAxis
             dataKey="name"
             stroke={isDark ? '#64748b' : '#94a3b8'}
-            fontSize={10}
+            fontSize={11}
             tickLine={false}
             interval={0}
-            tick={{ fill: isDark ? '#94a3b8' : '#64748b' }}
+            tick={{ fill: isDark ? '#94a3b8' : '#475569', fontWeight: 500 }}
           />
           <YAxis
             stroke={isDark ? '#64748b' : '#94a3b8'}
