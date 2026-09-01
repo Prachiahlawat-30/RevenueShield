@@ -29,25 +29,52 @@ export const OpportunityDetailDrawer: React.FC<OpportunityDetailDrawerProps> = (
   onActionExecuted,
 }) => {
   const [isExecuting, setIsExecuting] = useState(false);
+  const [executingAction, setExecutingAction] = useState<string | null>(null);
+  const [selectedAction, setSelectedAction] = useState<string>(
+    opportunity?.recommended_action || 'send_payment_reminder'
+  );
+  const [currentStatus, setCurrentStatus] = useState<string>(
+    opportunity?.status || 'detected'
+  );
   const [executionFeedback, setExecutionFeedback] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (opportunity) {
+      setSelectedAction(opportunity.recommended_action);
+      setCurrentStatus(opportunity.status);
+      setExecutionFeedback(null);
+    }
+  }, [opportunity]);
 
   if (!isOpen || !opportunity) return null;
 
-  const handleExecute = async () => {
+  const handleExecute = async (actionToRun?: string) => {
+    const action = actionToRun || selectedAction || opportunity.recommended_action;
     try {
       setIsExecuting(true);
+      setExecutingAction(action);
       setExecutionFeedback(null);
-      const res = await executeRecoveryStep(opportunity.risk_id, true);
+      const res = await executeRecoveryStep(opportunity.risk_id, true, action);
+      setCurrentStatus(res.current_status);
+      const actionLabel =
+        opportunity.candidates.find((c) => c.action === action)?.action_label || action;
       setExecutionFeedback(
-        `Action '${res.step_name}' executed. New Status: ${res.current_status}. Recovered: ${formatCurrency(res.amount_recovered)}`
+        `✓ Action '${actionLabel}' executed successfully! New Status: ${res.current_status.toUpperCase()}${
+          Number(res.amount_recovered) > 0
+            ? ` • Recovered: ${formatCurrency(res.amount_recovered)}`
+            : ''
+        }`
       );
       if (onActionExecuted) {
         onActionExecuted();
       }
     } catch (err: any) {
-      setExecutionFeedback(`Execution failed: ${err.message || 'Unknown error'}`);
+      setExecutionFeedback(
+        `Execution failed: ${err.response?.data?.detail || err.message || 'Unknown error'}`
+      );
     } finally {
       setIsExecuting(false);
+      setExecutingAction(null);
     }
   };
 
@@ -229,42 +256,88 @@ export const OpportunityDetailDrawer: React.FC<OpportunityDetailDrawerProps> = (
 
               {/* Action Candidate Evaluation Table */}
               <div className="pt-2">
-                <p className="text-xs font-semibold text-fintech-muted uppercase tracking-wider mb-2">
-                  Intervention Candidates Evaluated
-                </p>
-                <div className="space-y-1.5">
-                  {opportunity.candidates.map((cand, idx) => (
-                    <div
-                      key={idx}
-                      className={`p-2.5 rounded-fintech-sm border text-xs flex items-center justify-between ${
-                        cand.action === opportunity.recommended_action
-                          ? 'bg-brand-500/10 border-brand-500/40 text-fintech-primary font-medium'
-                          : 'bg-fintech-surface border-fintech-border text-fintech-secondary'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        {cand.action === opportunity.recommended_action ? (
-                          <CheckCircle2 className="w-4 h-4 text-brand-500" />
-                        ) : (
-                          <div className="w-4 h-4 rounded-full border border-slate-400 dark:border-slate-600 flex items-center justify-center text-[10px] text-fintech-muted font-mono">
-                            {idx + 1}
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-xs font-semibold text-fintech-muted uppercase tracking-wider">
+                    Intervention Candidates (Click to Select or Execute)
+                  </p>
+                  <span className="text-[10px] text-brand-600 dark:text-brand-400 font-mono">
+                    Select any action to override AI recommendation
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  {opportunity.candidates.map((cand, idx) => {
+                    const isSelected = selectedAction === cand.action;
+                    const isAiPick = cand.action === opportunity.recommended_action;
+                    const isRowExecuting = executingAction === cand.action;
+
+                    return (
+                      <div
+                        key={idx}
+                        onClick={() => setSelectedAction(cand.action)}
+                        className={`p-3 rounded-fintech-md border text-xs flex flex-wrap items-center justify-between gap-3 cursor-pointer transition-all ${
+                          isSelected
+                            ? 'bg-brand-500/10 border-brand-500 text-fintech-primary font-medium shadow-fintech-sm'
+                            : 'bg-fintech-surface border-fintech-border text-fintech-secondary hover:border-brand-500/40 hover:bg-fintech-surface-subtle'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div
+                            className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors shrink-0 ${
+                              isSelected
+                                ? 'border-brand-500 bg-brand-500 text-white'
+                                : 'border-slate-300 dark:border-slate-600'
+                            }`}
+                          >
+                            {isSelected ? (
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                            ) : (
+                              <span className="text-[10px] text-fintech-muted font-mono">{idx + 1}</span>
+                            )}
                           </div>
-                        )}
-                        <span>{cand.action_label}</span>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="font-bold text-fintech-primary">{cand.action_label}</span>
+                            {isAiPick && (
+                              <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-brand-500/15 text-brand-600 dark:text-brand-300 font-mono">
+                                AI Recommended
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-3 shrink-0">
+                          <span className="font-mono text-fintech-secondary text-[11px]">
+                            {formatPercent(cand.action_recovery_probability * 100)}
+                          </span>
+                          <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold text-xs">
+                            {formatCurrency(cand.expected_recovery_value)}
+                          </span>
+                          <span className="text-[10px] text-fintech-muted font-mono hidden sm:inline">
+                            -${Number(cand.intervention_cost).toFixed(2)} cost
+                          </span>
+                          <button
+                            type="button"
+                            disabled={currentStatus === 'recovered' || isExecuting}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleExecute(cand.action);
+                            }}
+                            className={`px-2.5 py-1 text-[11px] font-bold rounded-fintech-sm border transition flex items-center gap-1 ${
+                              isSelected
+                                ? 'bg-brand-500 text-white border-brand-500 hover:bg-brand-600'
+                                : 'bg-fintech-surface-subtle text-brand-600 dark:text-brand-400 border-fintech-border hover:bg-brand-500/10 hover:border-brand-500/30'
+                            } disabled:opacity-50 disabled:cursor-not-allowed`}
+                          >
+                            {isRowExecuting ? (
+                              <span className="inline-block animate-spin mr-1">●</span>
+                            ) : (
+                              <Zap className="w-3 h-3" />
+                            )}
+                            Execute
+                          </button>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-4">
-                        <span className="font-mono text-fintech-secondary">
-                          {formatPercent(cand.action_recovery_probability * 100)}
-                        </span>
-                        <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">
-                          {formatCurrency(cand.expected_recovery_value)}
-                        </span>
-                        <span className="text-[10px] text-fintech-muted font-mono">
-                          -${Number(cand.intervention_cost).toFixed(2)} cost
-                        </span>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -312,7 +385,9 @@ export const OpportunityDetailDrawer: React.FC<OpportunityDetailDrawerProps> = (
           <div className="p-6 border-t border-fintech-border bg-fintech-surface sticky bottom-0 flex items-center justify-between">
             <div className="text-xs text-fintech-muted">
               <span>Risk Status: </span>
-              <span className="font-mono uppercase font-bold text-fintech-primary">{opportunity.status}</span>
+              <span className="font-mono uppercase font-bold text-brand-600 dark:text-brand-400">
+                {currentStatus}
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <Button variant="outline" size="md" onClick={onClose}>
@@ -322,11 +397,11 @@ export const OpportunityDetailDrawer: React.FC<OpportunityDetailDrawerProps> = (
                 variant="primary"
                 size="md"
                 icon={Zap}
-                isLoading={isExecuting}
-                disabled={opportunity.status === 'recovered'}
-                onClick={handleExecute}
+                isLoading={isExecuting && !executingAction}
+                disabled={currentStatus === 'recovered' || isExecuting}
+                onClick={() => handleExecute(selectedAction)}
               >
-                Execute Next Step
+                Execute: {opportunity.candidates.find((c) => c.action === selectedAction)?.action_label || 'Next Step'}
               </Button>
             </div>
           </div>

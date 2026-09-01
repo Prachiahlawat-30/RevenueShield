@@ -85,18 +85,26 @@ def run_ai_diagnosis(
     )
 
 
+class StepExecutionRequest(BaseModel):
+    force_cooldown_override: bool = True
+    override_action: Optional[str] = None
+
+
 @router.post("/{risk_id}/step", response_model=RecoveryStepResponse, summary="Execute single atomic state machine step")
 def execute_single_recovery_step(
     risk_id: uuid.UUID,
-    force_cooldown_override: bool = Body(True, embed=True),
+    payload: Optional[StepExecutionRequest] = None,
     db: Session = Depends(get_db),
 ) -> RecoveryStepResponse:
     """Execute the next atomic step (Diagnose -> Policy Check -> Execute Intervention) for a risk case."""
+    cooldown = payload.force_cooldown_override if payload else True
+    action_override = payload.override_action if payload else None
     try:
         return RecoveryEngine.execute_step(
             db=db,
             risk_id=risk_id,
-            force_cooldown_override=force_cooldown_override,
+            force_cooldown_override=cooldown,
+            override_action=action_override,
         )
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))

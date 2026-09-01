@@ -21,10 +21,12 @@ export const getPaymentDecisionGraph = async (
 
 export const executeRecoveryStep = async (
   riskId: string,
-  forceCooldownOverride: boolean = true
+  forceCooldownOverride: boolean = true,
+  overrideAction?: string
 ): Promise<RecoveryStepResponse> => {
   const res = await apiClient.post<RecoveryStepResponse>(`/recovery/${riskId}/step`, {
     force_cooldown_override: forceCooldownOverride,
+    override_action: overrideAction,
   });
   return res.data;
 };

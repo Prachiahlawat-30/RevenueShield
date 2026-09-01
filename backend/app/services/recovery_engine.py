@@ -28,6 +28,7 @@ class RecoveryEngine:
         db: Session,
         risk_id: uuid.UUID,
         force_cooldown_override: bool = True,  # Default True for interactive demonstration
+        override_action: Optional[str] = None,
     ) -> RecoveryStepResponse:
         """Execute a single atomic step in the recovery workflow."""
         risk = db.query(RevenueRisk).filter_by(id=risk_id).with_for_update().first()
@@ -83,6 +84,20 @@ class RecoveryEngine:
             decision_payload=diagnosis.model_dump(),
         )
 
+        # Determine effective proposed action (allowing operator candidate override)
+        action_to_propose = diagnosis.recommended_action
+        if override_action:
+            try:
+                norm_action = override_action.lower().strip()
+                if norm_action in ("stop_workflow", "stop"):
+                    action_to_propose = RecoveryAction.STOP
+                elif norm_action in ("escalate_to_human", "escalate_to_human_desk"):
+                    action_to_propose = RecoveryAction.ESCALATE_TO_HUMAN
+                else:
+                    action_to_propose = RecoveryAction(norm_action)
+            except Exception as e:
+                print(f"Invalid override action '{override_action}': {e}")
+
         # -------------------------------------------------------------
         # STEP 2: DETERMINISTIC POLICY ENGINE CHECK
         # -------------------------------------------------------------
@@ -93,7 +108,7 @@ class RecoveryEngine:
         policy_eval = PolicyEngine.evaluate(
             risk=risk,
             customer=customer,
-            proposed_action=diagnosis.recommended_action,
+            proposed_action=action_to_propose,
             past_attempts=past_attempts,
             policy=active_policy,
             ignore_cooldown_for_demo=force_cooldown_override,
@@ -101,11 +116,11 @@ class RecoveryEngine:
 
         AuditService.log_event(
             db=db,
-            actor=ActorType.POLICY_ENGINE.value,
+            actor="human_operator" if override_action else ActorType.POLICY_ENGINE.value,
             step_name="POLICY_CHECK",
             revenue_risk_id=risk.id,
             customer_id=customer.id,
-            recommended_action=diagnosis.recommended_action.value,
+            recommended_action=action_to_propose.value,
             policy_decision="APPROVED" if policy_eval.is_approved else "REJECTED",
             executed_action=policy_eval.effective_action.value,
             decision_payload=policy_eval.model_dump(),
