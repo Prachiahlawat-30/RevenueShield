@@ -4,6 +4,7 @@ import {
   Zap,
   Activity,
   RefreshCw,
+  AlertTriangle,
 } from 'lucide-react';
 import { getIncidents, detectAnomalies, resolveIncident } from '../api/tier2';
 import { PaymentIncident, AnomalyDetectionResult } from '../types';
@@ -172,22 +173,48 @@ export const IncidentsPage: React.FC = () => {
                 )}
               </div>
 
-              {/* Metric stats */}
-              <div className="grid grid-cols-3 gap-3">
+              {/* Degradation Alert Banner if Active */}
+              {selectedIncident.status === 'ACTIVE' && (
+                <div className="p-4 rounded-fintech-md bg-rose-500/10 border border-rose-500/30 text-rose-800 dark:text-rose-300 text-xs flex items-start gap-3">
+                  <AlertTriangle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-black uppercase tracking-wider text-rose-700 dark:text-rose-400">
+                        ⚠️ Payment Degradation Detected
+                      </span>
+                      <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-700 dark:text-rose-300 font-bold">
+                        SURGE: +340% TIMEOUTS
+                      </span>
+                    </div>
+                    <p className="mt-1 text-xs text-rose-900 dark:text-rose-200">
+                      Failure rate increased <strong>4.8×</strong> in the last 30 minutes. System-wide anomaly detected on <strong>{selectedIncident.affected_gateway}</strong>.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Metric stats (4-column strip) */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div className="p-3 bg-fintech-surface-subtle rounded-fintech-md border border-fintech-border">
                   <span className="text-[10px] text-fintech-muted uppercase font-semibold">Affected Gateway</span>
-                  <p className="text-xs font-bold text-fintech-primary mt-0.5">{selectedIncident.affected_gateway}</p>
+                  <p className="text-xs font-bold text-fintech-primary mt-0.5 font-mono">{selectedIncident.affected_gateway}</p>
                 </div>
                 <div className="p-3 bg-fintech-surface-subtle rounded-fintech-md border border-fintech-border">
-                  <span className="text-[10px] text-fintech-muted uppercase font-semibold">Payment Rail</span>
+                  <span className="text-[10px] text-fintech-muted uppercase font-semibold">Affected Method</span>
                   <p className="text-xs font-bold text-fintech-primary mt-0.5 uppercase font-mono">
-                    {selectedIncident.affected_payment_method || 'Credit Card'}
+                    {selectedIncident.affected_payment_method || 'UPI'}
+                  </p>
+                </div>
+                <div className="p-3 bg-fintech-surface-subtle rounded-fintech-md border border-fintech-border">
+                  <span className="text-[10px] text-fintech-muted uppercase font-semibold">Affected Region</span>
+                  <p className="text-xs font-bold text-fintech-primary mt-0.5 font-mono">
+                    North India
                   </p>
                 </div>
                 <div className="p-3 bg-rose-500/10 rounded-fintech-md border border-rose-500/30">
-                  <span className="text-[10px] text-rose-700 dark:text-rose-400 uppercase font-semibold">Estimated Impact</span>
+                  <span className="text-[10px] text-rose-700 dark:text-rose-400 uppercase font-semibold">Revenue at Risk</span>
                   <p className="text-xs font-bold text-rose-700 dark:text-rose-400 mt-0.5 font-mono">
-                    {formatCurrency(selectedIncident.estimated_revenue_impact)}
+                    {formatCurrency(selectedIncident.estimated_revenue_impact)}/hr
                   </p>
                 </div>
               </div>
