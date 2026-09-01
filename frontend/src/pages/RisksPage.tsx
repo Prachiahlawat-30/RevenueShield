@@ -6,7 +6,7 @@ import { StatusBadge } from '../components/ui/StatusBadge';
 import { Button } from '../components/ui/Button';
 import { TableSkeleton } from '../components/ui/Skeleton';
 import { EmptyState } from '../components/ui/EmptyState';
-import { formatCurrency, formatDate, getFailureTypeLabel } from '../utils/formatters';
+import { formatCurrency, formatDate, getFailureTypeLabel, getActionLabel } from '../utils/formatters';
 
 interface RisksPageProps {
   onSelectRisk: (riskId: string) => void;
@@ -59,15 +59,15 @@ export const RisksPage: React.FC<RisksPageProps> = ({ onSelectRisk }) => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-500">
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#6822CC]">
             <AlertTriangle className="h-4 w-4" />
-            <span>Payment Operations Console</span>
+            <span>Financial Operations Console</span>
           </div>
-          <h1 className="mt-1 text-2xl font-black text-fintech-primary sm:text-3xl">
+          <h1 className="mt-1 text-2xl font-bold text-[#1A1A2E] dark:text-white sm:text-3xl tracking-tight">
             Revenue at Risk
           </h1>
-          <p className="mt-1 text-xs text-fintech-secondary">
-            Monitor detected payment failures and prioritize interventions with highest recovery likelihood ({total} active cases).
+          <p className="mt-1 text-xs text-[#6B7280]">
+            Monitor detected payment failures, review automated root-cause diagnoses, and trigger high-yield recovery playbooks ({total} active cases).
           </p>
         </div>
 
@@ -78,28 +78,28 @@ export const RisksPage: React.FC<RisksPageProps> = ({ onSelectRisk }) => {
           isLoading={isLoading}
           onClick={fetchRisks}
         >
-          Refresh Risks
+          Refresh Console
         </Button>
       </div>
 
       {/* Filters Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-fintech-lg border border-fintech-border bg-fintech-surface p-4 shadow-fintech-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-[14px] border border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] p-4 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
         {/* Search */}
         <form onSubmit={handleSearchSubmit} className="relative flex-1 max-w-md">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-fintech-muted" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#9CA3AF]" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search customer name, email, or ID..."
-            className="w-full rounded-fintech-md border border-fintech-border bg-fintech-surface-subtle pl-10 pr-4 py-2 text-xs text-fintech-primary placeholder-fintech-muted focus:border-brand-500 focus:outline-none"
+            placeholder="Search customer name, email, or invoice ID..."
+            className="w-full rounded-lg border border-[#E5E7EB] dark:border-[#242E42] bg-slate-50/60 dark:bg-slate-800/40 pl-10 pr-4 py-2 text-xs text-[#1A1A2E] dark:text-white placeholder-[#9CA3AF] focus:border-[#6822CC] focus:outline-none transition-colors"
           />
         </form>
 
         {/* Filters */}
         <div className="flex flex-wrap items-center gap-3">
           {/* Status Tabs */}
-          <div className="flex items-center rounded-fintech-md border border-fintech-border bg-fintech-surface-subtle p-1">
+          <div className="flex items-center rounded-lg border border-[#E5E7EB] dark:border-[#242E42] bg-slate-50/80 dark:bg-slate-800/40 p-1">
             {statusOptions.map((status) => (
               <button
                 key={status}
@@ -107,10 +107,10 @@ export const RisksPage: React.FC<RisksPageProps> = ({ onSelectRisk }) => {
                   setStatusFilter(status);
                   setPage(1);
                 }}
-                className={`rounded-fintech-sm px-2.5 py-1 text-xs font-semibold uppercase tracking-wider transition-all ${
+                className={`rounded-md px-2.5 py-1 text-xs font-semibold uppercase tracking-wider transition-all ${
                   statusFilter === status
-                    ? 'bg-fintech-surface text-brand-600 dark:text-brand-400 shadow-fintech-sm font-bold'
-                    : 'text-fintech-secondary hover:text-fintech-primary'
+                    ? 'bg-white dark:bg-[#131824] text-[#6822CC] dark:text-[#B892FF] shadow-sm font-bold'
+                    : 'text-[#6B7280] hover:text-[#1A1A2E] dark:hover:text-white'
                 }`}
               >
                 {status}
@@ -125,10 +125,10 @@ export const RisksPage: React.FC<RisksPageProps> = ({ onSelectRisk }) => {
               setTypeFilter(e.target.value);
               setPage(1);
             }}
-            className="rounded-fintech-md border border-fintech-border bg-fintech-surface px-3 py-2 text-xs text-fintech-primary focus:border-brand-500 focus:outline-none"
+            className="rounded-lg border border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] px-3 py-2 text-xs text-[#1A1A2E] dark:text-white focus:border-[#6822CC] focus:outline-none"
           >
             <option value="all">All Failure Categories</option>
-            <option value="temporary_decline">Temporary Decline</option>
+            <option value="temporary_decline">Temporary Bank Decline</option>
             <option value="insufficient_funds">Insufficient Funds</option>
             <option value="expired_card">Expired Card</option>
             <option value="network_error">Network Error</option>
@@ -138,11 +138,11 @@ export const RisksPage: React.FC<RisksPageProps> = ({ onSelectRisk }) => {
       </div>
 
       {/* Risks Data Table */}
-      <div className="overflow-hidden rounded-fintech-lg border border-fintech-border bg-fintech-surface shadow-fintech-sm">
+      <div className="overflow-hidden rounded-[14px] border border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs fintech-table-sticky-header">
             <thead>
-              <tr className="border-b border-fintech-border bg-fintech-surface-subtle/80 text-fintech-muted uppercase font-semibold text-[11px]">
+              <tr className="border-b border-[#E5E7EB] dark:border-[#242E42] bg-slate-50/70 dark:bg-slate-800/40 text-[#6B7280] uppercase font-semibold text-[11px]">
                 <th className="px-6 py-3.5">Customer & Account</th>
                 <th className="px-6 py-3.5">Failure Category</th>
                 <th className="px-6 py-3.5">Amount at Risk</th>
@@ -153,7 +153,7 @@ export const RisksPage: React.FC<RisksPageProps> = ({ onSelectRisk }) => {
                 <th className="px-6 py-3.5 text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-fintech-border font-medium">
+            <tbody className="divide-y divide-[#E5E7EB] dark:divide-[#242E42] font-medium">
               {isLoading ? (
                 <tr>
                   <td colSpan={8} className="p-4">
@@ -174,43 +174,47 @@ export const RisksPage: React.FC<RisksPageProps> = ({ onSelectRisk }) => {
                   <tr
                     key={risk.id}
                     onClick={() => onSelectRisk(risk.id)}
-                    className="hover:bg-fintech-surface-subtle/60 transition-colors cursor-pointer"
+                    className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 cursor-pointer transition-colors group"
                   >
                     <td className="px-6 py-3.5">
-                      <div className="font-semibold text-fintech-primary">
+                      <div className="font-semibold text-[#1A1A2E] dark:text-white group-hover:text-[#6822CC] dark:group-hover:text-[#B892FF] transition-colors">
                         {risk.customer?.name || 'Customer'}
                       </div>
-                      <div className="text-[11px] text-fintech-muted font-mono">
+                      <div className="text-[11px] text-[#6B7280]">
                         {risk.customer?.email || risk.customer_id}
                       </div>
                     </td>
-                    <td className="px-6 py-3.5 text-fintech-secondary font-medium">
-                      {getFailureTypeLabel(risk.detected_failure_type)}
+                    <td className="px-6 py-3.5">
+                      <span className="inline-flex items-center rounded-md bg-slate-100 dark:bg-slate-800 px-2 py-0.5 text-xs text-[#1A1A2E] dark:text-white border border-[#E5E7EB] dark:border-slate-700">
+                        {getFailureTypeLabel(risk.detected_failure_type)}
+                      </span>
                     </td>
-                    <td className="px-6 py-3.5 font-mono font-bold text-rose-600 dark:text-rose-400">
+                    <td className="px-6 py-3.5 font-mono font-bold text-base text-[#DC2626]">
                       {formatCurrency(risk.amount_at_risk)}
                     </td>
-                    <td className="px-6 py-3.5 font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                    <td className="px-6 py-3.5 font-mono font-semibold text-[#16A34A]">
                       {formatCurrency(risk.amount_recovered)}
                     </td>
                     <td className="px-6 py-3.5">
                       <StatusBadge status={risk.status} size="sm" />
                     </td>
-                    <td className="px-6 py-3.5 font-mono text-fintech-secondary">
+                    <td className="px-6 py-3.5 font-mono text-[#6B7280]">
                       {risk.attempt_count} / 3
                     </td>
-                    <td className="px-6 py-3.5 text-fintech-muted">
+                    <td className="px-6 py-3.5 text-[#6B7280]">
                       {formatDate(risk.created_at)}
                     </td>
-                    <td className="px-6 py-3.5 text-right" onClick={(e) => e.stopPropagation()}>
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        icon={PlayCircle}
-                        onClick={() => onSelectRisk(risk.id)}
+                    <td className="px-6 py-3.5 text-right">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onSelectRisk(risk.id);
+                        }}
+                        className="inline-flex items-center gap-1 rounded-lg border border-[#E5E7EB] dark:border-slate-700 bg-white dark:bg-[#131824] px-3 py-1.5 text-xs font-semibold text-[#6822CC] dark:text-[#B892FF] hover:bg-[#F3EEFF] dark:hover:bg-purple-950/30 hover:border-[#D5BEFF] transition-all"
                       >
-                        Inspect
-                      </Button>
+                        <span>Diagnose</span>
+                        <ArrowUpRight className="h-3 w-3" />
+                      </button>
                     </td>
                   </tr>
                 ))
@@ -221,27 +225,27 @@ export const RisksPage: React.FC<RisksPageProps> = ({ onSelectRisk }) => {
 
         {/* Pagination Footer */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between border-t border-fintech-border px-6 py-3 text-xs text-fintech-secondary bg-fintech-surface-subtle/30">
-            <span>
-              Page <strong className="text-fintech-primary">{page}</strong> of{' '}
-              <strong className="text-fintech-primary">{totalPages}</strong>
-            </span>
+          <div className="flex items-center justify-between border-t border-[#E5E7EB] dark:border-[#242E42] bg-slate-50/50 dark:bg-slate-800/30 px-6 py-3.5 text-xs text-[#6B7280]">
+            <div>
+              Showing page <span className="font-bold text-[#1A1A2E] dark:text-white">{page}</span> of{' '}
+              <span className="font-bold text-[#1A1A2E] dark:text-white">{totalPages}</span> ({total} total failures)
+            </div>
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
                 size="sm"
                 icon={ChevronLeft}
-                disabled={page === 1}
+                disabled={page <= 1 || isLoading}
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
               >
-                Prev
+                Previous
               </Button>
               <Button
                 variant="outline"
                 size="sm"
                 icon={ChevronRight}
                 iconPosition="right"
-                disabled={page === totalPages}
+                disabled={page >= totalPages || isLoading}
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               >
                 Next

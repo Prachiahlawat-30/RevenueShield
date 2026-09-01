@@ -25,52 +25,64 @@ export const RecoveryTrendChart: React.FC<RecoveryTrendChartProps> = ({ data }) 
     recovered: typeof item.amount_recovered === 'string' ? parseFloat(item.amount_recovered) : item.amount_recovered,
   }));
 
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="rounded-lg border border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] p-3 shadow-md text-xs space-y-1.5">
+          <p className="font-bold text-[#1A1A2E] dark:text-white">{label}</p>
+          <div className="space-y-1 font-mono">
+            <p className="text-[#6822CC] flex items-center justify-between gap-4">
+              <span>Revenue at Risk:</span>
+              <strong className="font-bold">{formatCurrency(payload[0]?.value)}</strong>
+            </p>
+            <p className="text-[#16A34A] flex items-center justify-between gap-4">
+              <span>Recovered Revenue:</span>
+              <strong className="font-bold">{formatCurrency(payload[1]?.value)}</strong>
+            </p>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="h-64 w-full">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
           <defs>
-            <linearGradient id="colorRecovered" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
-              <stop offset="95%" stopColor="#10b981" stopOpacity={0.0} />
-            </linearGradient>
             <linearGradient id="colorAtRisk" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.25} />
-              <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.0} />
+              <stop offset="5%" stopColor="#6822CC" stopOpacity={0.25} />
+              <stop offset="95%" stopColor="#6822CC" stopOpacity={0.0} />
+            </linearGradient>
+            <linearGradient id="colorRecovered" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#16A34A" stopOpacity={0.25} />
+              <stop offset="95%" stopColor="#16A34A" stopOpacity={0.0} />
             </linearGradient>
           </defs>
           <CartesianGrid
             strokeDasharray="3 3"
-            stroke={isDark ? '#263247' : '#E2E8F0'}
+            stroke={isDark ? '#242E42' : '#F3F4F6'}
+            vertical={false}
           />
           <XAxis
             dataKey="date"
-            stroke={isDark ? '#64748b' : '#94a3b8'}
+            stroke={isDark ? '#6B7280' : '#9CA3AF'}
             fontSize={11}
             tickLine={false}
           />
           <YAxis
-            stroke={isDark ? '#64748b' : '#94a3b8'}
+            stroke={isDark ? '#6B7280' : '#9CA3AF'}
             fontSize={11}
             tickLine={false}
             tickFormatter={(val) => `$${val}`}
           />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: isDark ? '#0f1420' : '#ffffff',
-              borderColor: isDark ? '#263247' : '#e2e8f0',
-              color: isDark ? '#f8fafc' : '#0f172a',
-              borderRadius: '8px',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-              fontSize: '12px',
-            }}
-            formatter={(value: any) => [formatCurrency(value), '']}
-          />
+          <Tooltip content={<CustomTooltip />} />
           <Area
             type="monotone"
             dataKey="atRisk"
             name="Revenue at Risk"
-            stroke="#f59e0b"
+            stroke="#6822CC"
             strokeWidth={2}
             fillOpacity={1}
             fill="url(#colorAtRisk)"
@@ -78,8 +90,8 @@ export const RecoveryTrendChart: React.FC<RecoveryTrendChartProps> = ({ data }) 
           <Area
             type="monotone"
             dataKey="recovered"
-            name="Revenue Recovered"
-            stroke="#10b981"
+            name="Recovered Revenue"
+            stroke="#16A34A"
             strokeWidth={2}
             fillOpacity={1}
             fill="url(#colorRecovered)"

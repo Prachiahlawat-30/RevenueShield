@@ -34,32 +34,33 @@ export const FailureBreakdownChart: React.FC<FailureBreakdownChartProps> = ({ da
         <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
           <CartesianGrid
             strokeDasharray="3 3"
-            stroke={isDark ? '#263247' : '#E2E8F0'}
+            stroke={isDark ? '#242E42' : '#F3F4F6'}
+            vertical={false}
           />
           <XAxis
             dataKey="name"
-            stroke={isDark ? '#64748b' : '#94a3b8'}
+            stroke={isDark ? '#6B7280' : '#9CA3AF'}
             fontSize={11}
             tickLine={false}
           />
           <YAxis
-            stroke={isDark ? '#64748b' : '#94a3b8'}
+            stroke={isDark ? '#6B7280' : '#9CA3AF'}
             fontSize={11}
             tickLine={false}
             tickFormatter={(val) => `$${val}`}
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: isDark ? '#0f1420' : '#ffffff',
-              borderColor: isDark ? '#263247' : '#e2e8f0',
-              color: isDark ? '#f8fafc' : '#0f172a',
+              backgroundColor: isDark ? '#131824' : '#ffffff',
+              borderColor: isDark ? '#242E42' : '#E5E7EB',
+              color: isDark ? '#F9FAFB' : '#1A1A2E',
               borderRadius: '8px',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
               fontSize: '12px',
             }}
             formatter={(value: any, name: any) => [
               formatCurrency(value),
-              name === 'atRisk' ? 'At Risk' : 'Recovered',
+              name === 'atRisk' ? 'Amount at Risk' : 'Amount Recovered',
             ]}
           />
           <Legend
@@ -70,8 +71,8 @@ export const FailureBreakdownChart: React.FC<FailureBreakdownChartProps> = ({ da
               </span>
             )}
           />
-          <Bar dataKey="atRisk" fill="#f59e0b" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="recovered" fill="#10b981" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="atRisk" fill="#F59E0B" radius={[4, 4, 0, 0]} maxBarSize={32} />
+          <Bar dataKey="recovered" fill="#16A34A" radius={[4, 4, 0, 0]} maxBarSize={32} />
         </BarChart>
       </ResponsiveContainer>
     </div>

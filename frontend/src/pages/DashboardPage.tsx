@@ -90,43 +90,53 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
       {/* 1. Executive Money Story Command Banner */}
       <ExecutiveMoneyStoryBanner onNavigateToRecommendations={onNavigateToRecommendations} />
 
-      {/* 2. Executive KPI Summary Strip */}
+      {/* 2. Top Metric Cards - Styled exactly per prompt specifications */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Revenue at Risk - Prominent Danger/Warning */}
         <MetricCard
           label="Revenue at Risk"
           value={formatCurrency(metrics?.total_revenue_at_risk)}
+          accent="danger"
           icon={AlertOctagon}
           delta={metrics?.active_cases || 0}
           deltaType="negative"
           deltaLabel="active failure cases"
-          tooltip="Total monetary volume of identified payment failures requiring automated or human intervention."
+          tooltip="Total monetary volume of identified payment failures requiring automated intervention."
         />
+
+        {/* Recovered Revenue - Prominent Success #16A34A */}
         <MetricCard
-          label="Captured Revenue"
+          label="Recovered Revenue"
           value={formatCurrency(metrics?.total_revenue_recovered)}
+          accent="success"
           icon={TrendingUp}
           delta={`+${metrics?.recovery_rate_pct || 0}%`}
           deltaType="positive"
-          deltaLabel="overall recovery rate"
-          tooltip="Gross payment volume successfully recovered through automated smart retry and customer actions."
+          deltaLabel="gross captured volume"
+          tooltip="Gross payment volume successfully recovered through smart retries and proactive outreach."
         />
+
+        {/* Recovery Rate - Primary Brand #6822CC */}
         <MetricCard
-          label="Net Recovered Yield"
-          value={formatCurrency(roiData?.net_recovered_revenue || metrics?.total_revenue_recovered)}
-          icon={DollarSign}
-          delta={`Cost: ${formatCurrency(roiData?.total_intervention_cost || 0)}`}
-          deltaType="neutral"
-          deltaLabel="gateway & contact fees"
-          tooltip="Net economic revenue captured after subtracting all retry interchange fees, SMS/email reminder costs, and manual escalations."
-        />
-        <MetricCard
-          label="Economic Return"
-          value={`${roiData?.roi_multiple || 18.4}x`}
+          label="Recovery Rate"
+          value={`${metrics?.recovery_rate_pct || 0}%`}
+          accent="purple"
           icon={Award}
           delta="+14.2%"
           deltaType="positive"
-          deltaLabel="vs baseline static routing"
-          tooltip="Net financial yield generated per rupee invested in automated recovery interventions."
+          deltaLabel="vs static baseline"
+          tooltip="Percentage of failed transactions successfully rescued by the autonomous engine."
+        />
+
+        {/* Active Recovery Cases - Accent Blue #2B6FFF */}
+        <MetricCard
+          label="Active Recovery Cases"
+          value={metrics?.active_cases || 0}
+          accent="blue"
+          icon={Zap}
+          delta="Under Active Automation"
+          deltaType="neutral"
+          tooltip="Failed payment cases currently undergoing diagnostic triage and policy evaluation."
         />
       </div>
 
@@ -135,24 +145,24 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 
       {/* 4. Trends and Breakdown Charts Grid */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-        <div className="lg:col-span-8 rounded-fintech-lg border border-fintech-border bg-fintech-surface p-5 shadow-fintech-sm">
-          <div className="flex items-center justify-between border-b border-fintech-border pb-3 mb-4">
+        <div className="lg:col-span-8 rounded-[14px] border border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+          <div className="flex items-center justify-between border-b border-[#E5E7EB] dark:border-[#242E42] pb-3 mb-4">
             <div>
-              <h2 className="text-sm font-bold text-fintech-primary">Daily Recovery & Loss Trajectory</h2>
-              <span className="text-[11px] text-fintech-secondary">Real-time payment failure recovery velocity</span>
+              <h2 className="text-sm font-bold text-[#1A1A2E] dark:text-white">Daily Recovery & Loss Trajectory</h2>
+              <span className="text-[11px] text-[#6B7280]">Real-time payment failure recovery velocity</span>
             </div>
-            <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full font-bold">
+            <span className="text-[10px] font-mono text-[#16A34A] bg-[#16A34A]/10 border border-[#16A34A]/20 px-2 py-0.5 rounded-full font-bold">
               ● Live Stream
             </span>
           </div>
           {charts && <RecoveryTrendChart data={charts.daily_trends} />}
         </div>
 
-        <div className="lg:col-span-4 rounded-fintech-lg border border-fintech-border bg-fintech-surface p-5 shadow-fintech-sm">
-          <div className="flex items-center justify-between border-b border-fintech-border pb-3 mb-4">
+        <div className="lg:col-span-4 rounded-[14px] border border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+          <div className="flex items-center justify-between border-b border-[#E5E7EB] dark:border-[#242E42] pb-3 mb-4">
             <div>
-              <h2 className="text-sm font-bold text-fintech-primary">Failure Breakdown</h2>
-              <span className="text-[11px] text-fintech-secondary">By root-cause diagnosis</span>
+              <h2 className="text-sm font-bold text-[#1A1A2E] dark:text-white">Failure Breakdown</h2>
+              <span className="text-[11px] text-[#6B7280]">By root-cause diagnosis</span>
             </div>
           </div>
           {charts && <FailureBreakdownChart data={charts.failure_breakdown} />}
@@ -162,27 +172,27 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
       {/* 5. Attribution & Conversion Funnel */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         {/* Intervention Attribution */}
-        <div className="lg:col-span-7 rounded-fintech-lg border border-fintech-border bg-fintech-surface p-5 shadow-fintech-sm space-y-4">
-          <div className="flex items-center justify-between border-b border-fintech-border pb-3">
+        <div className="lg:col-span-7 rounded-[14px] border border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] space-y-4">
+          <div className="flex items-center justify-between border-b border-[#E5E7EB] dark:border-[#242E42] pb-3">
             <div>
-              <h2 className="text-sm font-bold text-fintech-primary">Recovery Attribution by Strategy</h2>
-              <span className="text-[11px] text-fintech-secondary">Financial yield by executed action</span>
+              <h2 className="text-sm font-bold text-[#1A1A2E] dark:text-white">Recovery Attribution by Strategy</h2>
+              <span className="text-[11px] text-[#6B7280]">Financial yield by executed action</span>
             </div>
-            <span className="text-[11px] font-mono text-fintech-muted">Net ROI Attribution</span>
+            <span className="text-[11px] font-mono text-[#6B7280]">Net ROI Attribution</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {roiData?.attribution_by_action.map((item, idx) => (
               <div
                 key={idx}
-                className="p-3.5 rounded-fintech-md bg-fintech-surface-subtle border border-fintech-border space-y-1"
+                className="p-3.5 rounded-lg bg-slate-50/70 dark:bg-slate-800/40 border border-[#E5E7EB] dark:border-[#242E42] space-y-1"
               >
-                <span className="text-xs font-semibold text-fintech-secondary block">{item.category_label}</span>
+                <span className="text-xs font-semibold text-[#6B7280] block">{item.category_label}</span>
                 <div className="flex items-baseline justify-between pt-1">
-                  <span className="text-base font-bold font-mono text-emerald-600 dark:text-emerald-400">
+                  <span className="text-base font-bold font-mono text-[#16A34A]">
                     {formatCurrency(item.recovered_revenue)}
                   </span>
-                  <span className="text-xs font-mono font-semibold text-fintech-primary">
+                  <span className="text-xs font-mono font-semibold text-[#1A1A2E] dark:text-white">
                     {item.percentage_of_total}%
                   </span>
                 </div>
@@ -192,11 +202,11 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
         </div>
 
         {/* Funnel */}
-        <div className="lg:col-span-5 rounded-fintech-lg border border-fintech-border bg-fintech-surface p-5 shadow-fintech-sm">
-          <div className="flex items-center justify-between border-b border-fintech-border pb-3 mb-4">
+        <div className="lg:col-span-5 rounded-[14px] border border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+          <div className="flex items-center justify-between border-b border-[#E5E7EB] dark:border-[#242E42] pb-3 mb-4">
             <div>
-              <h2 className="text-sm font-bold text-fintech-primary">Recovery Progression Funnel</h2>
-              <span className="text-[11px] text-fintech-secondary">4-stage operational conversion</span>
+              <h2 className="text-sm font-bold text-[#1A1A2E] dark:text-white">Recovery Progression Funnel</h2>
+              <span className="text-[11px] text-[#6B7280]">4-stage operational conversion</span>
             </div>
           </div>
           {charts && <ConversionFunnelChart stages={charts.stage_conversion_funnel} />}
@@ -204,15 +214,15 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
       </div>
 
       {/* 6. Recent Payment Failure Risks Console Table */}
-      <div className="rounded-fintech-lg border border-fintech-border bg-fintech-surface p-5 shadow-fintech-sm">
-        <div className="flex items-center justify-between border-b border-fintech-border pb-3 mb-4">
+      <div className="rounded-[14px] border border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+        <div className="flex items-center justify-between border-b border-[#E5E7EB] dark:border-[#242E42] pb-3 mb-4">
           <div>
-            <h2 className="text-sm font-bold text-fintech-primary">Active Revenue Risks Requiring Attention</h2>
-            <span className="text-[11px] text-fintech-secondary">Sorted by highest expected recoverable value</span>
+            <h2 className="text-sm font-bold text-[#1A1A2E] dark:text-white">Active Revenue Risks Requiring Attention</h2>
+            <span className="text-[11px] text-[#6B7280]">Sorted by highest expected recoverable value</span>
           </div>
           <button
             onClick={() => handleNav(recentRisks[0]?.id || '')}
-            className="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1"
+            className="text-xs font-bold text-[#6822CC] hover:text-[#4B1A99] flex items-center gap-1 transition-colors"
           >
             <span>Open in Workflow</span>
             <ArrowRight className="h-3.5 w-3.5" />
@@ -222,7 +232,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead>
-              <tr className="border-b border-fintech-border text-fintech-muted uppercase font-semibold text-[11px]">
+              <tr className="border-b border-[#E5E7EB] dark:border-[#242E42] text-[#6B7280] uppercase font-semibold text-[11px]">
                 <th className="pb-2.5">Customer</th>
                 <th className="pb-2.5">Failure Reason</th>
                 <th className="pb-2.5">Amount at Risk</th>
@@ -231,19 +241,19 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                 <th className="pb-2.5 text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-fintech-border font-medium">
+            <tbody className="divide-y divide-[#E5E7EB] dark:divide-[#242E42] font-medium">
               {recentRisks.map((risk) => (
-                <tr key={risk.id} className="hover:bg-fintech-surface-subtle/60 transition-colors">
-                  <td className="py-3 font-semibold text-fintech-primary">
+                <tr key={risk.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
+                  <td className="py-3 font-semibold text-[#1A1A2E] dark:text-white">
                     {risk.customer?.name || 'Customer'}
                   </td>
-                  <td className="py-3 text-fintech-secondary">
+                  <td className="py-3 text-[#6B7280]">
                     {getFailureTypeLabel(risk.detected_failure_type)}
                   </td>
-                  <td className="py-3 font-mono font-bold text-rose-600 dark:text-rose-400">
+                  <td className="py-3 font-mono font-bold text-[#DC2626]">
                     {formatCurrency(risk.amount_at_risk)}
                   </td>
-                  <td className="py-3 font-mono text-fintech-secondary">
+                  <td className="py-3 font-mono text-[#6B7280]">
                     {risk.attempt_count} / 3
                   </td>
                   <td className="py-3">

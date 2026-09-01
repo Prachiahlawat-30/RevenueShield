@@ -2,7 +2,7 @@ import React from 'react';
 import { Loader2 } from 'lucide-react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'success';
   size?: 'sm' | 'md' | 'lg';
   icon?: React.ComponentType<{ className?: string }>;
   iconPosition?: 'left' | 'right';
@@ -21,25 +21,27 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const baseClasses =
-    'inline-flex items-center justify-center font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-brand-500/50 disabled:opacity-50 disabled:cursor-not-allowed select-none';
+    'inline-flex items-center justify-center font-semibold transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#6822CC]/30 disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.99]';
 
   const sizeClasses = {
-    sm: 'px-3 py-1.5 text-xs rounded-fintech-sm gap-1.5',
-    md: 'px-4 py-2 text-xs font-semibold rounded-fintech-md gap-2',
-    lg: 'px-5 py-2.5 text-sm font-bold rounded-fintech-md gap-2.5',
+    sm: 'px-3 py-1.5 text-xs rounded-lg gap-1.5',
+    md: 'px-4 py-2 text-xs font-semibold rounded-lg gap-2',
+    lg: 'px-5 py-2.5 text-sm font-bold rounded-lg gap-2.5',
   };
 
   const variantClasses = {
     primary:
-      'bg-brand-500 hover:bg-brand-600 active:bg-brand-700 text-white shadow-fintech-sm shadow-brand-500/20 border border-transparent',
+      'bg-[#6822CC] hover:bg-[#4B1A99] active:bg-[#3D157D] text-white shadow-sm border border-transparent',
     secondary:
-      'bg-fintech-surface-subtle hover:bg-slate-200 dark:hover:bg-slate-800 text-fintech-primary border border-fintech-border',
+      'bg-white hover:bg-[#F3EEFF] text-[#6822CC] border border-[#E5E7EB] hover:border-[#D5BEFF] shadow-sm',
     outline:
-      'bg-transparent hover:bg-fintech-surface-subtle text-fintech-primary border border-fintech-border',
+      'bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800/60 text-fintech-primary border border-[#E5E7EB]',
     ghost:
-      'bg-transparent hover:bg-fintech-surface-subtle text-fintech-secondary hover:text-fintech-primary border border-transparent',
+      'bg-transparent hover:bg-[#F3EEFF] text-[#6822CC] dark:text-[#B892FF] border border-transparent',
     danger:
-      'bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white shadow-fintech-sm border border-transparent',
+      'bg-[#DC2626] hover:bg-[#B91C1C] active:bg-[#991B1B] text-white shadow-sm border border-transparent',
+    success:
+      'bg-[#16A34A] hover:bg-[#15803D] active:bg-[#166534] text-white shadow-sm border border-transparent',
   };
 
   return (

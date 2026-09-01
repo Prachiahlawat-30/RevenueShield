@@ -25,21 +25,29 @@ interface WorkflowStepperProps {
 
 export const WorkflowStepper: React.FC<WorkflowStepperProps> = ({ currentStage, status }) => {
   const stages = [
-    { id: 'DETECTED', label: 'Failure Detected', icon: AlertCircle },
-    { id: 'DIAGNOSING', label: 'AI Diagnosis', icon: Brain },
-    { id: 'ACTION_SELECTED', label: 'Action Proposed', icon: Sparkles },
-    { id: 'POLICY_CHECK', label: 'Policy Guardrails', icon: ShieldCheck },
-    { id: 'EXECUTING', label: 'Simulated Execution', icon: Zap },
+    { id: 'DETECTED', label: 'DETECTED', subtext: 'Failure Ingested', icon: AlertCircle },
+    { id: 'DIAGNOSING', label: 'DIAGNOSING', subtext: 'Root-Cause Analysis', icon: Brain },
+    { id: 'ACTION_SELECTED', label: 'ACTION SELECTED', subtext: 'Optimal Strategy', icon: Sparkles },
+    { id: 'POLICY_CHECK', label: 'POLICY CHECK', subtext: 'Guardrails Evaluated', icon: ShieldCheck },
+    { id: 'EXECUTING', label: 'EXECUTED', subtext: 'Gateway Routing', icon: Zap },
     {
       id: 'OUTCOME',
       label:
         status === 'recovered'
-          ? 'Revenue Recovered'
+          ? 'RECOVERED'
           : status === 'escalated'
-          ? 'Escalated to Human'
+          ? 'ESCALATED'
           : status === 'stopped'
-          ? 'Workflow Stopped'
-          : 'Outcome Settled',
+          ? 'STOPPED'
+          : 'SETTLED',
+      subtext:
+        status === 'recovered'
+          ? 'Funds Captured'
+          : status === 'escalated'
+          ? 'Human Review'
+          : status === 'stopped'
+          ? 'Interventions Halted'
+          : 'Pending Final Result',
       icon:
         status === 'recovered'
           ? CheckCircle2
@@ -53,14 +61,29 @@ export const WorkflowStepper: React.FC<WorkflowStepperProps> = ({ currentStage, 
   const currentIndex = stageOrder.indexOf(currentStage);
 
   return (
-    <div className="w-full rounded-fintech-lg border border-fintech-border bg-fintech-surface p-6 shadow-fintech-sm">
-      <div className="relative flex items-center justify-between">
+    <div className="w-full rounded-[14px] border border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+      <div className="flex items-center justify-between mb-5 border-b border-[#E5E7EB] dark:border-[#242E42] pb-3">
+        <div>
+          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#6822CC]">
+            AUTONOMOUS DECISION PIPELINE
+          </span>
+          <h2 className="text-sm font-bold text-[#1A1A2E] dark:text-white">Revenue Recovery State Machine</h2>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] font-mono text-[#6B7280]">Stage:</span>
+          <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#F3EEFF] text-[#6822CC] border border-[#D5BEFF]">
+            {currentStage}
+          </span>
+        </div>
+      </div>
+
+      <div className="relative flex items-center justify-between px-2 sm:px-6">
         {/* Background Connecting Line */}
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 h-1 w-full bg-slate-200 dark:bg-slate-800" />
-        
+        <div className="absolute left-6 right-6 top-5 h-0.5 bg-[#E5E7EB] dark:bg-[#242E42]" />
+
         {/* Active Progress Line */}
         <div
-          className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-gradient-to-r from-brand-500 to-emerald-500 transition-all duration-500"
+          className="absolute left-6 top-5 h-0.5 bg-gradient-to-r from-[#6822CC] to-[#16A34A] transition-all duration-500"
           style={{ width: `${(Math.max(0, currentIndex) / (stages.length - 1)) * 100}%` }}
         />
 
@@ -69,19 +92,19 @@ export const WorkflowStepper: React.FC<WorkflowStepperProps> = ({ currentStage, 
           const isPassed = idx < currentIndex || status === 'recovered' || status === 'stopped' || status === 'escalated';
           const isCurrent = idx === currentIndex;
 
-          let bubbleClass = 'border-slate-300 dark:border-slate-700 bg-fintech-surface text-fintech-muted';
+          let bubbleClass = 'border-[#E5E7EB] dark:border-slate-700 bg-white dark:bg-[#131824] text-[#9CA3AF]';
           if (isCurrent) {
             bubbleClass =
-              'border-brand-500 bg-brand-500/10 text-brand-600 dark:text-brand-300 ring-4 ring-brand-500/20 scale-110 shadow-fintech-sm';
+              'border-[#6822CC] bg-[#F3EEFF] dark:bg-purple-950/50 text-[#6822CC] ring-4 ring-[#6822CC]/15 shadow-sm scale-110';
           } else if (isPassed) {
             bubbleClass =
               status === 'recovered' && idx === stages.length - 1
-                ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                ? 'border-[#16A34A] bg-[#16A34A]/10 text-[#16A34A]'
                 : status === 'escalated' && idx === stages.length - 1
-                ? 'border-purple-500 bg-purple-500/10 text-purple-600 dark:text-purple-400'
+                ? 'border-violet-500 bg-violet-50 text-violet-700 dark:bg-violet-950/40 dark:text-violet-300'
                 : status === 'stopped' && idx === stages.length - 1
-                ? 'border-rose-500 bg-rose-500/10 text-rose-600 dark:text-rose-400'
-                : 'border-brand-500/40 bg-fintech-surface text-brand-500';
+                ? 'border-[#DC2626] bg-[#DC2626]/10 text-[#DC2626]'
+                : 'border-[#16A34A] bg-[#16A34A]/10 text-[#16A34A]';
           }
 
           return (
@@ -92,11 +115,14 @@ export const WorkflowStepper: React.FC<WorkflowStepperProps> = ({ currentStage, 
                 <Icon className="h-4.5 w-4.5" />
               </div>
               <span
-                className={`mt-2 text-center text-xs font-semibold max-w-[90px] leading-tight ${
-                  isCurrent ? 'text-fintech-primary font-bold' : isPassed ? 'text-fintech-secondary' : 'text-fintech-muted'
+                className={`mt-2.5 text-center text-[11px] font-bold tracking-tight max-w-[100px] leading-tight ${
+                  isCurrent ? 'text-[#6822CC] font-bold' : isPassed ? 'text-[#1A1A2E] dark:text-white' : 'text-[#9CA3AF]'
                 }`}
               >
                 {stage.label}
+              </span>
+              <span className="text-[10px] text-[#6B7280] hidden sm:block mt-0.5 text-center truncate max-w-[90px]">
+                {stage.subtext}
               </span>
             </div>
           );

@@ -13,7 +13,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setThemeState] = useState<ThemeMode>(() => {
     const saved = localStorage.getItem('recoverai-theme') as ThemeMode;
-    return saved || 'dark'; // Default to dark fintech terminal
+    return saved || 'light'; // Default to clean fintech light dashboard
   });
 
   const [isDark, setIsDark] = useState<boolean>(true);
