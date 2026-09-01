@@ -123,11 +123,13 @@ export const ExperimentsPage: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="px-3.5 py-1.5 rounded-fintech-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400">
+              <div className="px-3.5 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800/40">
                 <span className="text-[10px] uppercase font-bold block">Measured Lift</span>
-                <span className="text-base font-bold font-mono">+{selectedResult.lift_percentage}%</span>
+                <span className="text-base font-bold font-mono text-[#16A34A]">
+                  {selectedResult.lift_percentage > 0 ? `+${selectedResult.lift_percentage}%` : `${selectedResult.lift_percentage}%`}
+                </span>
               </div>
-              <div className="px-3.5 py-1.5 rounded-fintech-md bg-brand-500/10 border border-brand-500/30 text-brand-700 dark:text-brand-300">
+              <div className="px-3.5 py-1.5 rounded-lg bg-[#F3EEFF] border border-[#D5BEFF] text-[#6822CC] dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800/40">
                 <span className="text-[10px] uppercase font-bold block">Incremental Revenue</span>
                 <span className="text-base font-bold font-mono">
                   {formatCurrency(selectedResult.additional_revenue_generated)}
