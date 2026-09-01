@@ -33,6 +33,9 @@ class Settings(BaseSettings):
     METHOD_UPDATE_COST: Decimal = Decimal("0.20")
     HUMAN_ESCALATION_COST: Decimal = Decimal("15.00")
 
+    # Payment Gateway Configuration
+    RAZORPAY_WEBHOOK_SECRET: str = ""
+
     # CORS Settings
     CORS_ORIGINS: List[str] = [
         "http://localhost:5173",

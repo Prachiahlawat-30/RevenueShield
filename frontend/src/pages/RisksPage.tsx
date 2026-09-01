@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Search, PlayCircle, RefreshCw, ChevronLeft, ChevronRight, AlertTriangle, ArrowUpRight } from 'lucide-react';
+import { Search, PlayCircle, RefreshCw, ChevronLeft, ChevronRight, AlertTriangle, ArrowUpRight, UploadCloud, Zap } from 'lucide-react';
 import { getRevenueRisks } from '../api/risks';
 import { RevenueRisk } from '../types';
 import { StatusBadge } from '../components/ui/StatusBadge';
@@ -7,6 +7,8 @@ import { Button } from '../components/ui/Button';
 import { TableSkeleton } from '../components/ui/Skeleton';
 import { EmptyState } from '../components/ui/EmptyState';
 import { formatCurrency, formatDate, getFailureTypeLabel, getActionLabel } from '../utils/formatters';
+import { ImportCsvModal } from '../components/transactions/ImportCsvModal';
+import { RazorpayWebhookModal } from '../components/transactions/RazorpayWebhookModal';
 
 interface RisksPageProps {
   onSelectRisk: (riskId: string) => void;
@@ -21,6 +23,8 @@ export const RisksPage: React.FC<RisksPageProps> = ({ onSelectRisk }) => {
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [isRazorpayModalOpen, setIsRazorpayModalOpen] = useState(false);
 
   const fetchRisks = async () => {
     setIsLoading(true);
@@ -71,15 +75,35 @@ export const RisksPage: React.FC<RisksPageProps> = ({ onSelectRisk }) => {
           </p>
         </div>
 
-        <Button
-          variant="outline"
-          size="sm"
-          icon={RefreshCw}
-          isLoading={isLoading}
-          onClick={fetchRisks}
-        >
-          Refresh Console
-        </Button>
+        <div className="flex flex-wrap items-center gap-2.5">
+          <Button
+            variant="outline"
+            size="sm"
+            icon={UploadCloud}
+            onClick={() => setIsImportModalOpen(true)}
+          >
+            Import CSV
+          </Button>
+
+          <Button
+            variant="secondary"
+            size="sm"
+            icon={Zap}
+            onClick={() => setIsRazorpayModalOpen(true)}
+          >
+            Razorpay Webhook
+          </Button>
+
+          <Button
+            variant="outline"
+            size="sm"
+            icon={RefreshCw}
+            isLoading={isLoading}
+            onClick={fetchRisks}
+          >
+            Refresh Console
+          </Button>
+        </div>
       </div>
 
       {/* Filters Bar */}
@@ -254,6 +278,24 @@ export const RisksPage: React.FC<RisksPageProps> = ({ onSelectRisk }) => {
           </div>
         )}
       </div>
+
+      {/* Import Transactions CSV Modal */}
+      <ImportCsvModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+        onSuccess={() => {
+          fetchRisks();
+        }}
+      />
+
+      {/* Razorpay Webhook Modal */}
+      <RazorpayWebhookModal
+        isOpen={isRazorpayModalOpen}
+        onClose={() => setIsRazorpayModalOpen(false)}
+        onSuccess={() => {
+          fetchRisks();
+        }}
+      />
     </div>
   );
 };
