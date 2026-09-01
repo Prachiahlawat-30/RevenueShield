@@ -23,6 +23,7 @@ import { RevenueRisk, AIDiagnosisResult, RecoveryStepResponse } from '../types';
 import { WorkflowStepper, WorkflowStage } from '../components/workflow/WorkflowStepper';
 import { AIDiagnosisCard } from '../components/workflow/AIDiagnosisCard';
 import { PolicyCheckCard } from '../components/workflow/PolicyCheckCard';
+import { SmartRetrySchedulerCard } from '../components/workflow/SmartRetrySchedulerCard';
 import { StatusBadge } from '../components/ui/StatusBadge';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -414,6 +415,12 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({ initialRiskId, riskI
               evaluation={latestStepResponse?.policy_evaluation}
             />
           </div>
+
+          {/* Feature 8: Intelligent Retry Timing (Smart Retry Scheduler) */}
+          <SmartRetrySchedulerCard
+            riskId={currentRisk.id}
+            onScheduledConfirmed={() => loadRiskDetail(currentRisk.id)}
+          />
 
           {/* Execution Outcome & Attempts History Table */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
