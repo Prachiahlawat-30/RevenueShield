@@ -2,6 +2,7 @@ import React from 'react';
 import { Brain, Sparkles, Clock, MessageSquareQuote, ShieldAlert } from 'lucide-react';
 import { AIDiagnosisResult } from '../../types';
 import { getActionLabel, getFailureTypeLabel } from '../../utils/formatters';
+import { WhyThisActionButton } from '../ui/WhyThisActionButton';
 
 interface AIDiagnosisCardProps {
   diagnosis?: AIDiagnosisResult;
@@ -38,31 +39,45 @@ export const AIDiagnosisCard: React.FC<AIDiagnosisCardProps> = ({ diagnosis, isL
       <div>
         {/* Header */}
         <div className="flex items-center justify-between border-b border-purple-200/70 dark:border-purple-900/40 pb-3">
-          <div className="flex items-center gap-2">
-            <span className="text-xl">🤖</span>
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-300 shrink-0">
+              <Brain className="w-4 h-4" />
+            </div>
             <div>
-              <span className="text-xs font-black font-mono uppercase tracking-wider text-purple-900 dark:text-purple-300 block">
-                AI RECOMMENDATION
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white block">
+                AI DIAGNOSIS & RECOMMENDATION
               </span>
-              <span className="text-[10px] font-mono text-purple-700 dark:text-purple-400">
-                Probabilistic Yield Modeling
-              </span>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 font-normal leading-tight mt-0.5">
+                AI analyzes failure context and proposes the most appropriate recovery strategy.
+              </p>
             </div>
           </div>
-          <div className="flex items-center gap-1.5 rounded-full border border-purple-500/30 bg-purple-500/15 px-3 py-1 text-xs font-mono font-bold text-purple-700 dark:text-purple-300 shadow-xs">
-            <Sparkles className="h-3 w-3 text-purple-500" />
+          <div className="flex items-center gap-1.5 rounded-full border border-indigo-200/80 dark:border-indigo-800/50 bg-indigo-50 dark:bg-indigo-950/40 px-2.5 py-0.5 text-xs font-semibold text-indigo-700 dark:text-indigo-300 shadow-xs">
+            <Sparkles className="h-3 w-3 text-indigo-500" />
             <span>Confidence: {confidencePct}%</span>
           </div>
         </div>
 
-        {/* Proposed Strategy / Action */}
-        <div className="mt-4 p-3.5 rounded-lg border border-purple-200/70 dark:border-purple-800/40 bg-white/80 dark:bg-purple-950/20 space-y-1">
-          <span className="text-[10px] font-mono uppercase tracking-wider text-purple-700 dark:text-purple-400 font-bold block">
-            Recommended Action
-          </span>
-          <p className="text-sm font-black text-purple-900 dark:text-white font-mono">
-            {getActionLabel(diagnosis.recommended_action)}
-          </p>
+        {/* Proposed Strategy / Action with Why this action button */}
+        <div className="mt-4 p-3.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-white/80 dark:bg-slate-900/60 flex items-center justify-between gap-3">
+          <div>
+            <span className="text-[10px] font-mono uppercase tracking-wider text-indigo-600 dark:text-indigo-400 font-bold block">
+              Recommended Action
+            </span>
+            <p className="text-sm font-bold text-slate-900 dark:text-white">
+              {getActionLabel(diagnosis.recommended_action)}
+            </p>
+          </div>
+
+          <WhyThisActionButton
+            actionName={getActionLabel(diagnosis.recommended_action)}
+            confidenceScore={confidencePct}
+            reasons={[
+              diagnosis.root_cause_summary || 'Temporary decline detected.',
+              'Previous attempt was more than 12 hours ago.',
+              'Retry limit has not been reached.',
+            ]}
+          />
         </div>
 
         {/* Root Cause Reason */}

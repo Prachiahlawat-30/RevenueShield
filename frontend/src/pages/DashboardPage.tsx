@@ -127,7 +127,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           delta={metrics?.active_cases || 0}
           deltaType="negative"
           deltaLabel="active failure cases"
-          tooltip="Total monetary volume of identified payment failures requiring automated intervention."
+          tooltip="Money associated with failed or potentially recoverable transactions."
         />
 
         {/* Recovered Revenue - Prominent Success #16A34A */}

@@ -15,6 +15,7 @@ import { AIDiagnosisResult, PolicyEvaluationResult } from '../../types';
 import { getActionLabel } from '../../utils/formatters';
 import { executeRecoveryStep, runBatchRecovery } from '../../api/recovery';
 import { NavTab } from '../layout/Sidebar';
+import { WhyThisActionButton } from '../ui/WhyThisActionButton';
 
 interface AIVsPolicyComparisonCardProps {
   diagnosis?: AIDiagnosisResult | null;
@@ -128,33 +129,45 @@ export const AIVsPolicyComparisonCard: React.FC<AIVsPolicyComparisonCardProps> =
             {/* Header */}
             <div className="flex items-center justify-between pb-3 border-b border-indigo-100 dark:border-indigo-900/30">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-300">
+                <div className="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-300 shrink-0">
                   <Brain className="w-4 h-4" />
                 </div>
                 <div>
                   <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-950 dark:text-indigo-200">
                     AI RECOMMENDATION
                   </h4>
-                  <span className="text-[11px] text-indigo-600 dark:text-indigo-400 font-medium">
-                    Probabilistic Yield Prediction
-                  </span>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 font-normal leading-tight mt-0.5">
+                    AI analyzes failure context and proposes the most appropriate recovery strategy.
+                  </p>
                 </div>
               </div>
 
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-100/80 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-100/80 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300 shrink-0">
                 <Sparkles className="w-3 h-3 text-indigo-500" />
-                Confidence: {confidencePct}%
+                {confidencePct}%
               </span>
             </div>
 
-            {/* Proposed Strategy / Action */}
-            <div className="space-y-1 p-3.5 rounded-lg bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800">
-              <span className="text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
-                Proposed Action
-              </span>
-              <p className="text-sm font-bold text-slate-900 dark:text-white">
-                {aiAction}
-              </p>
+            {/* Proposed Strategy / Action with Why This Action Button */}
+            <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-lg bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800">
+              <div>
+                <span className="text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
+                  Proposed Action
+                </span>
+                <p className="text-sm font-bold text-slate-900 dark:text-white">
+                  {aiAction}
+                </p>
+              </div>
+
+              <WhyThisActionButton
+                actionName={aiAction}
+                confidenceScore={confidencePct}
+                reasons={[
+                  reasonText || 'Temporary decline detected.',
+                  'Previous attempt was more than 12 hours ago.',
+                  'Retry limit has not been reached.',
+                ]}
+              />
             </div>
 
             {/* Reason */}
@@ -183,16 +196,16 @@ export const AIVsPolicyComparisonCard: React.FC<AIVsPolicyComparisonCardProps> =
             {/* Header */}
             <div className="flex items-center justify-between pb-3 border-b border-emerald-100 dark:border-emerald-900/30">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center text-emerald-600 dark:text-emerald-300">
+                <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center text-emerald-600 dark:text-emerald-300 shrink-0">
                   <ShieldCheck className="w-4 h-4" />
                 </div>
                 <div>
                   <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-950 dark:text-emerald-200">
                     POLICY ENGINE
                   </h4>
-                  <span className="text-[11px] text-emerald-700 dark:text-emerald-400 font-medium">
-                    Deterministic Compliance Gatekeeper
-                  </span>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 font-normal leading-tight mt-0.5">
+                    Deterministic rules validate every AI proposal before execution.
+                  </p>
                 </div>
               </div>
 

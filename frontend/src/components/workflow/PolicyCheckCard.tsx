@@ -70,14 +70,16 @@ export const PolicyCheckCard: React.FC<PolicyCheckCardProps> = ({
         {/* Header with Professional Policy Indicator Badge */}
         <div className="flex items-center justify-between border-b border-emerald-200/70 dark:border-emerald-900/40 pb-3">
           <div className="flex items-center gap-2.5">
-            <span className="text-xl">🛡</span>
+            <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center text-emerald-600 dark:text-emerald-300 shrink-0">
+              <ShieldCheck className="w-4 h-4" />
+            </div>
             <div>
-              <span className="text-xs font-black font-mono uppercase tracking-wider text-emerald-900 dark:text-emerald-300 block">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white block">
                 POLICY ENGINE
               </span>
-              <span className="text-[10px] font-mono text-emerald-700 dark:text-emerald-400">
-                Deterministic Financial Gatekeeper
-              </span>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 font-normal leading-tight mt-0.5">
+                Deterministic rules validate every AI proposal before execution.
+              </p>
             </div>
           </div>
 

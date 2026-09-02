@@ -71,7 +71,7 @@ export const RisksPage: React.FC<RisksPageProps> = ({ onSelectRisk }) => {
             Revenue at Risk
           </h1>
           <p className="mt-1 text-xs text-[#6B7280]">
-            Monitor detected payment failures, review automated root-cause diagnoses, and trigger high-yield recovery playbooks ({total} active cases).
+            Money associated with failed or potentially recoverable transactions ({total} active cases).
           </p>
         </div>
 

@@ -224,7 +224,7 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
             Recovery Workflow & Decisioning
           </h1>
           <p className="mt-1 text-xs text-fintech-secondary">
-            Optimize authorization before execution, verify deterministic safety bounds, and trace the causal decision path.
+            Recovery Engine: Executes only approved actions and records the result across payment gateways.
           </p>
         </div>
 
