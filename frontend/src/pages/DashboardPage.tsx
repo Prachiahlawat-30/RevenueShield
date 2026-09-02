@@ -23,19 +23,23 @@ import { FailureBreakdownChart } from '../components/charts/FailureBreakdownChar
 import { ConversionFunnelChart } from '../components/charts/ConversionFunnelChart';
 import { RevenueProtectionScoreCard } from '../components/dashboard/RevenueProtectionScoreCard';
 import { ExecutiveMoneyStoryBanner } from '../components/dashboard/ExecutiveMoneyStoryBanner';
+import { MainWorkflowVisualizer } from '../components/workflow/MainWorkflowVisualizer';
 import { formatCurrency, formatDate, getFailureTypeLabel } from '../utils/formatters';
+import { NavTab } from '../components/layout/Sidebar';
 
 interface DashboardPageProps {
   onNavigateToRisk?: (riskId: string) => void;
   onNavigateToWorkflow?: (riskId: string) => void;
   onOpenBatchRunner?: () => void;
   onNavigateToRecommendations?: () => void;
+  onNavigateToTab?: (tab: NavTab) => void;
 }
 
 export const DashboardPage: React.FC<DashboardPageProps> = ({
   onNavigateToRisk,
   onNavigateToWorkflow,
   onNavigateToRecommendations,
+  onNavigateToTab,
 }) => {
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [charts, setCharts] = useState<DashboardChartsData | null>(null);
@@ -90,7 +94,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
       {/* 1. Executive Money Story Command Banner */}
       <ExecutiveMoneyStoryBanner onNavigateToRecommendations={onNavigateToRecommendations} />
 
-      {/* 2. Top Metric Cards - Styled exactly per prompt specifications */}
+      {/* 2. Primary 7-Step Recovery Workflow Visualizer (10-Second Judge Understanding) */}
+      <MainWorkflowVisualizer onNavigateToTab={onNavigateToTab} />
+
+      {/* 3. Top Metric Cards - Styled exactly per prompt specifications */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* Revenue at Risk - Prominent Danger/Warning */}
         <MetricCard

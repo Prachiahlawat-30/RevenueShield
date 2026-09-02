@@ -11,10 +11,17 @@ import {
 } from 'lucide-react';
 
 export type WorkflowStage =
+  | 'PAYMENT_FAILURE'
+  | 'REVENUE_AT_RISK'
+  | 'AI_DIAGNOSIS'
+  | 'ACTION_PROPOSAL'
+  | 'POLICY_CHECK'
+  | 'RECOVERY'
+  | 'MONEY_RECOVERED'
+  // Legacy aliases for backward compatibility
   | 'DETECTED'
   | 'DIAGNOSING'
   | 'ACTION_SELECTED'
-  | 'POLICY_CHECK'
   | 'EXECUTING'
   | 'OUTCOME';
 
@@ -25,21 +32,22 @@ interface WorkflowStepperProps {
 
 export const WorkflowStepper: React.FC<WorkflowStepperProps> = ({ currentStage, status }) => {
   const stages = [
-    { id: 'DETECTED', label: 'DETECTED', subtext: 'Failure Ingested', icon: AlertCircle },
-    { id: 'DIAGNOSING', label: 'DIAGNOSING', subtext: 'Root-Cause Analysis', icon: Brain },
-    { id: 'ACTION_SELECTED', label: 'ACTION SELECTED', subtext: 'Optimal Strategy', icon: Sparkles },
+    { id: 'PAYMENT_FAILURE', label: 'PAYMENT FAILURE', subtext: 'Failure Ingested', icon: AlertTriangle },
+    { id: 'REVENUE_AT_RISK', label: 'REVENUE AT RISK', subtext: 'Isolated in Pool', icon: AlertCircle },
+    { id: 'AI_DIAGNOSIS', label: 'AI DIAGNOSIS', subtext: 'Root Cause Scored', icon: Brain },
+    { id: 'ACTION_PROPOSAL', label: 'ACTION PROPOSAL', subtext: 'Optimal Strategy', icon: Sparkles },
     { id: 'POLICY_CHECK', label: 'POLICY CHECK', subtext: 'Guardrails Evaluated', icon: ShieldCheck },
-    { id: 'EXECUTING', label: 'EXECUTED', subtext: 'Gateway Routing', icon: Zap },
+    { id: 'RECOVERY', label: 'RECOVERY', subtext: 'Gateway Routing', icon: Zap },
     {
-      id: 'OUTCOME',
+      id: 'MONEY_RECOVERED',
       label:
         status === 'recovered'
-          ? 'RECOVERED'
+          ? 'MONEY RECOVERED'
           : status === 'escalated'
           ? 'ESCALATED'
           : status === 'stopped'
           ? 'STOPPED'
-          : 'SETTLED',
+          : 'MONEY RECOVERED',
       subtext:
         status === 'recovered'
           ? 'Funds Captured'
@@ -57,8 +65,23 @@ export const WorkflowStepper: React.FC<WorkflowStepperProps> = ({ currentStage, 
     },
   ];
 
-  const stageOrder = ['DETECTED', 'DIAGNOSING', 'ACTION_SELECTED', 'POLICY_CHECK', 'EXECUTING', 'OUTCOME'];
-  const currentIndex = stageOrder.indexOf(currentStage);
+  // Map aliases to canonical 7 indices
+  const stageToIndex: Record<string, number> = {
+    PAYMENT_FAILURE: 0,
+    DETECTED: 1,
+    REVENUE_AT_RISK: 1,
+    DIAGNOSING: 2,
+    AI_DIAGNOSIS: 2,
+    ACTION_SELECTED: 3,
+    ACTION_PROPOSAL: 3,
+    POLICY_CHECK: 4,
+    EXECUTING: 5,
+    RECOVERY: 5,
+    OUTCOME: 6,
+    MONEY_RECOVERED: 6,
+  };
+
+  const currentIndex = stageToIndex[currentStage] !== undefined ? stageToIndex[currentStage] : 1;
 
   return (
     <div className="w-full rounded-[14px] border border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">

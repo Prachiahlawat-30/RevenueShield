@@ -118,8 +118,10 @@ const AppContent: React.FC = () => {
           )}
           {currentTab === 'dashboard' && (
             <DashboardPage
+              onNavigateToRisk={handleNavigateToRisk}
               onNavigateToWorkflow={handleNavigateToRisk}
               onNavigateToRecommendations={() => setCurrentTab('recommendations')}
+              onNavigateToTab={(t) => setCurrentTab(t as NavTab)}
             />
           )}
           {currentTab === 'predictive' && <PredictiveRiskPage />}
@@ -137,6 +139,7 @@ const AppContent: React.FC = () => {
             <WorkflowPage
               riskId={activeWorkflowRiskId}
               onBack={() => setCurrentTab('risks')}
+              onNavigateToTab={(t) => setCurrentTab(t as NavTab)}
             />
           )}
           {currentTab === 'approval-queue' && <ApprovalQueuePage />}
