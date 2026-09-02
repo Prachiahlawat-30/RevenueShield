@@ -312,6 +312,8 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
           diagnosis={latestDiagnosis}
           policyEvaluation={latestStepResponse?.policy_evaluation}
           executionResult={latestStepResponse?.execution_result}
+          onExecuteStep={handleExecuteStep}
+          isExecuting={isExecutingStep}
         />
       )}
 
@@ -447,6 +449,8 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
 
                 <PolicyCheckCard
                   evaluation={latestStepResponse?.policy_evaluation}
+                  onExecute={handleExecuteStep}
+                  isExecuting={isExecutingStep}
                 />
               </div>
 
@@ -465,6 +469,8 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
                 diagnosis={latestDiagnosis}
                 policyEvaluation={latestStepResponse?.policy_evaluation}
                 executionResult={latestStepResponse?.execution_result}
+                onExecuteStep={handleExecuteStep}
+                isExecuting={isExecutingStep}
               />
             </div>
           </div>

@@ -141,45 +141,41 @@ export const PolicyCheckCard: React.FC<PolicyCheckCardProps> = ({
           </div>
         </div>
 
-        {/* Action Approved Stamp Banner - Clickable */}
+        {/* Action Approved Stamp Banner - Primary Clickable Recovery Trigger */}
         <button
           type="button"
-          onClick={onExecute}
+          onClick={() => {
+            if (onExecute) onExecute();
+          }}
           disabled={!isApproved || isExecuting}
-          className={`w-full mt-4 p-3 rounded-lg text-white font-mono font-bold text-center text-xs tracking-wider uppercase shadow-sm border flex items-center justify-center gap-2 transition-all ${
-            isApproved
-              ? 'bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] border-emerald-500 cursor-pointer group'
+          className={`w-full mt-4 p-3.5 rounded-lg text-white font-mono font-bold text-center text-xs tracking-wider uppercase shadow-sm border flex items-center justify-center gap-2 transition-all ${
+            isExecuting
+              ? 'bg-emerald-700 border-emerald-600 cursor-wait opacity-90'
+              : isApproved
+              ? 'bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] border-emerald-500 cursor-pointer group shadow-emerald-600/20'
               : 'bg-slate-400 border-slate-400 cursor-not-allowed'
           }`}
         >
-          <CheckCircle2 className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
-          <span>
-            {isExecuting
-              ? 'EXECUTING RECOVERY...'
-              : isApproved
-              ? 'ACTION APPROVED • CLICK TO EXECUTE RECOVERY'
-              : 'ACTION BLOCKED'}
-          </span>
-          {isApproved && !isExecuting && (
-            <ArrowRight className="w-3.5 h-3.5 text-white/80 group-hover:translate-x-0.5 transition-transform" />
+          {isExecuting ? (
+            <>
+              <span className="inline-block animate-spin">⟳</span>
+              <span>EXECUTING RECOVERY ACTION...</span>
+            </>
+          ) : (
+            <>
+              <CheckCircle2 className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
+              <span>
+                {isApproved
+                  ? 'ACTION APPROVED • CLICK TO EXECUTE RECOVERY'
+                  : 'ACTION BLOCKED'}
+              </span>
+              {isApproved && (
+                <ArrowRight className="w-3.5 h-3.5 text-white/80 group-hover:translate-x-1 transition-transform" />
+              )}
+            </>
           )}
         </button>
       </div>
-
-      {/* Primary Action Button */}
-      {onExecute && (
-        <div className="pt-2 border-t border-[#E5E7EB] dark:border-[#242E42]">
-          <Button
-            variant="primary"
-            className="w-full py-2.5 text-xs font-bold"
-            disabled={!isApproved || isExecuting}
-            isLoading={isExecuting}
-            onClick={onExecute}
-          >
-            Execute Recovery
-          </Button>
-        </div>
-      )}
     </div>
   );
 };
