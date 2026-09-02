@@ -11,6 +11,7 @@ import {
   History,
   Network,
   Zap,
+  Layers,
 } from 'lucide-react';
 import { getRevenueRisks, getRevenueRiskDetail } from '../api/risks';
 import {
@@ -23,6 +24,7 @@ import { RevenueRisk, AIDiagnosisResult, RecoveryStepResponse } from '../types';
 import { WorkflowStepper, WorkflowStage } from '../components/workflow/WorkflowStepper';
 import { AIDiagnosisCard } from '../components/workflow/AIDiagnosisCard';
 import { PolicyCheckCard } from '../components/workflow/PolicyCheckCard';
+import { TransactionStateTimeline } from '../components/workflow/TransactionStateTimeline';
 import { SmartRetrySchedulerCard } from '../components/workflow/SmartRetrySchedulerCard';
 import { StatusBadge } from '../components/ui/StatusBadge';
 import { Button } from '../components/ui/Button';
@@ -58,7 +60,7 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
 }) => {
   const [allRisks, setAllRisks] = useState<RevenueRisk[]>([]);
   const [selectedRiskId, setSelectedRiskId] = useState<string | null>(riskId || initialRiskId || null);
-  const [activeView, setActiveView] = useState<'graph' | 'stepper' | 'preauth'>('graph');
+  const [activeView, setActiveView] = useState<'graph' | 'stepper' | 'preauth' | 'timeline'>('graph');
   const [currentRisk, setCurrentRisk] = useState<RevenueRisk | null>(null);
   const [currentStage, setCurrentStage] = useState<WorkflowStage>('DETECTED');
   const [latestDiagnosis, setLatestDiagnosis] = useState<AIDiagnosisResult | undefined>(undefined);
@@ -288,7 +290,30 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
           <Play className="w-4 h-4" />
           <span>Interactive Stepper & Simulation</span>
         </button>
+
+        <button
+          onClick={() => setActiveView('timeline')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-fintech-md text-xs font-bold transition-all ${
+            activeView === 'timeline'
+              ? 'bg-brand-500 text-white shadow-fintech-sm shadow-brand-500/20'
+              : 'bg-fintech-surface text-fintech-secondary hover:text-fintech-primary border border-fintech-border'
+          }`}
+        >
+          <Layers className="w-4 h-4" />
+          <span>Visual State Timeline</span>
+        </button>
       </div>
+
+      {/* VIEW 4: VISUAL STATE TIMELINE */}
+      {activeView === 'timeline' && (
+        <TransactionStateTimeline
+          risk={currentRisk}
+          stage={currentStage}
+          diagnosis={latestDiagnosis}
+          policyEvaluation={latestStepResponse?.policy_evaluation}
+          executionResult={latestStepResponse?.execution_result}
+        />
+      )}
 
       {/* VIEW 1: PAYMENT DECISION GRAPH */}
       {activeView === 'graph' && selectedRiskId && (
@@ -411,23 +436,38 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
             </div>
           </div>
 
-          {/* AI Reasoning vs PolicyEngine Deterministic Rules */}
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <AIDiagnosisCard
-              diagnosis={latestDiagnosis}
-              isLoading={isDiagnosing}
-            />
+          {/* AI Reasoning vs PolicyEngine Deterministic Rules & Visual State Timeline */}
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+            <div className="lg:col-span-8 space-y-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <AIDiagnosisCard
+                  diagnosis={latestDiagnosis}
+                  isLoading={isDiagnosing}
+                />
 
-            <PolicyCheckCard
-              evaluation={latestStepResponse?.policy_evaluation}
-            />
+                <PolicyCheckCard
+                  evaluation={latestStepResponse?.policy_evaluation}
+                />
+              </div>
+
+              {/* Feature 8: Intelligent Retry Timing (Smart Retry Scheduler) */}
+              <SmartRetrySchedulerCard
+                riskId={currentRisk.id}
+                onScheduledConfirmed={() => loadRiskDetail(currentRisk.id)}
+              />
+            </div>
+
+            {/* Visual State Timeline Column */}
+            <div className="lg:col-span-4">
+              <TransactionStateTimeline
+                risk={currentRisk}
+                stage={currentStage}
+                diagnosis={latestDiagnosis}
+                policyEvaluation={latestStepResponse?.policy_evaluation}
+                executionResult={latestStepResponse?.execution_result}
+              />
+            </div>
           </div>
-
-          {/* Feature 8: Intelligent Retry Timing (Smart Retry Scheduler) */}
-          <SmartRetrySchedulerCard
-            riskId={currentRisk.id}
-            onScheduledConfirmed={() => loadRiskDetail(currentRisk.id)}
-          />
 
           {/* Execution Outcome & Attempts History Table */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
