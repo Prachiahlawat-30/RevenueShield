@@ -139,11 +139,29 @@ export const PolicyCheckCard: React.FC<PolicyCheckCardProps> = ({
           </div>
         </div>
 
-        {/* Action Approved Stamp Banner */}
-        <div className="mt-4 p-2.5 rounded-lg bg-emerald-600 text-white font-mono font-black text-center text-xs tracking-widest uppercase shadow-sm border border-emerald-500 flex items-center justify-center gap-2 animate-pulse">
-          <CheckCircle2 className="w-4 h-4 text-white" />
-          <span>{isApproved ? 'ACTION APPROVED' : 'ACTION BLOCKED'}</span>
-        </div>
+        {/* Action Approved Stamp Banner - Clickable */}
+        <button
+          type="button"
+          onClick={onExecute}
+          disabled={!isApproved || isExecuting}
+          className={`w-full mt-4 p-3 rounded-lg text-white font-mono font-bold text-center text-xs tracking-wider uppercase shadow-sm border flex items-center justify-center gap-2 transition-all ${
+            isApproved
+              ? 'bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] border-emerald-500 cursor-pointer group'
+              : 'bg-slate-400 border-slate-400 cursor-not-allowed'
+          }`}
+        >
+          <CheckCircle2 className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
+          <span>
+            {isExecuting
+              ? 'EXECUTING RECOVERY...'
+              : isApproved
+              ? 'ACTION APPROVED • CLICK TO EXECUTE RECOVERY'
+              : 'ACTION BLOCKED'}
+          </span>
+          {isApproved && !isExecuting && (
+            <ArrowRight className="w-3.5 h-3.5 text-white/80 group-hover:translate-x-0.5 transition-transform" />
+          )}
+        </button>
       </div>
 
       {/* Primary Action Button */}

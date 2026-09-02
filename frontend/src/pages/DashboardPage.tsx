@@ -109,8 +109,12 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
       {/* 3. Primary 7-Step Recovery Workflow Visualizer (10-Second Judge Understanding) */}
       <MainWorkflowVisualizer onNavigateToTab={onNavigateToTab} />
 
-      {/* 4. Architecture Spotlight: 🤖 AI RECOMMENDATION vs 🛡 POLICY ENGINE */}
-      <AIVsPolicyComparisonCard />
+      {/* 4. Architecture Spotlight: AI RECOMMENDATION vs POLICY ENGINE */}
+      <AIVsPolicyComparisonCard
+        activeRiskId={recentRisks[0]?.id}
+        onNavigateToWorkflow={onNavigateToWorkflow}
+        onNavigateToTab={onNavigateToTab}
+      />
 
       {/* 5. Top Metric Cards - Styled exactly per prompt specifications */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
