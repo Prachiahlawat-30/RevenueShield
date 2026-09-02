@@ -44,9 +44,10 @@ export const OperatorCopilotDrawer: React.FC<OperatorCopilotDrawerProps> = ({
   };
 
   const samplePrompts = [
-    'Why did Stripe decline surge in the last 2 hours?',
-    'What is our projected recovery for the next 7 days?',
-    'Show top 3 high-priority accounts at risk of churn',
+    'Why did recovery rate fall today?',
+    'What should we do?',
+    'Simulate it.',
+    'Which gateway is experiencing elevated timeouts?',
   ];
 
   return (
@@ -68,12 +69,22 @@ export const OperatorCopilotDrawer: React.FC<OperatorCopilotDrawerProps> = ({
               </span>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-fintech-sm text-fintech-muted hover:text-fintech-primary hover:bg-fintech-surface transition"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            {history.length > 0 && (
+              <button
+                onClick={() => setHistory([])}
+                className="text-[10px] font-mono text-fintech-muted hover:text-fintech-primary px-2 py-1 rounded border border-fintech-border transition"
+              >
+                Clear
+              </button>
+            )}
+            <button
+              onClick={onClose}
+              className="p-1.5 rounded-fintech-sm text-fintech-muted hover:text-fintech-primary hover:bg-fintech-surface transition"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Conversation Stream */}
@@ -90,13 +101,13 @@ export const OperatorCopilotDrawer: React.FC<OperatorCopilotDrawerProps> = ({
 
               <div className="pt-4 space-y-2 text-left max-w-sm mx-auto">
                 <span className="text-[10px] font-bold text-fintech-muted uppercase block font-mono">
-                  Sample Prompts
+                  Sample Prompts (Click to Run)
                 </span>
                 {samplePrompts.map((p, i) => (
                   <button
                     key={i}
                     onClick={() => handleSend(p)}
-                    className="w-full text-left p-2.5 rounded-fintech-md bg-fintech-surface-subtle hover:bg-slate-200 dark:hover:bg-slate-800 text-xs text-fintech-secondary border border-fintech-border transition"
+                    className="w-full text-left p-2.5 rounded-fintech-md bg-fintech-surface-subtle hover:bg-brand-500/10 hover:border-brand-500/30 text-xs text-fintech-primary border border-fintech-border transition font-medium"
                   >
                     "{p}"
                   </button>
@@ -141,6 +152,27 @@ export const OperatorCopilotDrawer: React.FC<OperatorCopilotDrawerProps> = ({
                         </li>
                       ))}
                     </ul>
+                  </div>
+                )}
+
+                {/* Suggested Follow-ups */}
+                {item.res.suggested_follow_ups && item.res.suggested_follow_ups.length > 0 && (
+                  <div className="space-y-1.5 pt-2 border-t border-fintech-border">
+                    <span className="text-[10px] font-bold text-fintech-muted uppercase block font-mono">
+                      Suggested Next Steps
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {item.res.suggested_follow_ups.map((followUp, fIdx) => (
+                        <button
+                          key={fIdx}
+                          type="button"
+                          onClick={() => handleSend(followUp)}
+                          className="px-2.5 py-1 text-[11px] rounded-fintech-sm bg-brand-500/10 hover:bg-brand-500/20 text-brand-700 dark:text-brand-300 border border-brand-500/30 transition text-left font-semibold"
+                        >
+                          {followUp} →
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
