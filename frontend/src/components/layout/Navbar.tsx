@@ -60,6 +60,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     'reports-leaderboard': { title: 'Reports & Leaderboard', subtitle: 'Financial reconciliation reports and operational benchmarks' },
     'demo-lab': { title: 'Demo Lab & Scenarios', subtitle: 'Synthetic failure scenario injectors and sandbox environment' },
     'specialized-use-cases': { title: 'Specialized Recovery Hub', subtitle: 'B2B receivables, UPI Autopay sequencer, and Hinglish Studio' },
+    'global-intelligence': { title: 'Global Payment Intelligence', subtitle: 'Global payment flow, regional failure patterns, and cross-border recovery yield' },
   };
 
   const currentMeta = pageMetaMap[currentTab] || { title: 'Payment Operations', subtitle: 'Autonomous revenue protection console' };

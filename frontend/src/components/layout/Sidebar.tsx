@@ -26,6 +26,7 @@ import {
   ChevronDown,
   ChevronRight,
   CircleDot,
+  Globe2,
 } from 'lucide-react';
 import { Tooltip } from '../ui/Tooltip';
 
@@ -52,7 +53,8 @@ export type NavTab =
   | 'system-health'
   | 'reports-leaderboard'
   | 'demo-lab'
-  | 'specialized-use-cases';
+  | 'specialized-use-cases'
+  | 'global-intelligence';
 
 interface SidebarProps {
   currentTab: NavTab;
@@ -85,6 +87,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       title: 'INTELLIGENCE & OPERATIONS',
       items: [
+        { id: 'global-intelligence' as NavTab, label: 'Global Payment Intelligence', icon: Globe2, badge: 'Global' },
         { id: 'control-center' as NavTab, label: 'Recovery Control Center', icon: Activity, badge: 'Ops' },
         { id: 'intelligence' as NavTab, label: 'Recovery Intelligence', icon: TrendingUp },
         { id: 'specialized-use-cases' as NavTab, label: 'Specialized Recovery Hub', icon: Briefcase, badge: 'B2B/UPI' },

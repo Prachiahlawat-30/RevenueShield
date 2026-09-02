@@ -37,6 +37,7 @@ from app.api.hackathon_usecases import router as hackathon_usecases_router
 from app.api.webhooks import router as webhooks_router
 from app.api.transactions import router as transactions_router
 from app.api.smart_scheduler import router as smart_scheduler_router
+from app.api.global_intelligence import router as global_intelligence_router
 
 
 def create_application() -> FastAPI:
@@ -103,6 +104,7 @@ def create_application() -> FastAPI:
     app.include_router(webhooks_router, prefix=settings.API_V1_STR)
     app.include_router(transactions_router, prefix=settings.API_V1_STR)
     app.include_router(smart_scheduler_router, prefix=settings.API_V1_STR)
+    app.include_router(global_intelligence_router, prefix=settings.API_V1_STR)
 
     @app.on_event("startup")
     def on_startup():

@@ -26,6 +26,7 @@ import { SystemHealthPage } from './pages/SystemHealthPage';
 import { DemoLabPage } from './pages/DemoLabPage';
 import { PolicyOptimizerPage } from './pages/PolicyOptimizerPage';
 import { SpecializedUseCasesPage } from './pages/SpecializedUseCasesPage';
+import { GlobalPaymentIntelligencePage } from './pages/GlobalPaymentIntelligencePage';
 import { BatchRunnerModal } from './components/workflow/BatchRunnerModal';
 import { OperatorCopilotDrawer } from './components/copilot/OperatorCopilotDrawer';
 import { seedDemoDatabase } from './api/simulation';
@@ -151,6 +152,9 @@ const AppContent: React.FC = () => {
             <DemoLabPage onNavigateToTab={(t) => setCurrentTab(t as NavTab)} />
           )}
           {currentTab === 'specialized-use-cases' && <SpecializedUseCasesPage />}
+          {currentTab === 'global-intelligence' && (
+            <GlobalPaymentIntelligencePage onSelectTab={(t) => setCurrentTab(t as NavTab)} />
+          )}
         </main>
       </div>
 

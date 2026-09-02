@@ -17,6 +17,7 @@ import {
   Moon,
   Sun,
   X,
+  Globe2,
 } from 'lucide-react';
 import { NavTab } from '../layout/Sidebar';
 import { useTheme } from '../../context/ThemeContext';
@@ -50,6 +51,17 @@ export const CommandSearchModal: React.FC<CommandSearchModalProps> = ({
 
   const commands: CommandItem[] = [
     // Navigation
+    {
+      id: 'global-intelligence',
+      label: 'Global Payment Intelligence & Regional Performance',
+      category: 'Pages',
+      icon: Globe2,
+      shortcut: 'G G',
+      action: () => {
+        onSelectTab('global-intelligence');
+        onClose();
+      },
+    },
     {
       id: 'dashboard',
       label: 'Executive Dashboard & Money Story',
