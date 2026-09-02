@@ -1,9 +1,8 @@
 # ⚡ RecoverAI — Autonomous Revenue Recovery & Payment Intelligence
 
-> **Find revenue that’s slipping away and win it back.**  
-> An autonomous, policy-bounded revenue recovery intelligence platform that detects payment degradations, diagnoses root causes, determines optimal interventions, and executes bounded recovery workflows across checkouts, recurring mandates, and B2B receivables.
+> **Autonomous, policy-bounded revenue recovery intelligence that detects payment degradations, diagnoses root causes, determines optimal interventions, and recovers lost revenue across checkouts, recurring mandates, and B2B receivables.**
 
-[![CI / Test Suite](https://img.shields.io/badge/pytest-96%20passed-emerald.svg)](backend/tests/)
+[![CI / Test Suite](https://img.shields.io/badge/pytest-109%20passed-emerald.svg)](backend/tests/)
 [![Frontend Build](https://img.shields.io/badge/vite-passing-blue.svg)](frontend/)
 [![TypeScript](https://img.shields.io/badge/typescript-strict%205.0-blue.svg)](frontend/tsconfig.json)
 [![Python Version](https://img.shields.io/badge/python-3.10%20%7C%203.11-yellow.svg)](backend/requirements.txt)
@@ -12,128 +11,218 @@
 
 ---
 
+## 🌐 Live Production Deployments
+
+| Service | Environment | URL |
+| :--- | :--- | :--- |
+| **Frontend Web App** | Vercel Production | [**https://recover-ai-nu.vercel.app**](https://recover-ai-nu.vercel.app) |
+| **Backend REST API** | Render Production | [**https://recover-ai-1-jwzz.onrender.com**](https://recover-ai-1-jwzz.onrender.com) |
+| **Interactive API Docs** | Swagger / OpenAPI | [**https://recover-ai-1-jwzz.onrender.com/docs**](https://recover-ai-1-jwzz.onrender.com/docs) |
+
+---
+
 ## 🏛️ Executive Summary & The Problem
 
-Over **$440B+** is lost globally every year to false declines, unoptimized retry timing, mandate clearing bounces, and overdue invoices. 
-- **Traditional Payment Processors** rely on *dumb retry loops* that blindly spam networks, triggering severe bank penalties and customer friction.
-- **Unconstrained AI/LLMs** cannot be trusted with real money movements due to hallucinations, unpredictable outputs, and regulatory compliance risks.
+Over **$440B+** is lost globally each year to false payment declines, unoptimized retry timing, mandate debit bounces, network timeouts, and overdue corporate receivables. 
 
-### **The RecoverAI Solution: AI Reasoning + Deterministic Safety Guardrails**
-RecoverAI introduces a **hybrid architectural model**:
-1. **AI Proposes & Diagnoses**: Deep multi-engine telemetry classification, contextual root cause identification, optimal timing prediction, and localized dunning synthesis.
-2. **PolicyEngine Strictly Authorizes**: Deterministic safety rules that **AI can NEVER override** (e.g., hard stop after 3 attempts, high-value human approval gates, cooldown safety windows, customer opt-out guarantees).
+* **Traditional Payment Processors** rely on *dumb retry loops* that blindly re-attempt charges at fixed intervals, triggering excessive gateway penalty fees, card scheme flags, and customer friction.
+* **Unconstrained AI / LLMs** cannot be trusted with actual money movement due to stochastic hallucinations, regulatory non-compliance, and lack of deterministic bounds.
+
+### **The RecoverAI Solution: Probabilistic AI + Deterministic Safety Guardrails**
+RecoverAI completely decouples **recovery formulation** from **execution authority**:
+1. **AI Diagnosis Engine (Probabilistic)**: Analyzes issuer decline codes, customer historical liquidity timing, network telemetry, and salvage propensity to propose high-yield recovery playbooks.
+2. **Policy Engine (Deterministic)**: Enforces immutable financial safety guardrails that **AI can NEVER bypass** (e.g., hard stop after 3 attempts, mandatory 24h cooldown windows, customer opt-out verification, max exposure bounds).
+3. **Recovery Engine (Execution Rails)**: Executes only verified actions across payment gateways (Smart Retries, UPI Autopay sequencing, Timed Reminders, Dynamic Routing).
+
+---
+
+## 🔄 The 7-Stage Autonomous Recovery Pipeline
+
+The core operational lifecycle transforms failed payments into settled merchant revenue through a 7-stage causal flow:
 
 ```
-$$\text{Detect} \longrightarrow \text{Predict} \longrightarrow \text{Optimize} \longrightarrow \text{Experiment} \longrightarrow \text{Learn} \longrightarrow \text{Prevent} \longrightarrow \text{Recover} \longrightarrow \text{Measure}$$
+PAYMENT FAILURE
+      ↓
+REVENUE AT RISK
+      ↓
+AI DIAGNOSIS
+      ↓
+ACTION PROPOSAL
+      ↓
+POLICY CHECK
+      ↓
+RECOVERY
+      ↓
+MONEY RECOVERED
+```
+
+| Stage | Title | Architectural Definition |
+| :---: | :--- | :--- |
+| **01** | **Payment Failure** | Ingestion of declined transactions from PSP webhooks or ISO 8583 error responses. |
+| **02** | **Revenue at Risk** | *Money associated with failed or potentially recoverable transactions.* |
+| **03** | **AI Diagnosis** | *AI analyzes failure context and proposes the most appropriate recovery strategy.* |
+| **04** | **Action Proposal** | Sequencing the highest-yielding intervention (Smart Retry, Timed Reminder, Gateway Re-route). |
+| **05** | **Policy Check** | *Deterministic rules validate every AI proposal before execution.* |
+| **06** | **Recovery** | *Executes only approved actions and records the result across payment rails.* |
+| **07** | **Money Recovered** | **₹57,200+** settled into the merchant ledger with immutable audit receipts. |
+
+---
+
+## 🛡️ AI Recommendation vs. Deterministic Policy Verification
+
+RecoverAI guarantees operational safety through architectural separation of powers:
+
+```
+┌────────────────────────────────────────┐     ┌────────────────────────────────────────┐
+│ 🤖 AI RECOMMENDATION                   │     │ 🛡️ DETERMINISTIC POLICY ENGINE          │
+│ Probabilistic Yield Prediction         │     │ Immutable Compliance Gatekeeper        │
+├────────────────────────────────────────┤     ├────────────────────────────────────────┤
+│ Proposed Action: Retry Payment         │ ──> │ ✓ Customer opted in          VERIFIED  │
+│ Confidence: 91%                        │     │ ✓ Attempts < 3               VERIFIED  │
+│ Reason: Temporary issuer decline       │     │ ✓ Cooldown satisfied         VERIFIED  │
+│                                        │     │ ✓ Amount within limit        VERIFIED  │
+│ [ 💡 Why this action? ]                │     │ ✓ No duplicate action        VERIFIED  │
+└────────────────────────────────────────┘     ├────────────────────────────────────────┤
+                                               │ [ ✓ ACTION APPROVED • EXECUTE ]        │
+                                               └────────────────────────────────────────┘
+```
+
+### **The 5 Enforced Safety Guardrails**
+1. **Customer Opt-in Guaranteed**: Verifies the customer has consented to automated recurring charge recovery.
+2. **Strict Attempt Caps**: Hard limit of $< 3$ retry interventions per invoice cycle to prevent issuer card blocking.
+3. **Cooldown Window Satisfied**: Enforces intelligent decay spacing (e.g. minimum 12–24h) between retry attempts.
+4. **Transaction Exposure Cap**: Restricts autonomous debits to approved merchant exposure ceilings.
+5. **Zero Duplicate Actions**: Idempotency checks guarantee that no two recovery workflows execute concurrently on the same charge.
+
+---
+
+## ⏱️ Visual State Timeline (Deterministic Causal Progression)
+
+Every transaction in RecoverAI features a live, functional, deterministic state progression timeline:
+
+```
+✓ DETECTED
+   10:31:02  •  Decline Ingested (Temporary Liquidity)
+      ↓
+✓ DIAGNOSING
+   10:31:03  •  AI Root-Cause Inference Scored (85% Confidence)
+      ↓
+✓ ACTION SELECTED
+   Retry Payment  •  Optimal recovery playbook formulated
+      ↓
+✓ POLICY CHECK
+   Approved  •  0 violations • 5/5 guardrails verified
+      ↓
+✓ EXECUTED
+   Gateway Simulator  •  Dispatched via optimal routing rail
+      ↓
+💰 RECOVERED
+   ₹8,500  •  Settled to merchant ledger
 ```
 
 ---
 
-## 🏗️ Core Architecture & Responsible AI Contract
+## 💡 Explainable AI: "Why this action?"
 
-```
-┌────────────────────────────────────────────────────────────────────────────┐
-│                             RECOVERAI PLATFORM                             │
-├──────────────────────┬──────────────────────────────┬──────────────────────┤
-│  1. INTELLIGENCE     │  2. GOVERNANCE & POLICIES    │  3. EXECUTION RAILS  │
-├──────────────────────┼──────────────────────────────┼──────────────────────┤
-│ • 15-Node Decision   │ • Deterministic Safety Gate  │ • Batch Recovery     │
-│   Graph Visualizer   │ • Self-Learning Policy       │ • Adaptive Auth/3DS  │
-│ • Predictive Risk    │   Optimizer (Human-in-Loop)  │ • NPCI Mandate Auto  │
-│ • Heatmap & Leakage  │ • Human Approval Queue       │ • Hinglish Voice/WA  │
-│ • Unit Economics ROI │ • Immutable Cryptographic    │ • B2B Receivables    │
-│                      │   Audit Trail & Replay       │   Chaser & PTP       │
-└──────────────────────┴──────────────────────────────┴──────────────────────┘
-```
-
-### **The Invariant Safety Hierarchy**
-```
-AI / Diagnostic Engine Proposes
-               │
-               ▼
-Deterministic PolicyEngine (Authoritative Gatekeeper)
-               │
-               ▼
-RecoveryEngine (Execution Authority)
-               │
-               ▼
-Payment Rails & Gateway Simulators (UPI / Card / NACH)
-               │
-               ▼
-AuditService (Immutable Cryptographic Ledger)
-```
+RecoverAI avoids black-box decisioning. Clicking the **`Why this action?`** button launches an accessible, non-overlapping explainability modal detailing:
+* **Evaluated Strategy**: The exact playbook selected (e.g. `Retry Payment` or `Escalate to Human`).
+* **Decision Evidence**:
+  * *Temporary decline detected (issuer response code 99).*
+  * *Previous attempt was more than 12 hours ago.*
+  * *Retry limit has not been reached.*
+* **AI Confidence Score**: Real-time probabilistic yield metric (`91%`).
+* **Policy Gatekeeper Status**: Deterministic verification stamp (`Policy: Passed`).
 
 ---
 
-## 🎯 Specialized Hackathon Use Cases & Playbooks
+## 🌍 Platform Modules & Capabilities
 
-### 1. **Payment Degradation → Root Cause → Recovery Action**
-- Real-time detection of gateway degradation spikes (e.g., HDFC 504 timeouts).
-- Automatically reroutes transactions around degraded processors to healthy backup acquiring rails with zero customer drop-off.
+### 1. 🌍 Global Payment Intelligence
+* High-level command view answering: *"Where are payments succeeding, where are they failing, why are they failing, and where is RecoverAI losing or recovering the most revenue?"*
+* Slices multi-currency performance across regions (North America, Europe, APAC, Latin America), PSP gateways (Stripe, Razorpay, Adyen), and payment rails (Cards, UPI, SEPA, ACH).
+* Real-time degradation heatmaps and cross-gateway latency benchmarking.
 
-### 2. **Checkout Drop-Off & Smart 3DS Pre-Recovery**
-- Pre-empts cart abandonment during intrusive OTP/3DS challenges.
-- Requests frictionless 3DS exemptions for low-risk transactions (+5.8 pp checkout conversion lift) and caches network tokens.
+### 2. ⚠️ Payment Degradation & Incident Engine
+* System-wide anomaly detection identifying macro infrastructure outages (e.g., *Gateway A timeouts increased +340%, Gateway B unaffected*).
+* Computes real-time **Estimated Revenue at Risk** (e.g., ₹8.7L/hr).
+* Root-cause hypotheses with confidence scoring and automated fallback routing proposals.
 
-### 3. **Failed Subscription Dunning with Decay Curves**
-- Bounded retry sequence with diminishing returns decay curves.
-- Delays retries to match customer paydays, pairs retries with soft WhatsApp reminders, and stops before churn thresholds (78.4% retention yield).
+### 3. 🤖 Operator Copilot (Analytics & Policy AI)
+* Interactive conversational intelligence interface built specifically for payment operators and finance leaders.
+* Answers operational questions (*"Why did recovery rate drop today?"*, *"Which gateway has highest liquidity failure?"*).
+* Executes real-time scenario simulations (*"Simulate re-routing high-value transactions to Gateway B"* $\rightarrow$ Expected yield increases $71\% \rightarrow 79\%$).
 
-### 4. **B2B Receivables Chaser & Promise-to-Pay (PTP) Tracker**
-- Categorizes corporate receivables into aging buckets (`0-30d`, `31-60d`, `61-90d`, `90d+`).
-- Logs customer payment commitments (PTP), automatically pauses automated dunning during the grace period, and flags broken promises for human escalation.
+### 4. ⚡ Recovery Control Center & Batch Recovery
+* High-throughput operational console managing active payment failure queues.
+* Prioritizes cases by recovered dollar yield, customer LTV, and salvage probability.
+* 1-Click prioritized batch runner capable of recovering hundreds of transactions concurrently.
 
-### 5. **Mandate Retry Sequencer (UPI Autopay & eNACH)**
-- Solves month-end debit bounce spikes (up to 64% failure rate on 28th–31st).
-- Maps recurring mandate retries directly to the customer’s verified salary credit cycle (1st–5th of month) and NACH Cycle 1 windows.
-- Features real-time **"Execute Now"** instant clearing receipts with NPCI reference IDs.
+### 5. 🕸️ 15-Node Payment Decision Graph
+* Full interactive causal DAG decomposing payment ingestion, diagnostic heuristics, policy boundaries, routing choices, and terminal states.
+* Highlights the exact execution path taken for any given transaction.
 
-### 6. **Hinglish & Multilingual Conversational Recovery Studio**
-- Synthesizes empathetic, culturally localized **Hinglish Voice IVR calls** (*"Namaste Rahul ji, aapka subscription payment..."*) with live browser speech synthesis (`window.speechSynthesis`).
-- Interactive WhatsApp notification mockup with **1-Click UPI App intent** (Google Pay, PhonePe, Paytm, BHIM), Tokenized Card checkout, and 24/7 Priority Support dialing.
+### 6. 🛡️ Adaptive Authorization & Smart 3DS Pre-Recovery
+* Pre-empts cart abandonment before checkout completion.
+* Evaluates fraud propensity in real time, requests frictionless 3DS exemptions for qualified transactions (+5.8 pp conversion lift), and caches network tokens.
 
-### 7. **Measured Money Recovered Across a Batch ("The Bar")**
-- Executes prioritized batch recoveries across hundreds of transactions.
-- Computes gross recovered volume, intervention costs, and net ROI yield with cryptographic execution receipts and audit logging.
+### 7. 🧠 Self-Learning Policy Optimizer & Parameter Simulator
+* Continuously optimizes retry decay curves and timing windows from historical recovery outcomes.
+* Proposes parameter adjustments through human-in-the-loop governance approval queues.
+* Zero-mutation what-if simulator projecting macro revenue lift before committing changes.
+
+### 8. 🇮🇳 Specialized India Payment Rails Hub
+* **Mandate Retry Sequencer**: Solves month-end debit bounces (UPI Autopay & eNACH) by aligning retries with verified salary credit cycles (1st–5th of month) and NACH Cycle 1 windows.
+* **Hinglish & Multilingual Conversational Studio**: Empathetic, localized voice IVR calls (*"Namaste Rahul ji, aapka subscription payment..."*) with live browser audio synthesis (`window.speechSynthesis`).
+* **Interactive WhatsApp Intent Mockups**: 1-click UPI deep links (Google Pay, PhonePe, Paytm, BHIM) and priority support escalation.
+
+### 9. 💼 B2B Receivables Chaser & Promise-to-Pay (PTP) Tracker
+* Corporate invoice ledger aging buckets (`0–30d`, `31–60d`, `61–90d`, `90d+`).
+* Captures customer payment commitments (PTP), pauses automated dunning during grace periods, and auto-escalates broken promises.
+
+### 10. 📜 Cryptographic Audit Ledger & State Machine Replay
+* Immutable, cryptographically hashed audit trails for every decision, AI prompt, policy check, and gateway execution.
+* Step-by-step forensic state machine replay for regulatory auditing and compliance review.
 
 ---
 
-## 🖥️ Platform Modules Deep-Dive
+## 🏛️ System Architecture
 
-| Module | Route / Page | Capabilities |
-| :--- | :--- | :--- |
-| **Executive Dashboard** | `DashboardPage.tsx` | Macro money story, Revenue Protection Score ($87/100$), recovered vs unrecovered leakage. |
-| **Recovery Control Center** | `RecoveryControlCenterPage.tsx` | Real-time recovery queue, operational stream, 1-click batch runner. |
-| **Payment Decision Graph** | `WorkflowPage.tsx` | Flagship 15-node causal matrix decomposing ingestion, risk, policy bounds, and execution. |
-| **Adaptive Authorization** | `WorkflowPage.tsx` | Smart 3DS optimization, loss breakdown, and counterfactual what-if analysis. |
-| **Specialized Recovery Hub** | `SpecializedUseCasesPage.tsx` | Interactive hub for Mandates, B2B Receivables, PTP, and Hinglish Voice Studio. |
-| **Policy Optimizer** | `PolicyOptimizerPage.tsx` | Self-learning optimizer surfacing decay curves and human approval proposals. |
-| **Strategy Simulator** | `StrategySimulatorPage.tsx` | Zero-mutation policy parameter sandbox projecting macro revenue yield. |
-| **Revenue Leakage Radar** | `RevenueLeakagePage.tsx` | Multi-dimensional slicing by Failure Type, Rail, Gateway, and Merchant. |
-| **Decision Replay & Audit** | `DecisionReplayPage.tsx` | Forensic step-by-step state machine replay with cryptographic audit hashes. |
-| **Operator Copilot** | `OperatorCopilotDrawer.tsx` | Read-only analytics AI assistant backed by live database telemetry. |
+```mermaid
+graph TD
+    A[Payment Failure / Gateway Decline] --> B[Risk Engine: Revenue at Risk Pool]
+    B --> C[AI Diagnosis Engine]
+    C -->|Probabilistic Recommendation| D[Deterministic Policy Engine]
+    D -->|Evaluate 5 Safety Guardrails| E{Policy Check}
+    E -->|Approved| F[Recovery Engine]
+    E -->|Blocked / Limit Reached| G[Escalation / Human Review Queue]
+    F --> H[Gateway Simulator & Dynamic Routing]
+    H --> I[Settled Merchant Ledger: Money Recovered]
+    H --> J[Cryptographic Audit Trail]
+    C -.-> K[Operator Copilot & Global Intelligence]
+    F -.-> L[Smart Retry Scheduler & Mandate Hub]
+```
 
 ---
 
 ## 💻 Tech Stack
 
 ### **Backend**
-- **Runtime**: Python 3.10+
-- **Framework**: FastAPI (Async REST APIs)
-- **Database**: PostgreSQL 15+ / SQLite with SQLAlchemy 2.0 ORM & Alembic migrations
-- **Validation**: Pydantic v2 & Pydantic-Settings
-- **Testing**: Pytest (96 unit & integration test suites, 100% passing)
+* **Runtime**: Python 3.10+
+* **Framework**: FastAPI (Async REST APIs)
+* **Database**: SQLite / PostgreSQL 15+ with SQLAlchemy 2.0 ORM & Alembic migrations
+* **Validation**: Pydantic v2 & Pydantic-Settings
+* **Testing**: Pytest (109 unit & integration tests, 100% passing)
 
 ### **Frontend**
-- **Framework**: React 18 with TypeScript (Strict Mode)
-- **Build Tool**: Vite 5.x
-- **Styling**: Tailwind CSS with custom fintech design system (Dark & Light themes)
-- **Icons & Charts**: Lucide React & Recharts
-- **Audio Engine**: Web Speech API (`window.speechSynthesis`)
+* **Framework**: React 18 with TypeScript (Strict Mode)
+* **Build Tool**: Vite 5.x / 8.x
+* **Styling**: Tailwind CSS with custom Tier-1 FinTech design system
+* **Icons & Visuals**: Lucide React & Recharts
+* **Speech Engine**: Web Speech API (`window.speechSynthesis`)
 
 ---
 
-## 🚀 Quickstart & Local Setup
+## 🚀 Local Quickstart Guide
 
 ### 1. Clone the Repository
 ```bash
@@ -148,21 +237,22 @@ cd backend
 
 # Create and activate virtual environment
 python -m venv .venv
+
 # On Windows:
 .venv\Scripts\activate
-# On Linux/macOS:
+# On Linux / macOS:
 source .venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
 
-# Run test suite (All 96 tests)
-pytest tests/
+# Run the complete test suite (109 tests)
+pytest tests/ -q
 
-# Start FastAPI server
+# Start the FastAPI server
 uvicorn app.main:app --reload --port 8000
 ```
-Backend Swagger API documentation will be live at: [**http://localhost:8000/docs**](http://localhost:8000/docs)
+Backend Swagger API documentation will be available at: [**http://localhost:8000/docs**](http://localhost:8000/docs)
 
 ### 3. Frontend Setup
 ```bash
@@ -172,13 +262,33 @@ cd ../frontend
 # Install dependencies
 npm install
 
-# Start Vite dev server
+# Verify production build
+npm run build
+
+# Start Vite development server
 npm run dev
 ```
-Frontend application will be live at: [**http://localhost:5173**](http://localhost:5173)
+The web dashboard will be available at: [**http://localhost:5173**](http://localhost:5173)
+
+---
+
+## 🧪 Verification & Test Suite
+
+The platform includes **109 automated unit and integration tests** covering:
+* Core risk ingestion and failure classification.
+* Deterministic policy boundary verification (cooldown, max attempts, opt-out).
+* Adaptive authorization and pre-auth 3DS exemption scoring.
+* Global payment intelligence aggregations and cross-gateway metrics.
+* Payment degradation incident detection and operator copilot queries.
+* Batch recovery execution and ledger settlement math.
+
+```bash
+pytest backend/tests/ -q
+# ======================== 109 passed in 6.80s ========================
+```
 
 ---
 
 ## 📄 License
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
