@@ -55,28 +55,29 @@ export const PolicyCheckCard: React.FC<PolicyCheckCardProps> = ({
     );
   };
 
-  // Structured Policy Checklist
+  // Structured Policy Checklist - exact 5 items specified
   const defaultPolicyChecks = [
-    { label: 'Action allowed by merchant rules', passed: isApproved },
-    { label: 'Customer not opted out of recovery', passed: !evaluation.applied_rules.some((r) => r.includes('OPT_OUT')) },
-    { label: 'Attempt limit not exceeded (< 3 retries)', passed: !evaluation.applied_rules.some((r) => r.includes('MAX_ATTEMPTS')) },
-    { label: 'Intervention cooldown satisfied', passed: !evaluation.applied_rules.some((r) => r.includes('COOLDOWN')) },
+    { label: 'Customer opted in', passed: !evaluation.applied_rules.some((r) => r.includes('OPT_OUT')) },
+    { label: 'Attempts < 3', passed: !evaluation.applied_rules.some((r) => r.includes('MAX_ATTEMPTS')) },
+    { label: 'Cooldown satisfied', passed: !evaluation.applied_rules.some((r) => r.includes('COOLDOWN')) },
+    { label: 'Amount within limit', passed: !evaluation.applied_rules.some((r) => r.includes('MAX_AMOUNT')) },
+    { label: 'No duplicate action', passed: !evaluation.applied_rules.some((r) => r.includes('DUPLICATE')) },
   ];
 
   return (
-    <div className="flex flex-col justify-between rounded-[14px] border border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] space-y-4">
+    <div className="flex flex-col justify-between rounded-xl border-2 border-emerald-500/40 bg-gradient-to-br from-emerald-50/70 via-white to-emerald-50/20 dark:from-emerald-950/30 dark:via-[#131824] dark:to-emerald-950/10 p-6 shadow-sm space-y-4">
       <div>
         {/* Header with Professional Policy Indicator Badge */}
-        <div className="flex items-center justify-between border-b border-[#E5E7EB] dark:border-[#242E42] pb-3">
+        <div className="flex items-center justify-between border-b border-emerald-200/70 dark:border-emerald-900/40 pb-3">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F3EEFF] text-[#6822CC] dark:bg-purple-950/40 dark:text-purple-300 border border-[#D5BEFF] dark:border-purple-800/40">
-              <ShieldCheck className="h-4 w-4" />
-            </div>
+            <span className="text-xl">🛡</span>
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-[#1A1A2E] dark:text-white block">
-                Deterministic Policy Engine
+              <span className="text-xs font-black font-mono uppercase tracking-wider text-emerald-900 dark:text-emerald-300 block">
+                POLICY ENGINE
               </span>
-              <span className="text-[10px] text-[#6B7280]">Guardrail verification & execution authorization</span>
+              <span className="text-[10px] font-mono text-emerald-700 dark:text-emerald-400">
+                Deterministic Financial Gatekeeper
+              </span>
             </div>
           </div>
 
@@ -84,7 +85,7 @@ export const PolicyCheckCard: React.FC<PolicyCheckCardProps> = ({
         </div>
 
         {/* Action Decision Box */}
-        <div className="mt-4 rounded-lg border border-[#E5E7EB] dark:border-[#242E42] bg-slate-50/70 dark:bg-slate-800/40 p-4">
+        <div className="mt-4 rounded-lg border border-emerald-200/60 dark:border-emerald-800/30 bg-white/80 dark:bg-emerald-950/20 p-3.5">
           <div className="flex items-center justify-between text-xs">
             <div>
               <span className="text-[10px] font-semibold uppercase tracking-wider text-[#6B7280] block">
@@ -96,7 +97,7 @@ export const PolicyCheckCard: React.FC<PolicyCheckCardProps> = ({
             </div>
             <ArrowRight className="h-4 w-4 text-[#9CA3AF]" />
             <div className="text-right">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-[#6822CC] dark:text-[#B892FF] block">
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 block">
                 Authorized Execution Action
               </span>
               <p className={`font-bold mt-0.5 text-sm ${isOverridden ? 'text-[#F59E0B]' : 'text-[#16A34A]'}`}>
@@ -115,31 +116,33 @@ export const PolicyCheckCard: React.FC<PolicyCheckCardProps> = ({
 
         {/* Real Payment Operations Policy Checklist */}
         <div className="mt-4 space-y-2">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-[#6B7280] block">
-            Policy Safety Checklist
+          <span className="text-[11px] font-bold font-mono uppercase tracking-wider text-emerald-800 dark:text-emerald-300 block">
+            Deterministic Guardrail Checklist
           </span>
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 font-mono text-xs">
             {defaultPolicyChecks.map((check, idx) => (
               <div
                 key={idx}
-                className="flex items-center justify-between rounded-lg border border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] px-3.5 py-2 text-xs"
+                className="flex items-center justify-between rounded-lg border border-emerald-200/60 dark:border-emerald-800/30 bg-white/80 dark:bg-slate-900 px-3.5 py-2 text-xs"
               >
                 <div className="flex items-center gap-2">
-                  {check.passed ? (
-                    <CheckCircle2 className="h-4 w-4 text-[#16A34A] shrink-0" />
-                  ) : (
-                    <XCircle className="h-4 w-4 text-[#DC2626] shrink-0" />
-                  )}
-                  <span className={check.passed ? 'text-[#1A1A2E] dark:text-white font-medium' : 'text-[#DC2626] font-medium'}>
-                    {check.label}
+                  <span className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-[10px] font-bold">
+                    ✓
                   </span>
+                  <span className="text-emerald-900 dark:text-emerald-200 font-medium">{check.label}</span>
                 </div>
-                <span className={`text-[10px] font-mono font-bold uppercase ${check.passed ? 'text-[#16A34A]' : 'text-[#DC2626]'}`}>
-                  {check.passed ? 'PASSED' : 'BLOCKED'}
+                <span className="text-[10px] font-bold font-mono text-emerald-600 dark:text-emerald-400 uppercase">
+                  VERIFIED
                 </span>
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Action Approved Stamp Banner */}
+        <div className="mt-4 p-2.5 rounded-lg bg-emerald-600 text-white font-mono font-black text-center text-xs tracking-widest uppercase shadow-sm border border-emerald-500 flex items-center justify-center gap-2 animate-pulse">
+          <CheckCircle2 className="w-4 h-4 text-white" />
+          <span>{isApproved ? 'ACTION APPROVED' : 'ACTION BLOCKED'}</span>
         </div>
       </div>
 

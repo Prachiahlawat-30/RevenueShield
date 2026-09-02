@@ -24,6 +24,8 @@ import { ConversionFunnelChart } from '../components/charts/ConversionFunnelChar
 import { RevenueProtectionScoreCard } from '../components/dashboard/RevenueProtectionScoreCard';
 import { ExecutiveMoneyStoryBanner } from '../components/dashboard/ExecutiveMoneyStoryBanner';
 import { MainWorkflowVisualizer } from '../components/workflow/MainWorkflowVisualizer';
+import { HeroMoneyRecoveredCard } from '../components/dashboard/HeroMoneyRecoveredCard';
+import { AIVsPolicyComparisonCard } from '../components/workflow/AIVsPolicyComparisonCard';
 import { formatCurrency, formatDate, getFailureTypeLabel } from '../utils/formatters';
 import { NavTab } from '../components/layout/Sidebar';
 
@@ -38,6 +40,7 @@ interface DashboardPageProps {
 export const DashboardPage: React.FC<DashboardPageProps> = ({
   onNavigateToRisk,
   onNavigateToWorkflow,
+  onOpenBatchRunner,
   onNavigateToRecommendations,
   onNavigateToTab,
 }) => {
@@ -91,13 +94,25 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 
   return (
     <div className="space-y-6 animate-fintech-fade">
-      {/* 1. Executive Money Story Command Banner */}
+      {/* 1. THE HERO METRIC: MONEY RECOVERED (The biggest number on the page) */}
+      <HeroMoneyRecoveredCard
+        recoveredAmount={metrics?.total_revenue_recovered}
+        atRiskAmount={metrics?.total_revenue_at_risk}
+        recoveryRatePct={metrics?.recovery_rate_pct}
+        onNavigateToTab={onNavigateToTab}
+        onOpenBatchRunner={onOpenBatchRunner}
+      />
+
+      {/* 2. Executive Money Story Command Banner */}
       <ExecutiveMoneyStoryBanner onNavigateToRecommendations={onNavigateToRecommendations} />
 
-      {/* 2. Primary 7-Step Recovery Workflow Visualizer (10-Second Judge Understanding) */}
+      {/* 3. Primary 7-Step Recovery Workflow Visualizer (10-Second Judge Understanding) */}
       <MainWorkflowVisualizer onNavigateToTab={onNavigateToTab} />
 
-      {/* 3. Top Metric Cards - Styled exactly per prompt specifications */}
+      {/* 4. Architecture Spotlight: 🤖 AI RECOMMENDATION vs 🛡 POLICY ENGINE */}
+      <AIVsPolicyComparisonCard />
+
+      {/* 5. Top Metric Cards - Styled exactly per prompt specifications */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* Revenue at Risk - Prominent Danger/Warning */}
         <MetricCard

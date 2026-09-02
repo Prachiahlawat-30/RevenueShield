@@ -34,55 +34,50 @@ export const AIDiagnosisCard: React.FC<AIDiagnosisCardProps> = ({ diagnosis, isL
   const confidencePct = Math.round(diagnosis.confidence_score * 100);
 
   return (
-    <div className="flex flex-col justify-between rounded-fintech-lg border border-brand-500/30 bg-fintech-surface p-6 shadow-fintech-sm space-y-4">
+    <div className="flex flex-col justify-between rounded-xl border-2 border-purple-500/40 bg-gradient-to-br from-purple-50/70 via-white to-purple-50/20 dark:from-purple-950/30 dark:via-[#131824] dark:to-purple-950/10 p-6 shadow-sm space-y-4">
       <div>
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-fintech-border pb-3">
+        <div className="flex items-center justify-between border-b border-purple-200/70 dark:border-purple-900/40 pb-3">
           <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-fintech-sm bg-brand-500/10 text-brand-500 border border-brand-500/20">
-              <Brain className="h-4 w-4" />
+            <span className="text-xl">🤖</span>
+            <div>
+              <span className="text-xs font-black font-mono uppercase tracking-wider text-purple-900 dark:text-purple-300 block">
+                AI RECOMMENDATION
+              </span>
+              <span className="text-[10px] font-mono text-purple-700 dark:text-purple-400">
+                Probabilistic Yield Modeling
+              </span>
             </div>
-            <span className="text-xs font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400">
-              AI Diagnosis & Recommendation
-            </span>
           </div>
-          <div className="flex items-center gap-1.5 rounded-full border border-brand-500/20 bg-brand-500/10 px-2.5 py-0.5 text-xs font-semibold text-brand-600 dark:text-brand-400">
-            <Sparkles className="h-3 w-3" />
-            <span>{confidencePct}% Confidence</span>
+          <div className="flex items-center gap-1.5 rounded-full border border-purple-500/30 bg-purple-500/15 px-3 py-1 text-xs font-mono font-bold text-purple-700 dark:text-purple-300 shadow-xs">
+            <Sparkles className="h-3 w-3 text-purple-500" />
+            <span>Confidence: {confidencePct}%</span>
           </div>
         </div>
 
-        {/* Failure Category & Proposed Action */}
-        <div className="mt-4 grid grid-cols-2 gap-3">
-          <div className="rounded-fintech-md border border-fintech-border bg-fintech-surface-subtle p-3">
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-fintech-muted block">
-              Diagnosed Category
-            </span>
-            <p className="mt-1 text-xs font-bold text-fintech-primary">
-              {getFailureTypeLabel(diagnosis.failure_category)}
-            </p>
-          </div>
-          <div className="rounded-fintech-md border border-brand-500/20 bg-brand-500/5 p-3">
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400 block">
-              Proposed Action
-            </span>
-            <p className="mt-1 text-xs font-bold text-brand-700 dark:text-brand-300">
-              {getActionLabel(diagnosis.recommended_action)}
-            </p>
-          </div>
-        </div>
-
-        {/* Root Cause Summary */}
-        <div className="mt-3.5 rounded-fintech-md border border-fintech-border bg-fintech-surface-subtle p-3.5">
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-fintech-muted block">
-            Root-Cause Analysis
+        {/* Proposed Strategy / Action */}
+        <div className="mt-4 p-3.5 rounded-lg border border-purple-200/70 dark:border-purple-800/40 bg-white/80 dark:bg-purple-950/20 space-y-1">
+          <span className="text-[10px] font-mono uppercase tracking-wider text-purple-700 dark:text-purple-400 font-bold block">
+            Recommended Action
           </span>
-          <p className="mt-1 text-xs text-fintech-primary leading-relaxed">
-            {diagnosis.root_cause_summary}
+          <p className="text-sm font-black text-purple-900 dark:text-white font-mono">
+            {getActionLabel(diagnosis.recommended_action)}
           </p>
-          <p className="mt-2 text-xs italic text-brand-600 dark:text-brand-400">
-            Rationale: {diagnosis.action_rationale}
+        </div>
+
+        {/* Root Cause Reason */}
+        <div className="mt-3 p-3.5 rounded-lg border border-purple-200/70 dark:border-purple-800/40 bg-white/80 dark:bg-purple-950/20 space-y-1">
+          <span className="text-[10px] font-mono uppercase tracking-wider text-[#6B7280] dark:text-slate-400 font-bold block">
+            Reason:
+          </span>
+          <p className="text-xs font-semibold text-[#1A1A2E] dark:text-slate-200 leading-relaxed font-mono">
+            {diagnosis.root_cause_summary || 'Temporary issuer decline'}
           </p>
+          {diagnosis.action_rationale && (
+            <p className="mt-1 text-[11px] italic text-purple-700 dark:text-purple-400">
+              Rationale: {diagnosis.action_rationale}
+            </p>
+          )}
         </div>
 
         {/* Customer Message Draft */}
