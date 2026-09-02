@@ -41,7 +41,6 @@ import { AuthorizationFunnelChart } from '../components/adaptive-authorization/A
 import { AdaptiveAuthorizationLossBreakdown } from '../components/adaptive-authorization/AdaptiveAuthorizationLossBreakdown';
 import { getAuthorizationByRisk } from '../api/authorization';
 import { AuthorizationDecisionResponse } from '../types';
-import { MainWorkflowVisualizer } from '../components/workflow/MainWorkflowVisualizer';
 import { NavTab } from '../components/layout/Sidebar';
 
 interface WorkflowPageProps {
@@ -245,24 +244,6 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
           </select>
         </div>
       </div>
-
-      {/* Primary 7-Step Workflow Pipeline Visualizer */}
-      <MainWorkflowVisualizer
-        currentActiveStep={
-          currentRisk?.status === 'recovered'
-            ? 7
-            : currentStage === 'EXECUTING' || currentStage === 'RECOVERY'
-            ? 6
-            : currentStage === 'POLICY_CHECK'
-            ? 5
-            : currentStage === 'ACTION_SELECTED' || currentStage === 'ACTION_PROPOSAL'
-            ? 4
-            : currentStage === 'DIAGNOSING' || currentStage === 'AI_DIAGNOSIS'
-            ? 3
-            : 2
-        }
-        onNavigateToTab={onNavigateToTab}
-      />
 
       {/* View Mode Switcher */}
       <div className="flex flex-wrap items-center gap-2 border-b border-fintech-border pb-3">
