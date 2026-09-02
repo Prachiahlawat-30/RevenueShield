@@ -93,7 +93,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   }
 
   return (
-    <div className="space-y-6 animate-fintech-fade">
+    <div className="space-y-8 animate-fintech-fade">
       {/* 1. THE HERO METRIC: MONEY RECOVERED (The biggest number on the page) */}
       <HeroMoneyRecoveredCard
         recoveredAmount={metrics?.total_revenue_recovered}

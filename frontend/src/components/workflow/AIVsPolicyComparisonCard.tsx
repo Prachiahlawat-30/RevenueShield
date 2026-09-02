@@ -5,12 +5,9 @@ import {
   CheckCircle2,
   Sparkles,
   ArrowRight,
-  ArrowDown,
   Lock,
   Cpu,
   Check,
-  AlertTriangle,
-  Info,
 } from 'lucide-react';
 import { AIDiagnosisResult, PolicyEvaluationResult } from '../../types';
 import { getActionLabel } from '../../utils/formatters';
@@ -26,9 +23,7 @@ export const AIVsPolicyComparisonCard: React.FC<AIVsPolicyComparisonCardProps> =
   diagnosis,
   policyEvaluation,
   className = '',
-  compact = false,
 }) => {
-  // Dynamic or User Specified Default Values
   const aiAction = diagnosis?.recommended_action
     ? getActionLabel(diagnosis.recommended_action)
     : 'Retry Payment';
@@ -45,157 +40,167 @@ export const AIVsPolicyComparisonCard: React.FC<AIVsPolicyComparisonCardProps> =
 
   return (
     <div
-      className={`w-full rounded-fintech-lg border border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] p-5 shadow-fintech-md space-y-4 ${className}`}
+      className={`w-full rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#111827] p-6 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.05),0_8px_16px_-4px_rgba(0,0,0,0.02)] space-y-5 ${className}`}
     >
-      {/* Top Banner: Architecture Principle Explainer */}
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#E5E7EB] dark:border-[#242E42] pb-3">
+      {/* Top Architectural Header */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-1 rounded bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/20">
+            <span className="p-1 rounded bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-800/40">
               <Cpu className="w-3.5 h-3.5" />
             </span>
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#6822CC] dark:text-[#B892FF]">
-              SYSTEM ARCHITECTURE: AI SUGGESTS • POLICY GOVERNS
+            <span className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+              Execution Architecture
             </span>
           </div>
-          <h3 className="text-sm font-black text-[#1A1A2E] dark:text-white font-mono mt-0.5">
-            PROBABILISTIC REASONING VS DETERMINISTIC ENFORCEMENT
+          <h3 className="text-base font-bold text-slate-900 dark:text-white mt-1">
+            Probabilistic AI Recommendation vs. Deterministic Policy Verification
           </h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 max-w-3xl">
+            RecoverAI decouples strategy formulation from execution. Machine learning models formulate optimal actions,
+            while a rule-based policy engine deterministically enforces financial and compliance safety.
+          </p>
         </div>
-        <span className="text-[9px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
-          Supervised Safety Boundary
-        </span>
+
+        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+          <Lock className="w-3.5 h-3.5 text-slate-500" />
+          <span>Non-Autonomous Override Capable</span>
+        </div>
       </div>
 
-      {/* Dual Column Side-by-Side Comparison (or Stacked on Mobile) */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-stretch">
+      {/* Dual Column Side-by-Side Architectural Contrast */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
         {/* ========================================================= */}
-        {/* 1. 🤖 AI RECOMMENDATION (Purple / Neural / Probabilistic)  */}
+        {/* 1. AI RECOMMENDATION (Clean Indigo Accent)                */}
         {/* ========================================================= */}
-        <div className="md:col-span-6 flex flex-col justify-between rounded-xl border-2 border-purple-500/30 bg-gradient-to-br from-purple-50/80 via-white to-purple-50/30 dark:from-purple-950/30 dark:via-[#131824] dark:to-purple-950/10 p-4 shadow-sm space-y-3 relative overflow-hidden">
-          {/* Subtle background glow badge */}
-          <div className="absolute -right-8 -top-8 w-28 h-28 rounded-full bg-purple-500/5 blur-xl pointer-events-none" />
-
-          <div className="space-y-3">
+        <div className="flex flex-col justify-between rounded-xl border border-indigo-100 dark:border-indigo-900/40 bg-gradient-to-b from-indigo-50/40 to-white dark:from-indigo-950/20 dark:to-slate-900/40 p-5 space-y-4">
+          <div className="space-y-4">
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-purple-200/70 dark:border-purple-900/40 pb-2.5">
-              <div className="flex items-center gap-2">
-                <span className="text-lg">🤖</span>
+            <div className="flex items-center justify-between pb-3 border-b border-indigo-100 dark:border-indigo-900/30">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-300">
+                  <Brain className="w-4 h-4" />
+                </div>
                 <div>
-                  <h4 className="text-xs font-black font-mono tracking-tight text-purple-900 dark:text-purple-300 uppercase">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-950 dark:text-indigo-200">
                     AI RECOMMENDATION
                   </h4>
-                  <span className="text-[9px] font-mono text-purple-700 dark:text-purple-400">
+                  <span className="text-[11px] text-indigo-600 dark:text-indigo-400 font-medium">
                     Probabilistic Yield Prediction
                   </span>
                 </div>
               </div>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-purple-500/15 text-purple-700 dark:text-purple-300 border border-purple-500/30 flex items-center gap-1">
-                <Sparkles className="w-3 h-3 text-purple-500" />
-                <span>Confidence: {confidencePct}%</span>
+
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-100/80 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300">
+                <Sparkles className="w-3 h-3 text-indigo-500" />
+                Confidence: {confidencePct}%
               </span>
             </div>
 
             {/* Proposed Strategy / Action */}
-            <div className="space-y-1 bg-white/80 dark:bg-purple-950/20 p-3 rounded-lg border border-purple-200/60 dark:border-purple-800/30">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-purple-700 dark:text-purple-400 font-bold block">
-                Proposed Action:
+            <div className="space-y-1 p-3.5 rounded-lg bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800">
+              <span className="text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
+                Proposed Action
               </span>
-              <p className="text-sm font-black text-purple-900 dark:text-white font-mono">
+              <p className="text-sm font-bold text-slate-900 dark:text-white">
                 {aiAction}
               </p>
             </div>
 
             {/* Reason */}
-            <div className="space-y-1 bg-white/80 dark:bg-purple-950/20 p-3 rounded-lg border border-purple-200/60 dark:border-purple-800/30">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-[#6B7280] dark:text-slate-400 font-bold block">
-                Reason:
+            <div className="space-y-1 p-3.5 rounded-lg bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800">
+              <span className="text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
+                Reason
               </span>
-              <p className="text-xs font-semibold text-[#1A1A2E] dark:text-slate-200 leading-relaxed font-mono">
+              <p className="text-xs font-medium text-slate-700 dark:text-slate-300 leading-relaxed">
                 {reasonText}
               </p>
             </div>
           </div>
 
           {/* AI Footnote */}
-          <div className="pt-2 border-t border-purple-200/60 dark:border-purple-900/40 text-[9px] font-mono text-purple-700 dark:text-purple-400 flex items-center gap-1.5">
-            <Brain className="w-3 h-3 text-purple-500 shrink-0" />
-            <span>AI cannot execute financial transactions directly. Passed to Policy Gatekeeper.</span>
+          <div className="pt-3 border-t border-indigo-100/80 dark:border-indigo-900/30 text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0" />
+            <span>AI outputs are recommendations only. Cannot directly debit or execute gateway calls.</span>
           </div>
         </div>
 
         {/* ========================================================= */}
-        {/* 2. 🛡 POLICY ENGINE (Emerald / Deterministic / Vault)     */}
+        {/* 2. POLICY ENGINE (Clean Emerald Accent)                  */}
         {/* ========================================================= */}
-        <div className="md:col-span-6 flex flex-col justify-between rounded-xl border-2 border-emerald-500/40 bg-gradient-to-br from-emerald-50/80 via-white to-emerald-50/30 dark:from-emerald-950/30 dark:via-[#131824] dark:to-emerald-950/10 p-4 shadow-sm space-y-3 relative overflow-hidden">
-          {/* Subtle background glow badge */}
-          <div className="absolute -right-8 -top-8 w-28 h-28 rounded-full bg-emerald-500/5 blur-xl pointer-events-none" />
-
-          <div className="space-y-3">
+        <div className="flex flex-col justify-between rounded-xl border border-emerald-100 dark:border-emerald-900/40 bg-gradient-to-b from-emerald-50/40 to-white dark:from-emerald-950/20 dark:to-slate-900/40 p-5 space-y-4">
+          <div className="space-y-4">
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-emerald-200/70 dark:border-emerald-900/40 pb-2.5">
-              <div className="flex items-center gap-2">
-                <span className="text-lg">🛡</span>
+            <div className="flex items-center justify-between pb-3 border-b border-emerald-100 dark:border-emerald-900/30">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center text-emerald-600 dark:text-emerald-300">
+                  <ShieldCheck className="w-4 h-4" />
+                </div>
                 <div>
-                  <h4 className="text-xs font-black font-mono tracking-tight text-emerald-900 dark:text-emerald-300 uppercase">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-950 dark:text-emerald-200">
                     POLICY ENGINE
                   </h4>
-                  <span className="text-[9px] font-mono text-emerald-700 dark:text-emerald-400">
-                    Deterministic Safety Gatekeeper
+                  <span className="text-[11px] text-emerald-700 dark:text-emerald-400 font-medium">
+                    Deterministic Compliance Gatekeeper
                   </span>
                 </div>
               </div>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3 text-emerald-500" />
-                <span>Strict Guardrails</span>
+
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100/80 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300">
+                Rule Check: Passed
               </span>
             </div>
 
             {/* Checklist per prompt specifications */}
-            <div className="bg-white/80 dark:bg-emerald-950/20 p-3 rounded-lg border border-emerald-200/60 dark:border-emerald-800/30 space-y-1.5 font-mono text-xs">
-              <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-300 font-semibold">
-                <span className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-[10px] font-bold">
-                  ✓
-                </span>
-                <span>Customer opted in</span>
-              </div>
-              <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-300 font-semibold">
-                <span className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-[10px] font-bold">
-                  ✓
-                </span>
-                <span>Attempts &lt; 3</span>
-              </div>
-              <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-300 font-semibold">
-                <span className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-[10px] font-bold">
-                  ✓
-                </span>
-                <span>Cooldown satisfied</span>
-              </div>
-              <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-300 font-semibold">
-                <span className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-[10px] font-bold">
-                  ✓
-                </span>
-                <span>Amount within limit</span>
-              </div>
-              <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-300 font-semibold">
-                <span className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-[10px] font-bold">
-                  ✓
-                </span>
-                <span>No duplicate action</span>
+            <div className="space-y-2 p-3.5 rounded-lg bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800">
+              <span className="text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 block pb-1">
+                Enforced Guardrails
+              </span>
+              <div className="space-y-1.5 text-xs">
+                <div className="flex items-center gap-2 text-slate-800 dark:text-slate-200 font-medium">
+                  <span className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-300 flex items-center justify-center text-[10px] font-bold">
+                    ✓
+                  </span>
+                  <span>Customer opted in</span>
+                </div>
+                <div className="flex items-center gap-2 text-slate-800 dark:text-slate-200 font-medium">
+                  <span className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-300 flex items-center justify-center text-[10px] font-bold">
+                    ✓
+                  </span>
+                  <span>Attempts &lt; 3</span>
+                </div>
+                <div className="flex items-center gap-2 text-slate-800 dark:text-slate-200 font-medium">
+                  <span className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-300 flex items-center justify-center text-[10px] font-bold">
+                    ✓
+                  </span>
+                  <span>Cooldown satisfied</span>
+                </div>
+                <div className="flex items-center gap-2 text-slate-800 dark:text-slate-200 font-medium">
+                  <span className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-300 flex items-center justify-center text-[10px] font-bold">
+                    ✓
+                  </span>
+                  <span>Amount within limit</span>
+                </div>
+                <div className="flex items-center gap-2 text-slate-800 dark:text-slate-200 font-medium">
+                  <span className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-300 flex items-center justify-center text-[10px] font-bold">
+                    ✓
+                  </span>
+                  <span>No duplicate action</span>
+                </div>
               </div>
             </div>
 
-            {/* ACTION APPROVED STAMP */}
-            <div className="p-2.5 rounded-lg bg-emerald-600 text-white font-mono font-black text-center text-xs tracking-widest uppercase shadow-sm border border-emerald-500 flex items-center justify-center gap-2 animate-pulse">
+            {/* ACTION APPROVED Status Banner */}
+            <div className="p-3 rounded-lg bg-emerald-600 text-white font-semibold text-center text-xs tracking-wider uppercase flex items-center justify-center gap-2 shadow-sm">
               <CheckCircle2 className="w-4 h-4 text-white" />
-              <span>ACTION APPROVED</span>
+              <span>{isApproved ? 'ACTION APPROVED' : 'ACTION BLOCKED'}</span>
             </div>
           </div>
 
           {/* Policy Footnote */}
-          <div className="pt-2 border-t border-emerald-200/60 dark:border-emerald-900/40 text-[9px] font-mono text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
-            <Lock className="w-3 h-3 text-emerald-500 shrink-0" />
-            <span>PolicyEngine remains the authoritative gatekeeper for all financial interventions.</span>
+          <div className="pt-3 border-t border-emerald-100/80 dark:border-emerald-900/30 text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+            <span>Deterministic gatekeeper with immutable cryptographic audit trail.</span>
           </div>
         </div>
       </div>

@@ -239,26 +239,26 @@ export const MainWorkflowVisualizer: React.FC<MainWorkflowVisualizerProps> = ({
   const activeStep = WORKFLOW_STEPS[activeStepIndex];
 
   return (
-    <div className="w-full rounded-fintech-lg border border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] p-5 shadow-fintech-md space-y-5 transition-all">
-      {/* 1. Header & Judge 10-Second Explainer */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#E5E7EB] dark:border-[#242E42] pb-3.5">
+    <div className="w-full rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#111827] p-6 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.05),0_8px_16px_-4px_rgba(0,0,0,0.02)] space-y-6 transition-all">
+      {/* 1. Header & Architectural Overview */}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
         <div>
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="p-1 rounded bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/20">
+            <span className="p-1 rounded bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-800/40">
               <Layers className="w-4 h-4" />
             </span>
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#6822CC] dark:text-[#B892FF]">
-              CORE ARCHITECTURE • 10-SECOND WALKTHROUGH
+            <span className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+              Recovery Pipeline Architecture
             </span>
-            <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold uppercase bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
-              Deterministic & AI Pipeline
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/40">
+              7-Stage Causal Flow
             </span>
           </div>
-          <h2 className="text-base font-black text-[#1A1A2E] dark:text-white mt-1 font-mono tracking-tight">
-            THE RECOVERAI REVENUE RECOVERY PIPELINE
+          <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mt-1">
+            Autonomous Payment Recovery Lifecycle
           </h2>
-          <p className="text-xs text-[#6B7280] dark:text-slate-400">
-            From payment drop to verified settlement in 7 autonomous, policy-checked stages.
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            Seven-stage deterministic pipeline from gateway failure ingestion to merchant fund settlement.
           </p>
         </div>
 
@@ -267,21 +267,21 @@ export const MainWorkflowVisualizer: React.FC<MainWorkflowVisualizerProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsPlaying(!isPlaying)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition shadow-sm ${
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm ${
                 isPlaying
-                  ? 'bg-amber-500 text-white hover:bg-amber-600'
-                  : 'bg-[#6822CC] text-white hover:bg-[#5719b0]'
+                  ? 'bg-amber-600 text-white hover:bg-amber-700'
+                  : 'bg-indigo-600 text-white hover:bg-indigo-700'
               }`}
             >
               {isPlaying ? (
                 <>
                   <Pause className="w-3.5 h-3.5" />
-                  <span>Pause Simulation</span>
+                  <span>Pause Pipeline Flow</span>
                 </>
               ) : (
                 <>
                   <Play className="w-3.5 h-3.5" />
-                  <span>Simulate Live Flow</span>
+                  <span>Run Interactive Flow</span>
                 </>
               )}
             </button>
@@ -290,8 +290,8 @@ export const MainWorkflowVisualizer: React.FC<MainWorkflowVisualizerProps> = ({
                 setIsPlaying(false);
                 setActiveStepIndex(0);
               }}
-              title="Reset to Step 1"
-              className="p-1.5 rounded-lg border border-[#E5E7EB] dark:border-slate-700 text-[#6B7280] hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+              title="Reset to Stage 1"
+              className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
             >
               <RotateCcw className="w-3.5 h-3.5" />
             </button>
@@ -315,12 +315,12 @@ export const MainWorkflowVisualizer: React.FC<MainWorkflowVisualizerProps> = ({
                   setIsPlaying(false);
                   setActiveStepIndex(idx);
                 }}
-                className={`relative flex flex-col justify-between p-3 rounded-xl border transition-all cursor-pointer select-none text-left ${
+                className={`relative flex flex-col justify-between p-3.5 rounded-xl border transition-all cursor-pointer select-none text-left ${
                   isCurrent
-                    ? `${item.bgLight} ${item.bgDark} border-2 ${item.borderLight} ${item.borderDark} ring-4 ring-brand-500/15 scale-[1.03] shadow-md z-10`
+                    ? `${item.bgLight} ${item.bgDark} border-2 ${item.borderLight} ${item.borderDark} shadow-sm z-10`
                     : isPassed
-                    ? 'bg-slate-50/70 dark:bg-[#182030] border-[#E5E7EB] dark:border-slate-800 opacity-90 hover:opacity-100 hover:border-slate-300'
-                    : 'bg-white dark:bg-[#131824] border-[#E5E7EB] dark:border-slate-800 opacity-75 hover:opacity-100 hover:border-slate-300'
+                    ? 'bg-slate-50/70 dark:bg-[#182030] border-slate-200/80 dark:border-slate-800 opacity-90 hover:opacity-100 hover:border-slate-300'
+                    : 'bg-white dark:bg-[#131824] border-slate-200/80 dark:border-slate-800 opacity-75 hover:opacity-100 hover:border-slate-300'
                 }`}
               >
                 {/* Step Top Header */}
@@ -480,12 +480,12 @@ export const MainWorkflowVisualizer: React.FC<MainWorkflowVisualizerProps> = ({
         </div>
       </div>
 
-      {/* 4. 10-Second Judge Takeaway Callout */}
-      <div className="flex items-start gap-2.5 p-3 rounded-lg bg-slate-50 dark:bg-[#182030] border border-[#E5E7EB] dark:border-slate-800 text-xs text-[#4B5563] dark:text-slate-300">
-        <Info className="w-4 h-4 text-brand-500 shrink-0 mt-0.5" />
+      {/* 4. Enterprise Architecture & Governance Note */}
+      <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-300">
+        <Info className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
         <div className="leading-relaxed">
-          <strong className="text-[#1A1A2E] dark:text-white">10-Second Takeaway for Judges: </strong>
-          RecoverAI does not blindly retry cards. It immediately isolates exposure as <em>Revenue at Risk</em>, performs multi-factor <em>AI Diagnosis</em>, formulates an optimal <em>Action Proposal</em>, guarantees safety through deterministic <em>Policy Checks</em>, and executes intelligent multi-rail <em>Recovery</em> until <em>Money is Recovered</em>.
+          <strong className="text-slate-900 dark:text-white font-semibold">Deterministic Policy Enforcement: </strong>
+          Unlike legacy dunning systems that indiscriminately re-attempt card debits, RecoverAI immediately isolates failed transactions into a monitored risk exposure ledger. Every recovery intervention is synthesized using causal machine learning, but strictly bounded by deterministic merchant compliance guardrails before reaching any payment rail.
         </div>
       </div>
     </div>
