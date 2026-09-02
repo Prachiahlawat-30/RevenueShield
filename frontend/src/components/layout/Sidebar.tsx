@@ -188,7 +188,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <button
             onClick={onToggleCollapse}
             title="Expand sidebar"
-            className="group relative mx-auto flex h-9 w-9 items-center justify-center rounded-lg bg-[#6822CC] hover:bg-[#4B1A99] text-white shadow-sm transition-all"
+            className="group relative mx-auto flex h-9 w-9 items-center justify-center rounded-lg bg-[#6822CC] hover:bg-[#4B1A99] text-white shadow-sm transition-all cursor-pointer"
           >
             <Zap className="h-4.5 w-4.5 fill-current group-hover:hidden" />
             <PanelLeftOpen className="h-4.5 w-4.5 hidden group-hover:block" />
@@ -199,7 +199,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <button
             onClick={onToggleCollapse}
             title="Collapse sidebar"
-            className="text-[#9CA3AF] hover:text-[#1A1A2E] dark:hover:text-white p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+            className="text-[#9CA3AF] hover:text-[#1A1A2E] dark:hover:text-white p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
           >
             <PanelLeftClose className="h-4 w-4" />
           </button>

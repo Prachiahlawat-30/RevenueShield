@@ -7,8 +7,6 @@ import {
   Play,
   Database,
   RefreshCw,
-  PanelLeftOpen,
-  PanelLeftClose,
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { NavTab } from './Sidebar';
@@ -19,8 +17,6 @@ interface NavbarProps {
   onSeedData: () => void;
   isSeeding: boolean;
   onOpenSearch: () => void;
-  isSidebarCollapsed?: boolean;
-  onToggleSidebar?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -29,8 +25,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   onSeedData,
   isSeeding,
   onOpenSearch,
-  isSidebarCollapsed = false,
-  onToggleSidebar,
 }) => {
   const { isDark, setTheme } = useTheme();
   const [showNotifications, setShowNotifications] = useState(false);
@@ -67,32 +61,12 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-[#E5E7EB] dark:border-[#242E42] bg-white/95 dark:bg-[#131824]/95 px-5 md:px-6 backdrop-blur-sm transition-colors">
-      {/* Left: Sidebar Toggle, Title & Contextual Subtitle */}
+      {/* Left: Title & Contextual Subtitle */}
       <div className="flex items-center gap-3 min-w-0">
-        {onToggleSidebar && (
-          <button
-            onClick={onToggleSidebar}
-            title={isSidebarCollapsed ? 'Expand sidebar (Ctrl+B)' : 'Collapse sidebar (Ctrl+B)'}
-            className="p-1.5 rounded-lg text-[#6B7280] hover:text-[#1A1A2E] dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 border border-[#E5E7EB] dark:border-slate-700 transition-colors flex items-center justify-center shrink-0"
-          >
-            {isSidebarCollapsed ? (
-              <PanelLeftOpen className="h-4 w-4 text-[#6822CC]" />
-            ) : (
-              <PanelLeftClose className="h-4 w-4 text-[#6B7280]" />
-            )}
-          </button>
-        )}
-
         <div className="min-w-0">
-          <div className="flex items-center gap-2">
-            <h1 className="text-sm font-bold text-[#1A1A2E] dark:text-white truncate">
-              {currentMeta.title}
-            </h1>
-            <span className="hidden xl:inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 dark:bg-emerald-950/40 dark:border-emerald-800/40 px-2 py-0.2 text-[10px] font-mono font-semibold text-[#16A34A] shrink-0">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#16A34A] animate-pulse" />
-              <span>Live Engine</span>
-            </span>
-          </div>
+          <h1 className="text-sm font-bold text-[#1A1A2E] dark:text-white truncate">
+            {currentMeta.title}
+          </h1>
           <p className="hidden md:block text-[11px] text-[#6B7280] truncate max-w-lg">
             {currentMeta.subtitle}
           </p>

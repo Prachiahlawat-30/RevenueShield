@@ -100,8 +100,6 @@ const AppContent: React.FC = () => {
           onSeedData={handleSeedData}
           isSeeding={isSeeding}
           onOpenSearch={() => setIsSearchOpen(true)}
-          isSidebarCollapsed={isSidebarCollapsed}
-          onToggleSidebar={() => setIsSidebarCollapsed((prev) => !prev)}
         />
 
         {/* Feedback Notification Banner */}
