@@ -65,30 +65,30 @@ export const ExpectedRecoveryByTypeChart: React.FC<Props> = ({ data, height = 22
     if (active && payload && payload.length) {
       const item = payload[0].payload;
       return (
-        <div className="rounded-[12px] border border-white/[0.08] bg-[#171C28] p-3 shadow-fintech-elevated text-xs space-y-1.5 min-w-[170px]">
-          <p className="font-medium text-[#F5F6FA] pb-1 border-b border-white/[0.06]">{item.fullName}</p>
+        <div className="rounded-[12px] border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-[#171C28] p-3 shadow-lg dark:shadow-fintech-elevated text-xs space-y-1.5 min-w-[170px]">
+          <p className="font-medium text-slate-900 dark:text-[#F5F6FA] pb-1 border-b border-slate-100 dark:border-white/[0.06]">{item.fullName}</p>
           <div className="space-y-1 text-xs">
-            <p className="text-[#9CA3B0] flex items-center justify-between gap-4">
+            <p className="text-slate-600 dark:text-[#9CA3B0] flex items-center justify-between gap-4">
               <span>Active cases:</span>
-              <strong className="text-[#F5F6FA] tabular-nums">{item.count}</strong>
+              <strong className="text-slate-900 dark:text-[#F5F6FA] tabular-nums">{item.count}</strong>
             </p>
-            <p className="flex items-center justify-between gap-4 text-[#F0625A]">
+            <p className="flex items-center justify-between gap-4 text-[#E11D48] dark:text-[#F0625A]">
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#F0625A]" />
+                <span className="w-2 h-2 rounded-full bg-[#E11D48] dark:bg-[#F0625A]" />
                 <span>Exposure:</span>
               </span>
               <strong className="tabular-nums">{formatCurrency(item.amount_at_risk)}</strong>
             </p>
-            <p className="flex items-center justify-between gap-4 text-[#3B82F6]">
+            <p className="flex items-center justify-between gap-4 text-[#2563EB] dark:text-[#3B82F6]">
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#3B82F6]" />
+                <span className="w-2 h-2 rounded-full bg-[#2563EB] dark:bg-[#3B82F6]" />
                 <span>Expected yield:</span>
               </span>
               <strong className="tabular-nums">{formatCurrency(item.expected_recovery)}</strong>
             </p>
-            <p className="text-[#6B7280] flex items-center justify-between gap-4 pt-1 border-t border-white/[0.06]">
+            <p className="text-slate-500 dark:text-[#6B7280] flex items-center justify-between gap-4 pt-1 border-t border-slate-100 dark:border-white/[0.06]">
               <span>Recovery probability:</span>
-              <span className="font-medium text-[#10B981] tabular-nums">{formatPercent(item.average_probability * 100)}</span>
+              <strong className="text-slate-900 dark:text-[#F5F6FA] tabular-nums">{item.average_probability}%</strong>
             </p>
           </div>
         </div>
@@ -98,12 +98,13 @@ export const ExpectedRecoveryByTypeChart: React.FC<Props> = ({ data, height = 22
   };
 
   return (
-    <div style={{ width: '100%', height }} className="min-w-0 overflow-hidden">
+    <div className="h-64 w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData} margin={{ top: 12, right: 10, left: -20, bottom: 4 }}>
+        <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
           <CartesianGrid
             strokeDasharray="3 3"
-            stroke="rgba(255, 255, 255, 0.05)"
+            stroke="currentColor"
+            className="text-slate-200 dark:text-white/[0.05]"
             vertical={false}
           />
           <XAxis

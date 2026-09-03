@@ -105,14 +105,14 @@ export const WORKFLOW_STEPS: WorkflowStepItem[] = [
     step: 5,
     title: 'Policy check',
     tagline: 'Deterministic rules validate proposals',
-    description: 'Enforces hard merchant guardrails: max retries limit, customer cooldown intervals, and transaction limits.',
-    engine: 'Policy Engine',
+    description: 'PolicyEngine verifies customer opt-out status, cooldown intervals, and maximum retry limits before authorizing execution.',
+    engine: 'PolicyEngine Guardrails',
     icon: ShieldCheck,
     badge: '05 · Validation',
     sampleTelemetry: {
-      label: 'Policy Invariants',
-      value: 'Rule Evaluation: APPROVED (4/4 Passed)',
-      details: 'Attempts: 1/3 · Cooldown: 14h OK · Risk Tier: Verified',
+      label: 'Policy Evaluation',
+      value: 'Passed All 5 Merchant Guardrails',
+      details: 'Customer Eligible: True · Cooldown: Met · Attempts < 3',
     },
     targetTab: 'playground',
   },
@@ -120,14 +120,14 @@ export const WORKFLOW_STEPS: WorkflowStepItem[] = [
     step: 6,
     title: 'Recovery engine',
     tagline: 'Executes approved actions safely',
-    description: 'Safely dispatches approved actions via gateway switches, dynamic scheduling, or customer communication rails.',
-    engine: 'Recovery Execution Engine',
+    description: 'Executes the authorized action via smart gateway routing, direct card networks, or multi-channel communications.',
+    engine: 'RecoveryEngine Execution',
     icon: Zap,
     badge: '06 · Execution',
     sampleTelemetry: {
-      label: 'Rail Dispatch',
-      value: 'Execute recovery step for ₹8,500',
-      details: 'Channel: Secondary Gateway Rail · Latency: 42ms',
+      label: 'Execution Status',
+      value: 'Dispatched via Gateway Simulator',
+      details: 'Routing: Secondary Gateway B · Payload Sealed',
     },
     targetTab: 'workflow',
   },
@@ -135,37 +135,37 @@ export const WORKFLOW_STEPS: WorkflowStepItem[] = [
     step: 7,
     title: 'Recovered',
     tagline: 'Realized revenue settled into ledger',
-    description: 'Payment successfully captured, customer subscription preserved, and verified in audit trail.',
-    engine: 'Settlement & Audit Ledger',
+    description: 'Transaction succeeds, revenue is settled to merchant ledger, and audit log is permanently recorded.',
+    engine: 'Settlement Ledger',
     icon: ShieldCheck,
     badge: '07 · Settled',
     sampleTelemetry: {
-      label: 'Settled Funds',
-      value: 'Captured: ₹8,500 (Gross Yield +100%)',
-      details: 'Audit Hash #tx_9f81bc92 · Immutable Ledger Written',
+      label: 'Settlement Outcome',
+      value: 'Settled: ₹8,500 Realized',
+      details: 'Ledger Sequence: #TXN-SETTLE-8491 · Audit Recorded',
     },
     targetTab: 'audit',
   },
 ];
 
 export const MainWorkflowVisualizer: React.FC<MainWorkflowVisualizerProps> = ({
-  currentActiveStep,
+  currentActiveStep = 1,
   onNavigateToTab,
   interactiveSimulation = true,
 }) => {
-  const [activeStepIndex, setActiveStepIndex] = useState<number>(
-    currentActiveStep ? currentActiveStep - 1 : 0
+  const [activeStepIndex, setActiveStepIndex] = useState(
+    Math.max(0, Math.min(6, currentActiveStep - 1))
   );
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
-    if (currentActiveStep !== undefined && currentActiveStep >= 1 && currentActiveStep <= 7) {
+    if (currentActiveStep >= 1 && currentActiveStep <= 7) {
       setActiveStepIndex(currentActiveStep - 1);
     }
   }, [currentActiveStep]);
 
   useEffect(() => {
-    let interval: ReturnType<typeof setInterval>;
+    let interval: any;
     if (isPlaying) {
       interval = setInterval(() => {
         setActiveStepIndex((prev) => (prev + 1) % WORKFLOW_STEPS.length);
@@ -177,25 +177,25 @@ export const MainWorkflowVisualizer: React.FC<MainWorkflowVisualizerProps> = ({
   const activeStep = WORKFLOW_STEPS[activeStepIndex];
 
   return (
-    <div className="w-full rounded-[16px] border border-white/[0.06] bg-[#12161F] p-6 sm:p-7 shadow-fintech-card space-y-6">
+    <div className="w-full rounded-[16px] border border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#12161F] p-6 sm:p-7 shadow-sm dark:shadow-fintech-card space-y-6 transition-colors">
       {/* 1. Header & Architectural Overview */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.06] pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 dark:border-white/[0.06] pb-4">
         <div>
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="p-1 rounded-[6px] bg-white/[0.04] text-[#9CA3B0] border border-white/[0.06]">
+            <span className="p-1 rounded-[6px] bg-slate-100 dark:bg-white/[0.04] text-slate-600 dark:text-[#9CA3B0] border border-slate-200 dark:border-white/[0.06]">
               <Layers className="w-4 h-4" />
             </span>
-            <span className="text-[11px] font-medium tracking-[0.04em] text-[#6B7280] uppercase">
+            <span className="text-[11px] font-medium tracking-[0.04em] text-slate-400 dark:text-[#6B7280] uppercase">
               Pipeline architecture
             </span>
-            <span className="h-5 px-2 rounded-full inline-flex items-center text-[10px] font-medium bg-white/[0.05] text-[#9CA3B0] border border-white/[0.08]">
+            <span className="h-5 px-2 rounded-full inline-flex items-center text-[10px] font-medium bg-slate-100 dark:bg-white/[0.05] text-slate-600 dark:text-[#9CA3B0] border border-slate-200 dark:border-white/[0.08]">
               7-Stage Deterministic Flow
             </span>
           </div>
-          <h2 className="text-[18px] sm:text-[20px] font-semibold text-[#F5F6FA] mt-1 tracking-tight">
+          <h2 className="text-[18px] sm:text-[20px] font-semibold text-slate-900 dark:text-[#F5F6FA] mt-1 tracking-tight">
             Autonomous Payment Recovery Lifecycle
           </h2>
-          <p className="text-[13px] text-[#9CA3B0] mt-0.5">
+          <p className="text-[13px] text-slate-600 dark:text-[#9CA3B0] mt-0.5">
             Seven-stage causal state machine from gateway failure ingestion to merchant ledger settlement.
           </p>
         </div>
@@ -225,7 +225,7 @@ export const MainWorkflowVisualizer: React.FC<MainWorkflowVisualizerProps> = ({
                 setActiveStepIndex(0);
               }}
               title="Reset to Stage 1"
-              className="p-1.5 rounded-[10px] border border-white/[0.08] bg-[#171C28] hover:bg-[#1C2333] text-[#9CA3B0] hover:text-[#F5F6FA] transition-colors cursor-pointer"
+              className="p-1.5 rounded-[10px] border border-slate-200 dark:border-white/[0.08] bg-slate-100 hover:bg-slate-200 dark:bg-[#171C28] dark:hover:bg-[#1C2333] text-slate-600 hover:text-slate-900 dark:text-[#9CA3B0] dark:hover:text-[#F5F6FA] transition-colors cursor-pointer"
             >
               <RotateCcw className="w-3.5 h-3.5" />
             </button>
@@ -252,8 +252,8 @@ export const MainWorkflowVisualizer: React.FC<MainWorkflowVisualizerProps> = ({
                   isCurrent
                     ? 'bg-[#3B82F6]/10 border-[#3B82F6]/50 shadow-sm'
                     : isPassed
-                    ? 'bg-[#0E121A] border-white/[0.06] opacity-90 hover:border-white/[0.12]'
-                    : 'bg-[#0E121A] border-white/[0.04] opacity-60 hover:opacity-90'
+                    ? 'bg-slate-50 dark:bg-[#0E121A] border-slate-200 dark:border-white/[0.06] opacity-90 hover:border-slate-300 dark:hover:border-white/[0.12]'
+                    : 'bg-slate-50/60 dark:bg-[#0E121A] border-slate-100 dark:border-white/[0.04] opacity-60 hover:opacity-90'
                 }`}
               >
                 {/* Step Top Header */}
@@ -263,7 +263,7 @@ export const MainWorkflowVisualizer: React.FC<MainWorkflowVisualizerProps> = ({
                       className={`text-[9px] px-1.5 py-0.2 rounded-full uppercase border font-medium ${
                         isCurrent
                           ? 'bg-[#3B82F6] text-white border-transparent'
-                          : 'text-[#6B7280] bg-white/[0.04] border-white/[0.06]'
+                          : 'text-slate-500 dark:text-[#6B7280] bg-slate-100 dark:bg-white/[0.04] border-slate-200 dark:border-white/[0.06]'
                       }`}
                     >
                       {item.badge}
@@ -275,8 +275,8 @@ export const MainWorkflowVisualizer: React.FC<MainWorkflowVisualizerProps> = ({
                         isCurrent
                           ? 'bg-[#3B82F6] text-white'
                           : isPassed
-                          ? 'bg-[#10B981]/10 text-[#10B981]'
-                          : 'bg-white/[0.04] text-[#6B7280]'
+                          ? 'bg-[#10B981]/10 text-[#059669] dark:text-[#10B981]'
+                          : 'bg-slate-100 dark:bg-white/[0.04] text-slate-500 dark:text-[#6B7280]'
                       }`}
                     >
                       {isPassed ? (
@@ -291,22 +291,22 @@ export const MainWorkflowVisualizer: React.FC<MainWorkflowVisualizerProps> = ({
                   <h3
                     className={`text-xs tracking-tight leading-tight font-medium ${
                       isCurrent
-                        ? 'text-[#F5F6FA]'
-                        : 'text-[#9CA3B0]'
+                        ? 'text-slate-900 dark:text-[#F5F6FA]'
+                        : 'text-slate-700 dark:text-[#9CA3B0]'
                     }`}
                   >
                     {item.title}
                   </h3>
 
                   {/* Tagline */}
-                  <p className="text-[11px] text-[#6B7280] leading-snug line-clamp-2">
+                  <p className="text-[11px] text-slate-500 dark:text-[#6B7280] leading-snug line-clamp-2">
                     {item.tagline}
                   </p>
                 </div>
 
                 {/* Bottom Engine Badge */}
-                <div className="pt-2 mt-2 border-t border-white/[0.04] flex items-center justify-between text-[10px]">
-                  <span className="text-[#6B7280] truncate max-w-[85px]">{item.engine.split(' ')[0]}</span>
+                <div className="pt-2 mt-2 border-t border-slate-100 dark:border-white/[0.04] flex items-center justify-between text-[10px]">
+                  <span className="text-slate-500 dark:text-[#6B7280] truncate max-w-[85px]">{item.engine.split(' ')[0]}</span>
                   {isCurrent && (
                     <span className="w-1.5 h-1.5 rounded-full bg-[#3B82F6]" />
                   )}
@@ -317,39 +317,39 @@ export const MainWorkflowVisualizer: React.FC<MainWorkflowVisualizerProps> = ({
         </div>
 
         {/* Desktop Connecting Rail Indicator */}
-        <div className="hidden lg:flex items-center justify-between px-6 pt-3 text-[11px] text-[#6B7280]">
-          <span className="flex items-center gap-1 font-medium text-[#9CA3B0]">
+        <div className="hidden lg:flex items-center justify-between px-6 pt-3 text-[11px] text-slate-400 dark:text-[#6B7280]">
+          <span className="flex items-center gap-1 font-medium text-slate-700 dark:text-[#9CA3B0]">
             [1] Failure detected
           </span>
-          <ArrowRight className="w-3 h-3 text-[#6B7280]" />
-          <span className="flex items-center gap-1 font-medium text-[#9CA3B0]">
+          <ArrowRight className="w-3 h-3 text-slate-400 dark:text-[#6B7280]" />
+          <span className="flex items-center gap-1 font-medium text-slate-700 dark:text-[#9CA3B0]">
             [2] Risk isolated
           </span>
-          <ArrowRight className="w-3 h-3 text-[#6B7280]" />
-          <span className="flex items-center gap-1 font-medium text-[#9CA3B0]">
+          <ArrowRight className="w-3 h-3 text-slate-400 dark:text-[#6B7280]" />
+          <span className="flex items-center gap-1 font-medium text-slate-700 dark:text-[#9CA3B0]">
             [3] AI diagnosis
           </span>
-          <ArrowRight className="w-3 h-3 text-[#6B7280]" />
-          <span className="flex items-center gap-1 font-medium text-[#9CA3B0]">
+          <ArrowRight className="w-3 h-3 text-slate-400 dark:text-[#6B7280]" />
+          <span className="flex items-center gap-1 font-medium text-slate-700 dark:text-[#9CA3B0]">
             [4] Action proposal
           </span>
-          <ArrowRight className="w-3 h-3 text-[#6B7280]" />
-          <span className="flex items-center gap-1 font-medium text-[#9CA3B0]">
+          <ArrowRight className="w-3 h-3 text-slate-400 dark:text-[#6B7280]" />
+          <span className="flex items-center gap-1 font-medium text-slate-700 dark:text-[#9CA3B0]">
             [5] Policy check
           </span>
-          <ArrowRight className="w-3 h-3 text-[#6B7280]" />
-          <span className="flex items-center gap-1 font-medium text-[#9CA3B0]">
+          <ArrowRight className="w-3 h-3 text-slate-400 dark:text-[#6B7280]" />
+          <span className="flex items-center gap-1 font-medium text-slate-700 dark:text-[#9CA3B0]">
             [6] Recovery
           </span>
-          <ArrowRight className="w-3 h-3 text-[#10B981]" />
-          <span className="flex items-center gap-1 font-medium text-[#10B981]">
+          <ArrowRight className="w-3 h-3 text-[#059669] dark:text-[#10B981]" />
+          <span className="flex items-center gap-1 font-medium text-[#059669] dark:text-[#10B981]">
             [7] Settled ✓
           </span>
         </div>
       </div>
 
       {/* 3. ACTIVE STAGE DEEP DIVE & TELEMETRY INSPECTOR */}
-      <div className="p-5 rounded-[14px] border border-white/[0.06] bg-[#0E121A]">
+      <div className="p-5 rounded-[14px] border border-slate-200 dark:border-white/[0.06] bg-slate-50 dark:bg-[#0E121A]">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
           {/* Left Column: Stage Explanation */}
           <div className="md:col-span-7 space-y-2">
@@ -357,16 +357,16 @@ export const MainWorkflowVisualizer: React.FC<MainWorkflowVisualizerProps> = ({
               <span className="text-[10px] font-medium px-2 py-0.5 rounded-[6px] uppercase bg-[#3B82F6] text-white">
                 Stage {activeStep.step} of 7
               </span>
-              <span className="text-xs text-[#9CA3B0]">
-                Engine: <strong className="text-[#F5F6FA] font-medium">{activeStep.engine}</strong>
+              <span className="text-xs text-slate-600 dark:text-[#9CA3B0]">
+                Engine: <strong className="text-slate-900 dark:text-[#F5F6FA] font-medium">{activeStep.engine}</strong>
               </span>
             </div>
 
-            <h4 className="text-[16px] font-semibold text-[#F5F6FA]">
+            <h4 className="text-[16px] font-semibold text-slate-900 dark:text-[#F5F6FA]">
               {activeStep.title}: {activeStep.tagline}
             </h4>
 
-            <p className="text-[13px] text-[#9CA3B0] leading-relaxed">
+            <p className="text-[13px] text-slate-600 dark:text-[#9CA3B0] leading-relaxed">
               {activeStep.description}
             </p>
 
@@ -385,26 +385,26 @@ export const MainWorkflowVisualizer: React.FC<MainWorkflowVisualizerProps> = ({
           </div>
 
           {/* Right Column: Telemetry Preview Box */}
-          <div className="md:col-span-5 bg-[#12161F] rounded-[12px] p-4 border border-white/[0.06] space-y-2">
-            <div className="flex items-center justify-between text-[11px] text-[#6B7280] pb-2 border-b border-white/[0.06]">
+          <div className="md:col-span-5 bg-white dark:bg-[#12161F] rounded-[12px] p-4 border border-slate-200 dark:border-white/[0.06] space-y-2">
+            <div className="flex items-center justify-between text-[11px] text-slate-400 dark:text-[#6B7280] pb-2 border-b border-slate-100 dark:border-white/[0.06]">
               <span className="flex items-center gap-1.5 font-medium">
-                <Cpu className="w-3.5 h-3.5 text-[#9CA3B0]" />
+                <Cpu className="w-3.5 h-3.5 text-slate-500 dark:text-[#9CA3B0]" />
                 <span>Telemetry stream</span>
               </span>
-              <span className="h-5 px-2 rounded-full inline-flex items-center gap-1 text-[10px] font-medium text-[#10B981] bg-[#10B981]/10 border border-[#10B981]/20">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
+              <span className="h-5 px-2 rounded-full inline-flex items-center gap-1 text-[10px] font-medium text-[#059669] dark:text-[#10B981] bg-[#10B981]/10 border border-[#10B981]/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#059669] dark:bg-[#10B981]" />
                 Live
               </span>
             </div>
 
             <div className="space-y-1 text-xs">
-              <span className="text-[10px] text-[#6B7280] uppercase tracking-[0.04em] block">
+              <span className="text-[10px] text-slate-400 dark:text-[#6B7280] uppercase tracking-[0.04em] block">
                 {activeStep.sampleTelemetry.label}
               </span>
-              <p className="font-semibold text-[#F5F6FA] tabular-nums">
+              <p className="font-semibold text-slate-900 dark:text-[#F5F6FA] tabular-nums">
                 {activeStep.sampleTelemetry.value}
               </p>
-              <p className="text-[12px] text-[#9CA3B0] truncate">
+              <p className="text-[12px] text-slate-600 dark:text-[#9CA3B0] truncate">
                 {activeStep.sampleTelemetry.details}
               </p>
             </div>
@@ -413,10 +413,10 @@ export const MainWorkflowVisualizer: React.FC<MainWorkflowVisualizerProps> = ({
       </div>
 
       {/* 4. Enterprise Architecture & Governance Note */}
-      <div className="flex items-start gap-3 p-4 rounded-[12px] bg-[#0E121A] border border-white/[0.04] text-xs text-[#9CA3B0]">
-        <Info className="w-4 h-4 text-[#6B7280] shrink-0 mt-0.5" />
+      <div className="flex items-start gap-3 p-4 rounded-[12px] bg-slate-50 dark:bg-[#0E121A] border border-slate-200 dark:border-white/[0.04] text-xs text-slate-600 dark:text-[#9CA3B0]">
+        <Info className="w-4 h-4 text-slate-400 dark:text-[#6B7280] shrink-0 mt-0.5" />
         <div className="leading-relaxed">
-          <strong className="text-[#F5F6FA] font-medium">Deterministic policy enforcement: </strong>
+          <strong className="text-slate-900 dark:text-[#F5F6FA] font-medium">Deterministic policy enforcement: </strong>
           Unlike legacy dunning systems that indiscriminately re-attempt card debits, RecoverAI immediately isolates failed transactions into a monitored risk exposure ledger. Every recovery intervention is synthesized using causal machine learning, but strictly bounded by deterministic merchant compliance guardrails before reaching any payment rail.
         </div>
       </div>
