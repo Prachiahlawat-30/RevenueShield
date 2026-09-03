@@ -39,7 +39,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     recommendations: { title: 'Action Recommendations', subtitle: 'Autonomous next-best payment actions prioritized by confidence' },
     risks: { title: 'Revenue at Risk', subtitle: 'Active failed payment transactions undergoing diagnostic evaluation' },
     workflow: { title: 'Recovery Workflow', subtitle: 'Deterministic AI state machine and gateway re-routing execution' },
-    customers: { title: 'Customers 360', subtitle: 'Customer billing profiles, contact history, and opt-out preferences' },
+    customers: { title: 'Customers', subtitle: 'Customer billing profiles, contact history, and opt-out preferences' },
     experiments: { title: 'A/B Experiments', subtitle: 'Statistical significance testing across dunning copy and retry policies' },
     simulator: { title: 'Strategy Simulator', subtitle: 'Monte Carlo policy yield forecasting and synthetic stress testing' },
     'merchant-intelligence': { title: 'Gateway & Merchant Intel', subtitle: 'PSP health scoring, routing latency, and fee economics' },

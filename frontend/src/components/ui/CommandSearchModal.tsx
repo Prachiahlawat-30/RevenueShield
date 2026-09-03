@@ -160,7 +160,7 @@ export const CommandSearchModal: React.FC<CommandSearchModalProps> = ({
     },
     {
       id: 'customers',
-      label: 'Customers 360 & Recovery Dossier',
+      label: 'Customers & Recovery Profiles',
       category: 'Operations',
       icon: Users,
       action: () => {

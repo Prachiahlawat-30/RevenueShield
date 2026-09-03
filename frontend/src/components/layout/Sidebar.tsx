@@ -76,7 +76,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'dashboard' as NavTab, label: 'Overview', icon: LayoutDashboard },
     { id: 'risks' as NavTab, label: 'Revenue at Risk', icon: AlertTriangle, badge: 'Live' },
     { id: 'workflow' as NavTab, label: 'Recovery Workflow', icon: PlayCircle },
-    { id: 'customers' as NavTab, label: 'Customers 360', icon: Users },
+    { id: 'customers' as NavTab, label: 'Customers', icon: Users },
     { id: 'audit' as NavTab, label: 'Audit Trail', icon: ScrollText },
   ];
 

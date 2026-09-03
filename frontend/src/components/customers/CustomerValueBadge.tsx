@@ -78,7 +78,7 @@ export const CustomerValueBadge: React.FC<CustomerValueBadgeProps> = ({
           <div className="flex items-center justify-between border-b border-fintech-border pb-2">
             <span className="text-xs font-bold uppercase tracking-wider text-fintech-primary flex items-center gap-1">
               <User className="w-3.5 h-3.5 text-brand-500" />
-              Customer 360 Value
+              Customer Value
             </span>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-brand-500/10 text-brand-600 dark:text-brand-400 font-bold border border-brand-500/30">
               Score {profile.customer_value_score}/100
