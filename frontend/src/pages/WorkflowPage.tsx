@@ -80,7 +80,8 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
     try {
       const data = await getRevenueRisks({ page: 1, page_size: 20 });
       setAllRisks(data.items);
-      if (!selectedRiskId && data.items.length > 0) {
+      const riskExists = data.items.some((r) => r.id === selectedRiskId);
+      if ((!selectedRiskId || !riskExists) && data.items.length > 0) {
         setSelectedRiskId(data.items[0].id);
       }
     } catch (err) {
