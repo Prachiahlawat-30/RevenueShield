@@ -207,7 +207,15 @@ export const PaymentDecisionGraph: React.FC<Props> = ({ riskId, onRefresh }) => 
       </div>
 
       {/* TOP FLAGSHIP SECTION: Full-Width AI vs Policy Governance Panel */}
-      <PolicyDecisionPanel policyNode={graphData.nodes.find((n) => n.type === 'policy_engine')} />
+      <PolicyDecisionPanel
+        comparison={graphData.ai_vs_policy}
+        policyNode={graphData.nodes.find((n) => n.type === 'policy_engine')}
+        riskId={riskId}
+        onExecuted={() => {
+          fetchGraph();
+          if (onRefresh) onRefresh();
+        }}
+      />
 
       {/* Main Grid: 15-Node Interactive Visual Matrix + Inspection Panels */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
