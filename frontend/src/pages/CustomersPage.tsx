@@ -229,27 +229,29 @@ export const CustomersPage: React.FC = () => {
           <div className="max-h-[640px] overflow-y-auto">
             <table className="w-full text-left text-xs table-fixed">
               <colgroup>
-                <col className="w-[52%]" />
-                <col className="w-[24%]" />
-                <col className="w-[24%]" />
+                <col className="w-[44%]" />
+                <col className="w-[22%]" />
+                <col className="w-[20%]" />
+                <col className="w-[14%]" />
               </colgroup>
               <thead className="sticky top-0 z-10">
                 <tr className="border-b border-slate-200 dark:border-white/[0.06] text-slate-400 dark:text-[#6B7280] uppercase text-[10px] font-semibold tracking-[0.04em] bg-slate-50 dark:bg-[#0E121A]">
                   <th className="px-4 py-3 font-semibold">Customer</th>
                   <th className="px-3 py-3 font-semibold">Card & Expiry</th>
-                  <th className="px-3 py-3 font-semibold text-right sm:text-left">Policy State</th>
+                  <th className="px-3 py-3 font-semibold">Policy State</th>
+                  <th className="px-3 py-3 font-semibold text-right">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-white/[0.04]">
                 {isLoading ? (
                   <tr>
-                    <td colSpan={3} className="p-4">
-                      <TableSkeleton rows={6} cols={3} />
+                    <td colSpan={4} className="p-4">
+                      <TableSkeleton rows={6} cols={4} />
                     </td>
                   </tr>
                 ) : filteredCustomers.length === 0 ? (
                   <tr>
-                    <td colSpan={3} className="py-12 text-center text-slate-400 dark:text-[#6B7280]">
+                    <td colSpan={4} className="py-12 text-center text-slate-400 dark:text-[#6B7280]">
                       No customers match your search criteria.
                     </td>
                   </tr>
@@ -269,7 +271,7 @@ export const CustomersPage: React.FC = () => {
                       <tr
                         key={c.id}
                         onClick={() => handleSelectCustomer(c.id)}
-                        className={`cursor-pointer transition-all border-l-4 ${
+                        className={`group cursor-pointer transition-all border-l-4 ${
                           isSelected
                             ? 'border-l-[#3B82F6] bg-blue-50/70 dark:bg-[#3B82F6]/10'
                             : 'border-l-transparent hover:bg-slate-50 dark:hover:bg-white/[0.02]'
@@ -302,7 +304,7 @@ export const CustomersPage: React.FC = () => {
                         </td>
 
                         {/* Policy State Column - strictly whitespace-nowrap, never wraps */}
-                        <td className="px-3 py-3.5 text-right sm:text-left whitespace-nowrap overflow-hidden">
+                        <td className="px-3 py-3.5 whitespace-nowrap overflow-hidden">
                           <button
                             type="button"
                             onClick={(e) => handleToggleOptOut(c, e)}
@@ -325,6 +327,20 @@ export const CustomersPage: React.FC = () => {
                               </>
                             )}
                           </button>
+                        </td>
+
+                        {/* Action Column */}
+                        <td className="px-3 py-3.5 text-right whitespace-nowrap overflow-hidden">
+                          <span
+                            className={`inline-flex items-center text-xs font-semibold transition-colors ${
+                              isSelected
+                                ? 'text-[#2563EB] dark:text-[#3B82F6]'
+                                : 'text-slate-400 dark:text-[#6B7280] group-hover:text-[#2563EB] dark:group-hover:text-[#3B82F6]'
+                            }`}
+                          >
+                            Inspect
+                            <ChevronRight className="h-3.5 w-3.5 ml-0.5" />
+                          </span>
                         </td>
                       </tr>
                     );
