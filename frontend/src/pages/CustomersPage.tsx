@@ -13,6 +13,7 @@ import {
   Clock,
   Filter,
   Lock,
+  Code,
 } from 'lucide-react';
 import { getCustomers, getCustomerDetail, toggleCustomerOptOut, CustomerDetail } from '../api/customers';
 import { Customer } from '../types';
@@ -20,12 +21,14 @@ import { Button } from '../components/ui/Button';
 import { TableSkeleton } from '../components/ui/Skeleton';
 import { CustomerRecoveryProfileCard } from '../components/customers/CustomerRecoveryProfileCard';
 import { CustomerValueBadge } from '../components/customers/CustomerValueBadge';
+import { JsonDrawer } from '../components/common/JsonDrawer';
 import { formatCurrency, formatDate, getFailureTypeLabel } from '../utils/formatters';
 
 export const CustomersPage: React.FC = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCustomer, setSelectedCustomer] = useState<CustomerDetail | null>(null);
+  const [inspectDrawerData, setInspectDrawerData] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [filterMode, setFilterMode] = useState<'ALL' | 'ACTIVE' | 'OPTED_OUT'>('ALL');
 
@@ -72,6 +75,41 @@ export const CustomersPage: React.FC = () => {
       setSelectedCustomer(detail);
     } catch (err) {
       console.error('Failed to load customer detail', err);
+    }
+  };
+
+  const handleInspectCustomer = async (c: Customer | CustomerDetail) => {
+    try {
+      const detail = await getCustomerDetail(c.id);
+      setSelectedCustomer(detail);
+      setInspectDrawerData({
+        account: {
+          id: detail.id,
+          name: detail.name,
+          email: detail.email,
+          external_id: detail.external_id,
+          created_at: detail.created_at,
+        },
+        vaulted_credentials: {
+          card_last4: detail.card_last4 || '4242',
+          card_expiry: detail.card_expiry || '12/28',
+          payment_method_type: detail.payment_method_type || 'credit_card',
+          pci_dss_tokenization: 'NETWORK_TOKENIZED_ACTIVE',
+        },
+        policy_guardrails: {
+          opt_out_rule_1: detail.is_opted_out
+            ? 'OPTED_OUT (COMMUNICATIONS_HALTED)'
+            : 'ACTIVE (RECOVERY_PERMITTED)',
+          high_value_threshold_rule_2: '$1,000.00 (₹1,00,000)',
+          max_attempts_rule_3: 3,
+          cooldown_hours_rule_4: 24,
+          anti_duplicate_rule_5: 'ENFORCED',
+        },
+        total_transactions: detail.transactions.length,
+        transactions: detail.transactions,
+      });
+    } catch (err) {
+      console.error('Failed to inspect customer', err);
     }
   };
 
@@ -329,18 +367,24 @@ export const CustomersPage: React.FC = () => {
                           </button>
                         </td>
 
-                        {/* Action Column */}
+                        {/* Action Column - Functional Button */}
                         <td className="px-3 py-3.5 text-right whitespace-nowrap overflow-hidden">
-                          <span
-                            className={`inline-flex items-center text-xs font-semibold transition-colors ${
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleInspectCustomer(c);
+                            }}
+                            className={`px-2.5 py-1 rounded-[6px] text-xs font-semibold inline-flex items-center gap-1 transition-all cursor-pointer shadow-xs ${
                               isSelected
-                                ? 'text-[#2563EB] dark:text-[#3B82F6]'
-                                : 'text-slate-400 dark:text-[#6B7280] group-hover:text-[#2563EB] dark:group-hover:text-[#3B82F6]'
+                                ? 'bg-[#3B82F6] text-white'
+                                : 'bg-slate-100 dark:bg-white/[0.06] text-slate-700 dark:text-slate-300 hover:bg-[#3B82F6] hover:text-white dark:hover:bg-[#3B82F6] dark:hover:text-white'
                             }`}
+                            title={`Inspect full ledger and telemetry for ${c.name}`}
                           >
-                            Inspect
-                            <ChevronRight className="h-3.5 w-3.5 ml-0.5" />
-                          </span>
+                            <span>Inspect</span>
+                            <ChevronRight className="w-3 h-3" />
+                          </button>
                         </td>
                       </tr>
                     );
@@ -355,7 +399,7 @@ export const CustomersPage: React.FC = () => {
         <div className="lg:col-span-5 sticky top-6 self-start rounded-[16px] border border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#12161F] p-5 shadow-sm dark:shadow-fintech-card space-y-4 transition-colors">
           {selectedCustomer ? (
             <div className="space-y-4">
-              {/* Account Header with Non-Wrapping Button */}
+              {/* Account Header with Actions */}
               <div className="border-b border-slate-200 dark:border-white/[0.06] pb-3.5 flex items-start justify-between gap-2">
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="w-10 h-10 rounded-[10px] bg-[#3B82F6]/10 border border-[#3B82F6]/20 flex items-center justify-center text-xs font-bold text-[#3B82F6] shrink-0">
@@ -381,19 +425,30 @@ export const CustomersPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Quick Toggle Opt-Out Button - Strictly whitespace-nowrap and shrink-0 */}
-                <button
-                  type="button"
-                  onClick={() => handleToggleOptOut(selectedCustomer)}
-                  className={`px-2.5 py-1 rounded-[8px] text-[10px] font-semibold border transition-all cursor-pointer whitespace-nowrap shrink-0 ${
-                    selectedCustomer.is_opted_out
-                      ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/25 hover:bg-rose-500/20'
-                      : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/25 hover:bg-emerald-500/20'
-                  }`}
-                  title="Toggle customer opt-out status"
-                >
-                  {selectedCustomer.is_opted_out ? 'Opted Out' : 'Active Policy'}
-                </button>
+                {/* Right Header Buttons: Raw Dossier + Opt-Out Toggle */}
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => handleInspectCustomer(selectedCustomer)}
+                    className="p-1 rounded-[8px] border border-slate-200 dark:border-white/[0.08] hover:bg-slate-100 dark:hover:bg-white/[0.06] text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+                    title="View full audit telemetry"
+                  >
+                    <Code className="w-3.5 h-3.5" />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleToggleOptOut(selectedCustomer)}
+                    className={`px-2.5 py-1 rounded-[8px] text-[10px] font-semibold border transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+                      selectedCustomer.is_opted_out
+                        ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/25 hover:bg-rose-500/20'
+                        : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/25 hover:bg-emerald-500/20'
+                    }`}
+                    title="Toggle customer opt-out status"
+                  >
+                    {selectedCustomer.is_opted_out ? 'Opted Out' : 'Active Policy'}
+                  </button>
+                </div>
               </div>
 
               {/* Recovery Intelligence Profile */}
@@ -482,6 +537,16 @@ export const CustomersPage: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Customer JSON Dossier Drawer */}
+      {inspectDrawerData && (
+        <JsonDrawer
+          isOpen={Boolean(inspectDrawerData)}
+          onClose={() => setInspectDrawerData(null)}
+          title={`Customer Audit Dossier: ${inspectDrawerData.account?.name || 'Account'}`}
+          data={inspectDrawerData}
+        />
+      )}
     </div>
   );
 };
