@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Search, PlayCircle, RefreshCw, ChevronLeft, ChevronRight, AlertTriangle, ArrowUpRight, UploadCloud, Zap } from 'lucide-react';
+import { Search, RefreshCw, ChevronLeft, ChevronRight, AlertTriangle, ArrowUpRight, UploadCloud, Zap } from 'lucide-react';
 import { getRevenueRisks } from '../api/risks';
 import { RevenueRisk } from '../types';
 import { StatusBadge } from '../components/ui/StatusBadge';
 import { Button } from '../components/ui/Button';
 import { TableSkeleton } from '../components/ui/Skeleton';
 import { EmptyState } from '../components/ui/EmptyState';
-import { formatCurrency, formatDate, getFailureTypeLabel, getActionLabel } from '../utils/formatters';
+import { formatCurrency, formatDate, getFailureTypeLabel } from '../utils/formatters';
 import { ImportCsvModal } from '../components/transactions/ImportCsvModal';
 import { RazorpayWebhookModal } from '../components/transactions/RazorpayWebhookModal';
 
@@ -63,15 +63,15 @@ export const RisksPage: React.FC<RisksPageProps> = ({ onSelectRisk }) => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#6822CC]">
+          <div className="flex items-center gap-2 text-xs font-mono font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">
             <AlertTriangle className="h-4 w-4" />
-            <span>Financial Operations Console</span>
+            <span>OPERATIONAL TRIAGE CONSOLE</span>
           </div>
-          <h1 className="mt-1 text-2xl font-bold text-[#1A1A2E] dark:text-white sm:text-3xl tracking-tight">
+          <h1 className="mt-1 text-2xl font-bold text-slate-900 dark:text-white sm:text-3xl tracking-tight">
             Revenue at Risk
           </h1>
-          <p className="mt-1 text-xs text-[#6B7280]">
-            Money associated with failed or potentially recoverable transactions ({total} active cases).
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+            Active failed transactions undergoing diagnostic triage and policy evaluation ({total} active cases).
           </p>
         </div>
 
@@ -101,29 +101,29 @@ export const RisksPage: React.FC<RisksPageProps> = ({ onSelectRisk }) => {
             isLoading={isLoading}
             onClick={fetchRisks}
           >
-            Refresh Console
+            Refresh
           </Button>
         </div>
       </div>
 
       {/* Filters Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-[14px] border border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] p-4 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-[18px] border border-slate-200/80 dark:border-white/[0.09] bg-white/65 dark:bg-white/[0.045] backdrop-blur-glass p-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
         {/* Search */}
         <form onSubmit={handleSearchSubmit} className="relative flex-1 max-w-md">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#9CA3AF]" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search customer name, email, or invoice ID..."
-            className="w-full rounded-lg border border-[#E5E7EB] dark:border-[#242E42] bg-slate-50/60 dark:bg-slate-800/40 pl-10 pr-4 py-2 text-xs text-[#1A1A2E] dark:text-white placeholder-[#9CA3AF] focus:border-[#6822CC] focus:outline-none transition-colors"
+            className="w-full rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.04] pl-10 pr-4 py-2 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-slate-400 transition-colors"
           />
         </form>
 
         {/* Filters */}
         <div className="flex flex-wrap items-center gap-3">
           {/* Status Tabs */}
-          <div className="flex items-center rounded-lg border border-[#E5E7EB] dark:border-[#242E42] bg-slate-50/80 dark:bg-slate-800/40 p-1">
+          <div className="flex items-center rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.04] p-1">
             {statusOptions.map((status) => (
               <button
                 key={status}
@@ -131,10 +131,10 @@ export const RisksPage: React.FC<RisksPageProps> = ({ onSelectRisk }) => {
                   setStatusFilter(status);
                   setPage(1);
                 }}
-                className={`rounded-md px-2.5 py-1 text-xs font-semibold uppercase tracking-wider transition-all ${
+                className={`rounded-lg px-2.5 py-1 text-xs font-mono font-medium uppercase tracking-wider transition-all cursor-pointer ${
                   statusFilter === status
-                    ? 'bg-white dark:bg-[#131824] text-[#6822CC] dark:text-[#B892FF] shadow-sm font-bold'
-                    : 'text-[#6B7280] hover:text-[#1A1A2E] dark:hover:text-white'
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 {status}
@@ -149,7 +149,7 @@ export const RisksPage: React.FC<RisksPageProps> = ({ onSelectRisk }) => {
               setTypeFilter(e.target.value);
               setPage(1);
             }}
-            className="rounded-lg border border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] px-3 py-2 text-xs text-[#1A1A2E] dark:text-white focus:border-[#6822CC] focus:outline-none"
+            className="rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.04] px-3 py-2 text-xs text-slate-800 dark:text-slate-200 focus:outline-none cursor-pointer"
           >
             <option value="all">All Failure Categories</option>
             <option value="temporary_decline">Temporary Bank Decline</option>
@@ -162,22 +162,22 @@ export const RisksPage: React.FC<RisksPageProps> = ({ onSelectRisk }) => {
       </div>
 
       {/* Risks Data Table */}
-      <div className="overflow-hidden rounded-[14px] border border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+      <div className="overflow-hidden rounded-[18px] border border-slate-200/80 dark:border-white/[0.09] bg-white/65 dark:bg-white/[0.045] backdrop-blur-glass shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs fintech-table-sticky-header">
             <thead>
-              <tr className="border-b border-[#E5E7EB] dark:border-[#242E42] bg-slate-50/70 dark:bg-slate-800/40 text-[#6B7280] uppercase font-semibold text-[11px]">
-                <th className="px-6 py-3.5">Customer & Account</th>
-                <th className="px-6 py-3.5">Failure Category</th>
-                <th className="px-6 py-3.5">Amount at Risk</th>
-                <th className="px-6 py-3.5">Recovered</th>
-                <th className="px-6 py-3.5">Status</th>
-                <th className="px-6 py-3.5">Attempts</th>
-                <th className="px-6 py-3.5">Detected</th>
-                <th className="px-6 py-3.5 text-right">Action</th>
+              <tr className="border-b border-slate-200/60 dark:border-white/[0.06] text-slate-500 dark:text-slate-400 uppercase font-mono text-[11px]">
+                <th className="px-6 py-3.5 font-medium">Customer & Account</th>
+                <th className="px-6 py-3.5 font-medium">Failure Category</th>
+                <th className="px-6 py-3.5 font-medium">Amount at Risk</th>
+                <th className="px-6 py-3.5 font-medium">Recovered</th>
+                <th className="px-6 py-3.5 font-medium">Status</th>
+                <th className="px-6 py-3.5 font-medium">Attempts</th>
+                <th className="px-6 py-3.5 font-medium">Detected</th>
+                <th className="px-6 py-3.5 text-right font-medium">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E5E7EB] dark:divide-[#242E42] font-medium">
+            <tbody className="divide-y divide-slate-100 dark:divide-white/[0.04] font-medium">
               {isLoading ? (
                 <tr>
                   <td colSpan={8} className="p-4">
@@ -198,34 +198,34 @@ export const RisksPage: React.FC<RisksPageProps> = ({ onSelectRisk }) => {
                   <tr
                     key={risk.id}
                     onClick={() => onSelectRisk(risk.id)}
-                    className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 cursor-pointer transition-colors group"
+                    className="hover:bg-slate-50/50 dark:hover:bg-white/[0.02] cursor-pointer transition-all duration-150 group"
                   >
                     <td className="px-6 py-3.5">
-                      <div className="font-semibold text-[#1A1A2E] dark:text-white group-hover:text-[#6822CC] dark:group-hover:text-[#B892FF] transition-colors">
+                      <div className="font-semibold text-slate-900 dark:text-white transition-colors">
                         {risk.customer?.name || 'Customer'}
                       </div>
-                      <div className="text-[11px] text-[#6B7280]">
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
                         {risk.customer?.email || risk.customer_id}
                       </div>
                     </td>
                     <td className="px-6 py-3.5">
-                      <span className="inline-flex items-center rounded-md bg-slate-100 dark:bg-slate-800 px-2 py-0.5 text-xs text-[#1A1A2E] dark:text-white border border-[#E5E7EB] dark:border-slate-700">
+                      <span className="inline-flex items-center rounded-md bg-slate-500/[0.06] px-2 py-0.5 text-xs text-slate-700 dark:text-slate-300 border border-slate-500/15">
                         {getFailureTypeLabel(risk.detected_failure_type)}
                       </span>
                     </td>
-                    <td className="px-6 py-3.5 font-mono font-bold text-base text-[#DC2626]">
+                    <td className="px-6 py-3.5 font-mono font-bold text-slate-900 dark:text-white">
                       {formatCurrency(risk.amount_at_risk)}
                     </td>
-                    <td className="px-6 py-3.5 font-mono font-semibold text-[#16A34A]">
+                    <td className="px-6 py-3.5 font-mono font-medium text-emerald-600 dark:text-emerald-400">
                       {formatCurrency(risk.amount_recovered)}
                     </td>
                     <td className="px-6 py-3.5">
                       <StatusBadge status={risk.status} size="sm" />
                     </td>
-                    <td className="px-6 py-3.5 font-mono text-[#6B7280]">
+                    <td className="px-6 py-3.5 font-mono text-slate-500 dark:text-slate-400">
                       {risk.attempt_count} / 3
                     </td>
-                    <td className="px-6 py-3.5 text-[#6B7280]">
+                    <td className="px-6 py-3.5 text-slate-500 dark:text-slate-400 font-mono text-[11px]">
                       {formatDate(risk.created_at)}
                     </td>
                     <td className="px-6 py-3.5 text-right">
@@ -234,7 +234,7 @@ export const RisksPage: React.FC<RisksPageProps> = ({ onSelectRisk }) => {
                           e.stopPropagation();
                           onSelectRisk(risk.id);
                         }}
-                        className="inline-flex items-center gap-1 rounded-lg border border-[#E5E7EB] dark:border-slate-700 bg-white dark:bg-[#131824] px-3 py-1.5 text-xs font-semibold text-[#6822CC] dark:text-[#B892FF] hover:bg-[#F3EEFF] dark:hover:bg-purple-950/30 hover:border-[#D5BEFF] transition-all"
+                        className="inline-flex items-center gap-1 rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.04] px-3 py-1.5 text-xs font-semibold text-slate-800 dark:text-slate-200 hover:text-slate-950 dark:hover:text-white hover:bg-white dark:hover:bg-white/[0.08] hover:-translate-y-[1px] transition-all cursor-pointer shadow-xs"
                       >
                         <span>Diagnose</span>
                         <ArrowUpRight className="h-3 w-3" />
@@ -249,10 +249,10 @@ export const RisksPage: React.FC<RisksPageProps> = ({ onSelectRisk }) => {
 
         {/* Pagination Footer */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between border-t border-[#E5E7EB] dark:border-[#242E42] bg-slate-50/50 dark:bg-slate-800/30 px-6 py-3.5 text-xs text-[#6B7280]">
+          <div className="flex items-center justify-between border-t border-slate-200/60 dark:border-white/[0.06] bg-transparent px-6 py-3.5 text-xs text-slate-500">
             <div>
-              Showing page <span className="font-bold text-[#1A1A2E] dark:text-white">{page}</span> of{' '}
-              <span className="font-bold text-[#1A1A2E] dark:text-white">{totalPages}</span> ({total} total failures)
+              Page <span className="font-semibold text-slate-900 dark:text-white">{page}</span> of{' '}
+              <span className="font-semibold text-slate-900 dark:text-white">{totalPages}</span> ({total} total failures)
             </div>
             <div className="flex items-center gap-2">
               <Button

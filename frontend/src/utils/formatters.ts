@@ -106,36 +106,35 @@ export const getStatusBadgeClass = (status: string): string => {
     case 'approved':
     case 'allow':
     case 'active':
-      return 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/40';
+      return 'bg-emerald-500/[0.08] text-emerald-700 dark:text-emerald-400 border-emerald-500/20';
     case 'recovering':
     case 'executing':
-      return 'bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400 border-blue-200 dark:border-blue-800/40';
+      return 'bg-blue-500/[0.08] text-blue-700 dark:text-blue-400 border-blue-500/20';
     case 'diagnosing':
     case 'action_selected':
     case 'action selected':
     case 'policy_check':
     case 'pending':
     case 'pending_review':
-      return 'bg-[#F3EEFF] text-[#6822CC] dark:bg-purple-950/40 dark:text-purple-300 border-purple-200 dark:border-purple-800/40';
+      return 'bg-slate-500/[0.08] text-slate-700 dark:text-slate-300 border-slate-500/20';
     case 'detected':
     case 'medium':
     case 'warning':
-      return 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 border-amber-200 dark:border-amber-800/40';
+      return 'bg-amber-500/[0.08] text-amber-700 dark:text-amber-400 border-amber-500/20';
     case 'escalated':
     case 'human_approval_required':
-      return 'bg-violet-50 text-violet-700 dark:bg-violet-950/40 dark:text-violet-300 border-violet-200 dark:border-violet-800/40';
+      return 'bg-amber-500/[0.08] text-amber-700 dark:text-amber-400 border-amber-500/20';
     case 'stopped':
     case 'failed':
     case 'declined':
     case 'rejected':
     case 'block':
     case 'high':
-      return 'bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400 border-rose-200 dark:border-rose-800/40';
+      return 'bg-rose-500/[0.08] text-rose-700 dark:text-rose-400 border-rose-500/20';
     case 'low':
     case 'stale':
-      return 'bg-slate-50 text-slate-600 dark:bg-slate-800/40 dark:text-slate-400 border-slate-200 dark:border-slate-700';
     default:
-      return 'bg-slate-50 text-slate-600 dark:bg-slate-800/40 dark:text-slate-400 border-slate-200 dark:border-slate-700';
+      return 'bg-slate-500/[0.06] text-slate-600 dark:text-slate-400 border-slate-500/15';
   }
 };
 

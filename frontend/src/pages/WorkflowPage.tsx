@@ -248,43 +248,43 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
       </div>
 
       {/* View Mode Switcher */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-fintech-border pb-3">
+      <div className="flex flex-wrap items-center gap-2 border-b border-slate-200/60 dark:border-white/[0.06] pb-3">
         <button
           onClick={() => setActiveView('graph')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-fintech-md text-xs font-bold transition-all ${
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-150 cursor-pointer ${
             activeView === 'graph'
-              ? 'bg-brand-500 text-white shadow-fintech-sm shadow-brand-500/20'
-              : 'bg-fintech-surface text-fintech-secondary hover:text-fintech-primary border border-fintech-border'
+              ? 'bg-slate-900/[0.07] dark:bg-white/[0.1] text-slate-900 dark:text-white border border-slate-300/80 dark:border-white/20 shadow-xs'
+              : 'bg-white/40 dark:bg-white/[0.02] text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200/60 dark:border-white/[0.06]'
           }`}
         >
           <Network className="w-4 h-4" />
           <span>Payment Decision Graph</span>
-          <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded ${activeView === 'graph' ? 'bg-white/20 text-white' : 'bg-fintech-surface-subtle text-fintech-muted'}`}>
+          <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-slate-500/[0.08] text-slate-600 dark:text-slate-300">
             15 Nodes
           </span>
         </button>
 
         <button
           onClick={() => setActiveView('preauth')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-fintech-md text-xs font-bold transition-all ${
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-150 cursor-pointer ${
             activeView === 'preauth'
-              ? 'bg-brand-500 text-white shadow-fintech-sm shadow-brand-500/20'
-              : 'bg-fintech-surface text-fintech-secondary hover:text-fintech-primary border border-fintech-border'
+              ? 'bg-slate-900/[0.07] dark:bg-white/[0.1] text-slate-900 dark:text-white border border-slate-300/80 dark:border-white/20 shadow-xs'
+              : 'bg-white/40 dark:bg-white/[0.02] text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200/60 dark:border-white/[0.06]'
           }`}
         >
           <Zap className="w-4 h-4" />
           <span>Adaptive Pre-Auth & Smart 3DS</span>
-          <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded ${activeView === 'preauth' ? 'bg-white/20 text-white' : 'bg-fintech-surface-subtle text-fintech-muted'}`}>
+          <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-slate-500/[0.08] text-slate-600 dark:text-slate-300">
             Pre-Payment
           </span>
         </button>
 
         <button
           onClick={() => setActiveView('stepper')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-fintech-md text-xs font-bold transition-all ${
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-150 cursor-pointer ${
             activeView === 'stepper'
-              ? 'bg-brand-500 text-white shadow-fintech-sm shadow-brand-500/20'
-              : 'bg-fintech-surface text-fintech-secondary hover:text-fintech-primary border border-fintech-border'
+              ? 'bg-slate-900/[0.07] dark:bg-white/[0.1] text-slate-900 dark:text-white border border-slate-300/80 dark:border-white/20 shadow-xs'
+              : 'bg-white/40 dark:bg-white/[0.02] text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200/60 dark:border-white/[0.06]'
           }`}
         >
           <Play className="w-4 h-4" />
@@ -293,10 +293,10 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
 
         <button
           onClick={() => setActiveView('timeline')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-fintech-md text-xs font-bold transition-all ${
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-150 cursor-pointer ${
             activeView === 'timeline'
-              ? 'bg-brand-500 text-white shadow-fintech-sm shadow-brand-500/20'
-              : 'bg-fintech-surface text-fintech-secondary hover:text-fintech-primary border border-fintech-border'
+              ? 'bg-slate-900/[0.07] dark:bg-white/[0.1] text-slate-900 dark:text-white border border-slate-300/80 dark:border-white/20 shadow-xs'
+              : 'bg-white/40 dark:bg-white/[0.02] text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200/60 dark:border-white/[0.06]'
           }`}
         >
           <Layers className="w-4 h-4" />

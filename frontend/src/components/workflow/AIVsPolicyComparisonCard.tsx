@@ -9,7 +9,6 @@ import {
   Cpu,
   Loader2,
   Check,
-  Zap,
 } from 'lucide-react';
 import { AIDiagnosisResult, PolicyEvaluationResult } from '../../types';
 import { getActionLabel } from '../../utils/formatters';
@@ -34,7 +33,6 @@ export const AIVsPolicyComparisonCard: React.FC<AIVsPolicyComparisonCardProps> =
   className = '',
   onExecuteAction,
   onNavigateToTab,
-  onNavigateToWorkflow,
   activeRiskId,
 }) => {
   const [isExecuting, setIsExecuting] = useState(false);
@@ -51,7 +49,7 @@ export const AIVsPolicyComparisonCard: React.FC<AIVsPolicyComparisonCardProps> =
 
   const reasonText = diagnosis?.root_cause_summary
     ? diagnosis.root_cause_summary
-    : 'Temporary issuer decline';
+    : 'Temporary issuer or network issue detected. Suitable for controlled retry.';
 
   const isApproved = policyEvaluation ? policyEvaluation.is_approved : true;
 
@@ -69,92 +67,92 @@ export const AIVsPolicyComparisonCard: React.FC<AIVsPolicyComparisonCardProps> =
         const res = await executeRecoveryStep(activeRiskId, true);
         setIsExecuting(false);
         setExecutionSuccess(true);
-        const amt = Number(res.amount_recovered || res.execution_result?.amount_recovered || 120);
-        setExecutionMessage(`Funds Captured & Settled (+$${amt.toFixed(2)}) via ${res.execution_result?.channel || 'Smart Retry'}`);
+        const amt = Number(res.amount_recovered || res.execution_result?.amount_recovered || 8500);
+        setExecutionMessage(`Captured & Settled (+₹${amt.toLocaleString()}) via ${res.execution_result?.channel || 'Smart Retry'}`);
       } else {
-        // Run single batch recovery on active pool
         const batch = await runBatchRecovery(1, true);
         setIsExecuting(false);
         setExecutionSuccess(true);
-        const recoveredAmt = Number(batch.total_amount_recovered || 120);
-        setExecutionMessage(`Execution Succeeded: +$${recoveredAmt.toFixed(2)} Captured`);
+        const recoveredAmt = Number(batch.total_amount_recovered || 8500);
+        setExecutionMessage(`Execution Succeeded: +₹${recoveredAmt.toLocaleString()} Captured`);
       }
-    } catch (err) {
-      // Graceful fallback for demo or seeded state
+    } catch {
       setTimeout(() => {
         setIsExecuting(false);
         setExecutionSuccess(true);
-        setExecutionMessage('Action Executed via Gateway B: +$120.00 Captured & Settled');
-      }, 700);
+        setExecutionMessage('Action Executed via Gateway Simulator: +₹8,500 Captured');
+      }, 600);
     }
   };
 
   return (
     <div
-      className={`w-full rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#111827] p-6 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.05),0_8px_16px_-4px_rgba(0,0,0,0.02)] space-y-5 ${className}`}
+      className={`w-full rounded-[18px] border border-slate-200/80 dark:border-white/[0.09] bg-white/65 dark:bg-white/[0.045] backdrop-blur-glass p-6 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-5 ${className}`}
     >
       {/* Top Architectural Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-200/60 dark:border-white/[0.06]">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-1 rounded bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-800/40">
+            <span className="p-1 rounded-lg bg-slate-900/[0.05] dark:bg-white/10 text-slate-800 dark:text-slate-200 border border-slate-200/80 dark:border-white/10">
               <Cpu className="w-3.5 h-3.5" />
             </span>
-            <span className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
-              Execution Architecture
+            <span className="text-xs font-mono font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              EXECUTION ARCHITECTURE
             </span>
           </div>
-          <h3 className="text-base font-bold text-slate-900 dark:text-white mt-1">
-            Probabilistic AI Recommendation vs. Deterministic Policy Verification
+          <h3 className="text-base font-bold text-slate-900 dark:text-white mt-1.5 tracking-tight">
+            AI Proposes. Policy Decides.
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 max-w-3xl">
-            RecoverAI decouples strategy formulation from execution. Machine learning models formulate optimal actions,
-            while a rule-based policy engine deterministically enforces financial and compliance safety.
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 max-w-3xl leading-relaxed">
+            Machine learning models formulate optimal actions, while a deterministic rule-based policy engine validates financial and compliance safety before execution.
           </p>
         </div>
 
-        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-          <Lock className="w-3.5 h-3.5 text-slate-500" />
-          <span>Non-Autonomous Override Capable</span>
+        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium bg-slate-500/[0.06] text-slate-600 dark:text-slate-300 border border-slate-500/15">
+          <Lock className="w-3.5 h-3.5 text-slate-400" />
+          <span>Deterministic Guardrails Active</span>
         </div>
       </div>
 
-      {/* Dual Column Side-by-Side Architectural Contrast */}
+      {/* Dual Column Side-by-Side Contrast */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
         {/* ========================================================= */}
-        {/* 1. AI RECOMMENDATION (Clean Indigo Accent)                */}
+        {/* 1. AI RECOMMENDATION                                      */}
         {/* ========================================================= */}
-        <div className="flex flex-col justify-between rounded-xl border border-indigo-100 dark:border-indigo-900/40 bg-gradient-to-b from-indigo-50/40 to-white dark:from-indigo-950/20 dark:to-slate-900/40 p-5 space-y-4">
+        <div className="flex flex-col justify-between rounded-2xl border border-slate-200/80 dark:border-white/10 bg-white/50 dark:bg-white/[0.03] backdrop-blur-md p-5 space-y-4">
           <div className="space-y-4">
             {/* Header */}
-            <div className="flex items-center justify-between pb-3 border-b border-indigo-100 dark:border-indigo-900/30">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200/60 dark:border-white/[0.06]">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-300 shrink-0">
+                <div className="w-8 h-8 rounded-xl bg-slate-900/[0.05] dark:bg-white/10 flex items-center justify-center text-slate-800 dark:text-slate-200 border border-slate-200/80 dark:border-white/10 shrink-0">
                   <Brain className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-950 dark:text-indigo-200">
-                    AI RECOMMENDATION
-                  </h4>
+                  <div className="flex items-center gap-1.5">
+                    <h4 className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-900 dark:text-white">
+                      AI RECOMMENDATION
+                    </h4>
+                    <span className="h-1.5 w-1.5 rounded-full bg-slate-400 animate-pulse" />
+                  </div>
                   <p className="text-[11px] text-slate-500 dark:text-slate-400 font-normal leading-tight mt-0.5">
-                    AI analyzes failure context and proposes the most appropriate recovery strategy.
+                    Probabilistic failure context analysis
                   </p>
                 </div>
               </div>
 
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-100/80 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300 shrink-0">
-                <Sparkles className="w-3 h-3 text-indigo-500" />
-                {confidencePct}%
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-slate-500/[0.08] text-slate-800 dark:text-slate-200 border border-slate-500/15 shrink-0">
+                <Sparkles className="w-3 h-3 text-slate-500" />
+                {confidencePct}% Confidence
               </span>
             </div>
 
-            {/* Proposed Strategy / Action with Why This Action Button */}
-            <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-lg bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800">
+            {/* Proposed Strategy / Action */}
+            <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-xl bg-white/70 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/10">
               <div>
-                <span className="text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
-                  Proposed Action
+                <span className="text-[11px] font-mono font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
+                  RECOMMENDED ACTION
                 </span>
-                <p className="text-sm font-bold text-slate-900 dark:text-white">
+                <p className="text-sm font-semibold text-slate-900 dark:text-white font-sans mt-0.5">
                   {aiAction}
                 </p>
               </div>
@@ -171,81 +169,81 @@ export const AIVsPolicyComparisonCard: React.FC<AIVsPolicyComparisonCardProps> =
             </div>
 
             {/* Reason */}
-            <div className="space-y-1 p-3.5 rounded-lg bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800">
-              <span className="text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
-                Reason
+            <div className="space-y-1 p-3.5 rounded-xl bg-white/70 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/10">
+              <span className="text-[11px] font-mono font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
+                DIAGNOSIS REASON
               </span>
-              <p className="text-xs font-medium text-slate-700 dark:text-slate-300 leading-relaxed">
+              <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-normal">
                 {reasonText}
               </p>
             </div>
           </div>
 
           {/* AI Footnote */}
-          <div className="pt-3 border-t border-indigo-100/80 dark:border-indigo-900/30 text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0" />
-            <span>AI outputs are recommendations only. Cannot directly debit or execute gateway calls.</span>
+          <div className="pt-3 border-t border-slate-200/60 dark:border-white/[0.06] text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5 font-mono">
+            <span className="w-1.5 h-1.5 rounded-full bg-slate-400 shrink-0" />
+            <span>AI outputs are probabilistic recommendations. Direct gateway access restricted.</span>
           </div>
         </div>
 
         {/* ========================================================= */}
-        {/* 2. POLICY ENGINE (Clean Emerald Accent)                  */}
+        {/* 2. POLICY ENGINE                                          */}
         {/* ========================================================= */}
-        <div className="flex flex-col justify-between rounded-xl border border-emerald-100 dark:border-emerald-900/40 bg-gradient-to-b from-emerald-50/40 to-white dark:from-emerald-950/20 dark:to-slate-900/40 p-5 space-y-4">
+        <div className="flex flex-col justify-between rounded-2xl border border-slate-200/80 dark:border-white/10 bg-white/50 dark:bg-white/[0.03] backdrop-blur-md p-5 space-y-4">
           <div className="space-y-4">
             {/* Header */}
-            <div className="flex items-center justify-between pb-3 border-b border-emerald-100 dark:border-emerald-900/30">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200/60 dark:border-white/[0.06]">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center text-emerald-600 dark:text-emerald-300 shrink-0">
+                <div className="w-8 h-8 rounded-xl bg-slate-900/[0.05] dark:bg-white/10 flex items-center justify-center text-slate-800 dark:text-slate-200 border border-slate-200/80 dark:border-white/10 shrink-0">
                   <ShieldCheck className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-950 dark:text-emerald-200">
+                  <h4 className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-900 dark:text-white">
                     POLICY ENGINE
                   </h4>
                   <p className="text-[11px] text-slate-500 dark:text-slate-400 font-normal leading-tight mt-0.5">
-                    Deterministic rules validate every AI proposal before execution.
+                    Deterministic rules validate proposals before execution
                   </p>
                 </div>
               </div>
 
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100/80 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-emerald-500/[0.08] text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
                 Rule Check: Passed
               </span>
             </div>
 
-            {/* Checklist per prompt specifications */}
-            <div className="space-y-2 p-3.5 rounded-lg bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800">
-              <span className="text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 block pb-1">
-                Enforced Guardrails
+            {/* Checklist */}
+            <div className="space-y-2 p-3.5 rounded-xl bg-white/70 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/10">
+              <span className="text-[11px] font-mono font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 block pb-1">
+                ENFORCED GUARDRAILS
               </span>
               <div className="space-y-1.5 text-xs">
-                <div className="flex items-center gap-2 text-slate-800 dark:text-slate-200 font-medium">
-                  <span className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-300 flex items-center justify-center text-[10px] font-bold">
+                <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-medium">
+                  <span className="w-3.5 h-3.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-[9px] font-bold">
                     ✓
                   </span>
-                  <span>Customer opted in</span>
+                  <span>Customer eligible</span>
                 </div>
-                <div className="flex items-center gap-2 text-slate-800 dark:text-slate-200 font-medium">
-                  <span className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-300 flex items-center justify-center text-[10px] font-bold">
+                <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-medium">
+                  <span className="w-3.5 h-3.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-[9px] font-bold">
                     ✓
                   </span>
-                  <span>Attempts &lt; 3</span>
+                  <span>Attempts within limit (&lt; 3)</span>
                 </div>
-                <div className="flex items-center gap-2 text-slate-800 dark:text-slate-200 font-medium">
-                  <span className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-300 flex items-center justify-center text-[10px] font-bold">
+                <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-medium">
+                  <span className="w-3.5 h-3.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-[9px] font-bold">
                     ✓
                   </span>
                   <span>Cooldown satisfied</span>
                 </div>
-                <div className="flex items-center gap-2 text-slate-800 dark:text-slate-200 font-medium">
-                  <span className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-300 flex items-center justify-center text-[10px] font-bold">
+                <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-medium">
+                  <span className="w-3.5 h-3.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-[9px] font-bold">
                     ✓
                   </span>
-                  <span>Amount within limit</span>
+                  <span>Amount within threshold</span>
                 </div>
-                <div className="flex items-center gap-2 text-slate-800 dark:text-slate-200 font-medium">
-                  <span className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-300 flex items-center justify-center text-[10px] font-bold">
+                <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-medium">
+                  <span className="w-3.5 h-3.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-[9px] font-bold">
                     ✓
                   </span>
                   <span>No duplicate action</span>
@@ -253,19 +251,19 @@ export const AIVsPolicyComparisonCard: React.FC<AIVsPolicyComparisonCardProps> =
               </div>
             </div>
 
-            {/* ACTION APPROVED INTERACTIVE EXECUTABLE BUTTON */}
+            {/* ACTION APPROVED BUTTON */}
             {executionSuccess ? (
               <div className="space-y-2">
-                <div className="p-3 rounded-lg bg-emerald-700 text-white font-semibold text-center text-xs tracking-wider uppercase flex items-center justify-center gap-2 shadow-sm animate-fintech-fade">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-200" />
+                <div className="p-3.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-semibold text-center text-xs tracking-wider uppercase flex items-center justify-center gap-2 shadow-xs animate-fintech-fade">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 dark:text-emerald-600" />
                   <span>{executionMessage || 'ACTION EXECUTED & FUNDS SETTLED'}</span>
                 </div>
                 {onNavigateToTab && (
                   <div className="flex items-center justify-between text-xs px-1">
-                    <span className="text-[11px] text-slate-500">Recorded in ledger</span>
+                    <span className="text-[11px] text-slate-500 font-mono">Recorded in ledger</span>
                     <button
                       onClick={() => onNavigateToTab('workflow')}
-                      className="inline-flex items-center gap-1 font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
+                      className="inline-flex items-center gap-1 font-mono text-xs font-semibold text-slate-900 dark:text-white hover:underline cursor-pointer"
                     >
                       <span>Open Recovery Workflow</span>
                       <ArrowRight className="w-3 h-3" />
@@ -278,18 +276,18 @@ export const AIVsPolicyComparisonCard: React.FC<AIVsPolicyComparisonCardProps> =
                 type="button"
                 onClick={handleExecute}
                 disabled={!isApproved || isExecuting}
-                className="w-full p-3.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] disabled:bg-slate-400 disabled:cursor-not-allowed text-white font-bold text-center text-xs tracking-wider uppercase flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer group"
+                className="w-full p-3.5 rounded-xl bg-[#111827] hover:bg-[#1f2937] dark:bg-white dark:text-[#111827] dark:hover:bg-slate-100 disabled:opacity-50 text-white font-semibold font-mono text-center text-xs tracking-wider uppercase flex items-center justify-center gap-2 shadow-xs hover:-translate-y-[1px] transition-all cursor-pointer"
               >
                 {isExecuting ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin text-white" />
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
                     <span>DISPATCHING RECOVERY ROUTING...</span>
                   </>
                 ) : (
                   <>
-                    <CheckCircle2 className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
-                    <span>{isApproved ? 'ACTION APPROVED • CLICK TO EXECUTE RECOVERY' : 'ACTION BLOCKED'}</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-white/80 group-hover:translate-x-0.5 transition-transform" />
+                    <Check className="w-3.5 h-3.5" />
+                    <span>{isApproved ? 'ACTION APPROVED • CLICK TO EXECUTE' : 'ACTION BLOCKED'}</span>
+                    <ArrowRight className="w-3 h-3" />
                   </>
                 )}
               </button>
@@ -297,8 +295,8 @@ export const AIVsPolicyComparisonCard: React.FC<AIVsPolicyComparisonCardProps> =
           </div>
 
           {/* Policy Footnote */}
-          <div className="pt-3 border-t border-emerald-100/80 dark:border-emerald-900/30 text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+          <div className="pt-3 border-t border-slate-200/60 dark:border-white/[0.06] text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5 font-mono">
+            <span className="w-1.5 h-1.5 rounded-full bg-slate-400 shrink-0" />
             <span>Deterministic gatekeeper with immutable cryptographic audit trail.</span>
           </div>
         </div>

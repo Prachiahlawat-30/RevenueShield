@@ -1,23 +1,14 @@
 import React from 'react';
 import {
-  Check,
   ArrowDown,
-  Clock,
-  CheckCircle2,
-  AlertCircle,
-  Coins,
-  ShieldCheck,
-  Zap,
-  Brain,
-  Sparkles,
   Layers,
   Loader2,
-  XCircle,
-  UserCheck,
+  Zap,
   ArrowRight,
+  Check,
 } from 'lucide-react';
 import { RevenueRisk, AIDiagnosisResult, PolicyEvaluationResult, RecoveryExecutionResult } from '../../types';
-import { formatCurrency, formatIndianLakhs, getActionLabel, getFailureTypeLabel } from '../../utils/formatters';
+import { formatCurrency, getActionLabel, getFailureTypeLabel } from '../../utils/formatters';
 
 interface TransactionStateTimelineProps {
   risk?: RevenueRisk | null;
@@ -40,7 +31,6 @@ export const TransactionStateTimeline: React.FC<TransactionStateTimelineProps> =
   onExecuteStep,
   isExecuting = false,
 }) => {
-  // Format real timestamps from database objects
   const formatTime = (isoString?: string | null, fallbackSecondsOffset: number = 0) => {
     if (!isoString) {
       if (!risk?.created_at) return '10:31:02';
@@ -62,17 +52,16 @@ export const TransactionStateTimeline: React.FC<TransactionStateTimelineProps> =
     3
   );
 
-  // Dynamic values based on REAL state
   const hasDiagnosis = Boolean(diagnosis || stage !== 'DETECTED');
   const actionName = diagnosis?.recommended_action
     ? getActionLabel(diagnosis.recommended_action)
     : risk?.status === 'escalated'
-    ? 'escalate to human'
+    ? 'Escalate to human'
     : 'Retry payment';
 
   const confidenceScore = diagnosis?.confidence_score
     ? Math.round(diagnosis.confidence_score * 100)
-    : 85;
+    : 91;
 
   const isPolicyChecked = Boolean(
     policyEvaluation ||
@@ -108,35 +97,30 @@ export const TransactionStateTimeline: React.FC<TransactionStateTimelineProps> =
       ? Number(risk.amount_at_risk)
       : 8500;
 
-  const formattedAmount = `${currencySymbol}${amountVal.toLocaleString()}`;
+  const formattedAmount = `${currencySymbol}${amountVal.toLocaleString('en-IN')}`;
 
-  // Build the 6 functional dynamic steps
   const steps = [
-    // 1. DETECTED
     {
       id: 'DETECTED',
       status: 'completed',
-      title: '✓ DETECTED',
+      title: 'DETECTED',
       subtitle: detectedTime,
-      detail: risk ? getFailureTypeLabel(risk.detected_failure_type) : 'Decline Ingested',
+      detail: risk ? getFailureTypeLabel(risk.detected_failure_type) : 'Temporary decline detected',
     },
-    // 2. DIAGNOSING
     {
       id: 'DIAGNOSING',
       status: hasDiagnosis ? 'completed' : stage === 'DIAGNOSING' ? 'active' : 'pending',
-      title: hasDiagnosis ? '✓ DIAGNOSING' : stage === 'DIAGNOSING' ? '⟳ DIAGNOSING...' : '◌ DIAGNOSING',
-      subtitle: hasDiagnosis ? diagnosingTime : 'Awaiting diagnostic run',
-      detail: diagnosis?.root_cause_summary || (risk ? getFailureTypeLabel(risk.detected_failure_type) : 'Root cause analysis'),
+      title: 'DIAGNOSING',
+      subtitle: hasDiagnosis ? diagnosingTime : 'Diagnostic analysis',
+      detail: diagnosis?.root_cause_summary || (risk ? getFailureTypeLabel(risk.detected_failure_type) : 'Issuer failure context'),
     },
-    // 3. ACTION SELECTED
     {
       id: 'ACTION_SELECTED',
       status: hasDiagnosis ? 'completed' : 'pending',
-      title: hasDiagnosis ? '✓ ACTION SELECTED' : '◌ ACTION SELECTION',
+      title: 'ACTION SELECTED',
       subtitle: hasDiagnosis ? actionName : 'Pending diagnosis',
-      detail: hasDiagnosis ? `AI Confidence: ${confidenceScore}%` : 'Optimal yield strategy',
+      detail: hasDiagnosis ? `AI confidence: ${confidenceScore}%` : 'Optimal intervention',
     },
-    // 4. POLICY CHECK
     {
       id: 'POLICY_CHECK',
       status: isPolicyChecked
@@ -146,23 +130,18 @@ export const TransactionStateTimeline: React.FC<TransactionStateTimelineProps> =
         : stage === 'POLICY_CHECK'
         ? 'active'
         : 'pending',
-      title: isPolicyChecked
-        ? isApproved
-          ? '✓ POLICY CHECK'
-          : '✕ POLICY BLOCKED'
-        : '◌ POLICY CHECK',
+      title: 'POLICY CHECK',
       subtitle: isPolicyChecked
         ? isApproved
           ? 'Approved'
-          : 'Requires Manual Override'
-        : 'Deterministic guardrail verification',
+          : 'Manual Override Required'
+        : 'Safety check',
       detail: isPolicyChecked
         ? isApproved
-          ? '0 violations • Cooldown & caps satisfied'
+          ? 'Cooldown satisfied • Retry limit not reached'
           : policyEvaluation?.rejection_reason || 'Rule limit reached'
-        : '5 merchant safety rules pending',
+        : 'Deterministic guardrails',
     },
-    // 5. EXECUTED
     {
       id: 'EXECUTED',
       status: hasExecuted
@@ -170,76 +149,71 @@ export const TransactionStateTimeline: React.FC<TransactionStateTimelineProps> =
         : isExecuting || stage === 'EXECUTING'
         ? 'active'
         : 'pending',
-      title: hasExecuted
-        ? '✓ EXECUTED'
-        : isExecuting || stage === 'EXECUTING'
-        ? '⟳ EXECUTING...'
-        : '◌ EXECUTED',
+      title: 'EXECUTED',
       subtitle: hasExecuted
         ? executionChannel
         : isExecuting
-        ? 'Dispatching payment retry...'
+        ? 'Dispatching retry...'
         : 'Awaiting execution',
       detail: hasExecuted ? executedTime : 'Optimal routing channel',
     },
-    // 6. RECOVERED / TERMINAL OUTCOME
     {
       id: 'RECOVERED',
       status: isRecovered ? 'success' : isEscalated ? 'escalated' : isStopped ? 'stopped' : 'pending',
       title: isRecovered
-        ? '💰 RECOVERED'
+        ? 'RECOVERED'
         : isEscalated
-        ? '👤 ESCALATED'
+        ? 'ESCALATED'
         : isStopped
-        ? '🛑 STOPPED'
-        : '⏳ RECOVERY PENDING',
+        ? 'STOPPED'
+        : 'RECOVERY PENDING',
       subtitle: isRecovered
         ? formattedAmount
         : isEscalated
-        ? 'Sent to Human Ops'
+        ? 'Human review'
         : isStopped
-        ? 'Max Attempts'
+        ? 'Max attempts reached'
         : `${formattedAmount} at risk`,
       detail: isRecovered
         ? 'Settled to merchant ledger'
         : isEscalated
-        ? 'Agent review dispatched'
+        ? 'Sent to operator queue'
         : isStopped
-        ? 'Retry cap enforced'
-        : 'Awaiting final capture settlement',
+        ? 'Retry ceiling enforced'
+        : 'Awaiting capture settlement',
       isHero: true,
     },
   ];
 
   return (
     <div
-      className={`rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-[#111827] p-6 shadow-[0_1px_3px_rgba(0,0,0,0.05),0_8px_16px_-4px_rgba(0,0,0,0.02)] space-y-5 ${className}`}
+      className={`rounded-[18px] border border-slate-200/80 dark:border-white/[0.09] bg-white/65 dark:bg-white/[0.045] backdrop-blur-glass p-6 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-5 ${className}`}
     >
       {/* Top Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200/60 dark:border-white/[0.06]">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center border border-indigo-200/60 dark:border-indigo-800/40">
+          <div className="w-8 h-8 rounded-xl bg-slate-900/[0.05] dark:bg-white/10 text-slate-800 dark:text-slate-200 flex items-center justify-center border border-slate-200/80 dark:border-white/10">
             <Layers className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">
-              Visual State Timeline
+            <h3 className="text-xs font-mono font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              STATE TIMELINE
             </h3>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono truncate max-w-xs">
+            <p className="text-[11px] text-slate-900 dark:text-white font-mono font-semibold truncate max-w-xs">
               TXN {risk?.transaction_id || risk?.id || 'Active Case'}
             </p>
           </div>
         </div>
 
         {risk?.customer?.name && (
-          <span className="text-[11px] font-semibold px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-            Customer: {risk.customer.name}
+          <span className="text-[11px] font-mono font-medium px-2.5 py-0.5 rounded-md bg-slate-500/[0.06] text-slate-700 dark:text-slate-300 border border-slate-500/15">
+            {risk.customer.name}
           </span>
         )}
       </div>
 
-      {/* Timeline Steps (Dynamic Causal Sequence) */}
-      <div className="flex flex-col items-center justify-center space-y-2.5 max-w-sm mx-auto">
+      {/* Timeline Steps */}
+      <div className="flex flex-col items-center justify-center space-y-2 max-w-sm mx-auto w-full">
         {steps.map((step, idx) => {
           const isLast = idx === steps.length - 1;
           const isCompleted = step.status === 'completed';
@@ -247,42 +221,43 @@ export const TransactionStateTimeline: React.FC<TransactionStateTimelineProps> =
           const isSuccess = step.status === 'success';
           const isBlocked = step.status === 'blocked';
           const isEscalatedStatus = step.status === 'escalated';
-          const isPending = step.status === 'pending';
 
           return (
             <React.Fragment key={step.id}>
-              {/* Step Card with dynamic styling */}
+              {/* Step Card with subtle fintech styling */}
               <div
-                className={`w-full text-center p-3.5 rounded-xl border transition-all ${
+                className={`w-full text-center p-3.5 rounded-xl border transition-all duration-200 ${
                   isSuccess
-                    ? 'border-emerald-500 bg-gradient-to-b from-emerald-50/80 to-white dark:from-emerald-950/40 dark:to-slate-900 shadow-md ring-2 ring-emerald-500/20'
+                    ? 'border-emerald-500/30 bg-emerald-500/[0.04] dark:bg-emerald-500/[0.06] shadow-glass-1 ring-1 ring-emerald-500/20'
                     : isEscalatedStatus
-                    ? 'border-amber-500 bg-amber-50/50 dark:bg-amber-950/30'
+                    ? 'border-amber-500/30 bg-amber-500/[0.04] dark:bg-amber-500/[0.06]'
                     : isBlocked
-                    ? 'border-rose-500 bg-rose-50/50 dark:bg-rose-950/30'
+                    ? 'border-rose-500/30 bg-rose-500/[0.04] dark:bg-rose-500/[0.06]'
                     : isActive
-                    ? 'border-indigo-500 bg-indigo-50/40 dark:bg-indigo-950/30 ring-2 ring-indigo-500/20 animate-pulse'
+                    ? 'border-slate-400/40 bg-white/80 dark:bg-white/[0.08] ring-1 ring-slate-400/20 animate-pulse-subtle'
                     : isCompleted
-                    ? 'border-slate-200/90 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/30'
-                    : 'border-dashed border-slate-200 dark:border-slate-800/80 bg-slate-50/30 dark:bg-slate-900/20 opacity-60'
+                    ? 'border-slate-200/80 dark:border-white/[0.08] bg-white/50 dark:bg-white/[0.03]'
+                    : 'border-dashed border-slate-200/60 dark:border-white/[0.05] bg-white/20 dark:bg-white/[0.01] opacity-50'
                 }`}
               >
-                {/* Status Header: e.g. ✓ DETECTED or ⟳ DIAGNOSING */}
-                <div className="flex items-center justify-center gap-1.5 font-bold font-mono text-xs tracking-wider">
-                  {isActive && <Loader2 className="w-3.5 h-3.5 animate-spin text-indigo-600" />}
+                {/* Status Header */}
+                <div className="flex items-center justify-center gap-1.5 font-mono text-xs tracking-wider">
+                  {isActive && <Loader2 className="w-3.5 h-3.5 animate-spin text-slate-700 dark:text-slate-300" />}
+                  {isCompleted && <Check className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300" />}
+                  {isSuccess && <span className="text-emerald-600 dark:text-emerald-400 font-bold">✓</span>}
                   <span
                     className={
                       isSuccess
-                        ? 'text-emerald-700 dark:text-emerald-400 font-extrabold text-sm'
+                        ? 'text-emerald-600 dark:text-emerald-400 font-semibold text-xs'
                         : isBlocked
-                        ? 'text-rose-600 dark:text-rose-400'
+                        ? 'text-rose-600 dark:text-rose-400 font-semibold'
                         : isEscalatedStatus
-                        ? 'text-amber-600 dark:text-amber-400'
+                        ? 'text-amber-600 dark:text-amber-400 font-semibold'
                         : isActive
-                        ? 'text-indigo-600 dark:text-indigo-400'
+                        ? 'text-slate-900 dark:text-white font-semibold'
                         : isCompleted
-                        ? 'text-emerald-600 dark:text-emerald-400'
-                        : 'text-slate-400 dark:text-slate-500'
+                        ? 'text-slate-700 dark:text-slate-300 font-medium'
+                        : 'text-slate-400'
                     }
                   >
                     {step.title}
@@ -291,16 +266,16 @@ export const TransactionStateTimeline: React.FC<TransactionStateTimelineProps> =
 
                 {/* Subtitle / Value */}
                 <div
-                  className={`mt-1 font-bold font-mono ${
+                  className={`mt-1 font-mono ${
                     isSuccess
-                      ? 'text-2xl text-emerald-600 dark:text-emerald-400 font-black'
+                      ? 'text-2xl text-slate-900 dark:text-white font-bold font-sans'
                       : isBlocked
-                      ? 'text-sm text-rose-700 dark:text-rose-300'
+                      ? 'text-sm text-rose-700 dark:text-rose-300 font-medium'
                       : isEscalatedStatus
-                      ? 'text-sm text-amber-700 dark:text-amber-300'
+                      ? 'text-sm text-amber-700 dark:text-amber-300 font-medium'
                       : isCompleted
-                      ? 'text-sm text-slate-800 dark:text-slate-200'
-                      : 'text-xs text-slate-400 dark:text-slate-500 font-normal'
+                      ? 'text-sm text-slate-900 dark:text-white font-semibold'
+                      : 'text-xs text-slate-400 font-normal'
                   }`}
                 >
                   {step.subtitle}
@@ -317,11 +292,11 @@ export const TransactionStateTimeline: React.FC<TransactionStateTimelineProps> =
                 <div
                   className={`flex justify-center py-0.5 transition-colors ${
                     isCompleted
-                      ? 'text-emerald-500/70 dark:text-emerald-500/50'
+                      ? 'text-slate-400 dark:text-slate-600'
                       : 'text-slate-300 dark:text-slate-700'
                   }`}
                 >
-                  <ArrowDown className="w-4 h-4" />
+                  <ArrowDown className="w-3.5 h-3.5" />
                 </div>
               )}
             </React.Fragment>
@@ -329,14 +304,14 @@ export const TransactionStateTimeline: React.FC<TransactionStateTimelineProps> =
         })}
       </div>
 
-      {/* Interactive Action Trigger directly on the timeline */}
+      {/* Interactive Action Trigger */}
       {onExecuteStep && !isRecovered && isApproved && (
-        <div className="pt-3 border-t border-slate-100 dark:border-slate-800">
+        <div className="pt-3 border-t border-slate-200/60 dark:border-white/[0.06]">
           <button
             type="button"
             onClick={onExecuteStep}
             disabled={isExecuting}
-            className="w-full py-2.5 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] disabled:bg-slate-400 text-white text-xs font-bold font-mono uppercase tracking-wider flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
+            className="w-full py-2.5 px-3 rounded-xl bg-[#111827] hover:bg-[#1f2937] dark:bg-white dark:text-[#111827] dark:hover:bg-slate-100 disabled:opacity-50 text-white text-xs font-semibold font-mono uppercase tracking-wider flex items-center justify-center gap-2 shadow-xs hover:-translate-y-[1px] transition-all cursor-pointer"
           >
             {isExecuting ? (
               <>

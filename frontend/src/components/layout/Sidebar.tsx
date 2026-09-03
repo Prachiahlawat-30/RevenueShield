@@ -73,12 +73,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const [showAdvanced, setShowAdvanced] = useState(true);
 
-  // Core Primary Navigation as requested
+  // Core Primary Navigation
   const primaryNavItems = [
     { id: 'dashboard' as NavTab, label: 'Overview', icon: LayoutDashboard },
     { id: 'risks' as NavTab, label: 'Revenue at Risk', icon: AlertTriangle, badge: 'Live' },
-    { id: 'workflow' as NavTab, label: 'Recovery', icon: PlayCircle },
-    { id: 'customers' as NavTab, label: 'Customers', icon: Users },
+    { id: 'workflow' as NavTab, label: 'Recovery Workflow', icon: PlayCircle },
+    { id: 'customers' as NavTab, label: 'Customers 360', icon: Users },
     { id: 'audit' as NavTab, label: 'Audit Trail', icon: ScrollText },
   ];
 
@@ -91,7 +91,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         { id: 'control-center' as NavTab, label: 'Recovery Control Center', icon: Activity, badge: 'Ops' },
         { id: 'intelligence' as NavTab, label: 'Recovery Intelligence', icon: TrendingUp },
         { id: 'specialized-use-cases' as NavTab, label: 'Specialized Recovery Hub', icon: Briefcase, badge: 'B2B/UPI' },
-        { id: 'leakage' as NavTab, label: 'Revenue Leakage Radar', icon: Radar, badge: 'New' },
+        { id: 'leakage' as NavTab, label: 'Revenue Leakage Radar', icon: Radar, badge: 'Radar' },
         { id: 'predictive' as NavTab, label: 'Predictive Risk & Forecast', icon: Zap, badge: 'AI' },
         { id: 'recommendations' as NavTab, label: 'Action Recommendations', icon: Sparkles, badge: 'Auto' },
         { id: 'policy-optimizer' as NavTab, label: 'Policy Optimizer', icon: ShieldCheck },
@@ -117,18 +117,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <button
         key={item.id}
         onClick={() => onSelectTab(item.id)}
-        className={`group flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs font-medium transition-all ${
+        className={`relative group flex w-full items-center justify-between rounded-xl px-3 py-2 text-xs font-medium transition-all duration-150 cursor-pointer ${
           isActive
-            ? 'bg-[#F3EEFF] text-[#6822CC] dark:bg-[#6822CC]/20 dark:text-[#B892FF] font-bold shadow-sm'
-            : 'text-[#6B7280] hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-[#1A1A2E] dark:hover:text-white'
+            ? 'bg-slate-900/[0.06] dark:bg-white/[0.09] text-slate-900 dark:text-white font-semibold shadow-xs'
+            : 'text-slate-500 dark:text-slate-400 hover:bg-slate-900/[0.03] dark:hover:bg-white/[0.04] hover:text-slate-900 dark:hover:text-white'
         }`}
       >
+        {/* Subtle accent indicator for active state */}
+        {isActive && (
+          <span className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-slate-900 dark:bg-white" />
+        )}
+
         <div className="flex items-center gap-2.5">
           <Icon
             className={`h-4 w-4 shrink-0 transition-colors ${
               isActive
-                ? 'text-[#6822CC] dark:text-[#B892FF]'
-                : 'text-[#9CA3AF] group-hover:text-[#1A1A2E] dark:group-hover:text-white'
+                ? 'text-slate-900 dark:text-white'
+                : 'text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200'
             }`}
           />
           {!isCollapsed && <span className="truncate">{item.label}</span>}
@@ -136,10 +141,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {!isCollapsed && item.badge && (
           <span
-            className={`rounded px-1.5 py-0.2 text-[9px] font-mono font-bold uppercase tracking-wider ${
+            className={`rounded px-1.5 py-0.2 text-[9px] font-mono font-medium tracking-wider uppercase border ${
               isActive
-                ? 'bg-[#6822CC]/15 text-[#6822CC] dark:text-[#B892FF]'
-                : 'bg-slate-100 dark:bg-slate-800 text-[#6B7280] border border-[#E5E7EB] dark:border-slate-700'
+                ? 'bg-slate-900/10 dark:bg-white/10 text-slate-800 dark:text-slate-200 border-slate-900/20 dark:border-white/20'
+                : 'bg-slate-500/[0.06] text-slate-500 dark:text-slate-400 border-slate-500/15'
             }`}
           >
             {item.badge}
@@ -161,37 +166,37 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <aside
-      className={`fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] transition-all duration-200 ${
+      className={`fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-slate-200/80 dark:border-white/[0.08] bg-[#F7F8FA]/95 dark:bg-[oklch(0.218_0.008_223.9)]/95 backdrop-blur-2xl transition-all duration-200 ${
         isCollapsed ? 'w-16' : 'w-64'
       }`}
     >
       {/* Brand Header Motif */}
-      <div className="flex h-16 items-center justify-between border-b border-[#E5E7EB] dark:border-[#242E42] px-4 shrink-0">
+      <div className="flex h-16 items-center justify-between border-b border-slate-200/80 dark:border-white/[0.08] px-4 shrink-0">
         {!isCollapsed ? (
           <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#6822CC] text-white shadow-sm shadow-[#6822CC]/25">
-              <Zap className="h-4.5 w-4.5 fill-current" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs">
+              <Zap className="h-4 w-4 fill-current" />
             </div>
             <div>
               <div className="flex items-center gap-1.5 leading-none">
-                <span className="text-sm font-bold tracking-tight text-[#1A1A2E] dark:text-white">
-                  RECOVER<span className="text-[#6822CC]">AI</span>
+                <span className="text-sm font-bold tracking-tight text-slate-900 dark:text-white">
+                  RECOVER<span className="opacity-60">AI</span>
                 </span>
-                <span className="rounded px-1.5 py-0.5 text-[9px] font-mono font-bold text-[#6822CC] bg-[#F3EEFF] border border-[#D5BEFF] dark:bg-purple-950/40 dark:border-purple-800/40">
-                  FINTECH
+                <span className="rounded px-1.5 py-0.5 text-[9px] font-mono font-semibold text-slate-600 dark:text-slate-300 bg-slate-500/10 border border-slate-500/20">
+                  OPS
                 </span>
               </div>
-              <span className="text-[10px] font-medium text-[#6B7280]">Payment Operations</span>
+              <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400">Financial Operations</span>
             </div>
           </div>
         ) : (
           <button
             onClick={onToggleCollapse}
             title="Expand sidebar"
-            className="group relative mx-auto flex h-9 w-9 items-center justify-center rounded-lg bg-[#6822CC] hover:bg-[#4B1A99] text-white shadow-sm transition-all cursor-pointer"
+            className="group relative mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs transition-all cursor-pointer hover:-translate-y-[1px]"
           >
-            <Zap className="h-4.5 w-4.5 fill-current group-hover:hidden" />
-            <PanelLeftOpen className="h-4.5 w-4.5 hidden group-hover:block" />
+            <Zap className="h-4 w-4 fill-current group-hover:hidden" />
+            <PanelLeftOpen className="h-4 w-4 hidden group-hover:block" />
           </button>
         )}
 
@@ -199,7 +204,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <button
             onClick={onToggleCollapse}
             title="Collapse sidebar"
-            className="text-[#9CA3AF] hover:text-[#1A1A2E] dark:hover:text-white p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            className="text-slate-400 hover:text-slate-900 dark:hover:text-white p-1.5 rounded-lg hover:bg-slate-900/[0.04] dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
           >
             <PanelLeftClose className="h-4 w-4" />
           </button>
@@ -211,8 +216,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Core Primary Navigation */}
         <div className="space-y-1">
           {!isCollapsed && (
-            <div className="px-2 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF]">
-              MAIN MENU
+            <div className="px-2 pb-1.5 text-[10px] font-mono font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500">
+              CORE PLATFORM
             </div>
           )}
           {primaryNavItems.map(renderNavButton)}
@@ -220,17 +225,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Secondary Modules (All preserved) */}
         {secondarySections.map((section, sIdx) => (
-          <div key={sIdx} className="space-y-1 pt-2 border-t border-[#E5E7EB] dark:border-[#242E42]">
+          <div key={sIdx} className="space-y-1 pt-3 border-t border-slate-200/60 dark:border-white/[0.06]">
             {!isCollapsed && (
               <button
                 onClick={() => setShowAdvanced(!showAdvanced)}
-                className="flex items-center justify-between w-full px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-[#9CA3AF] hover:text-[#1A1A2E] dark:hover:text-white transition-colors"
+                className="flex items-center justify-between w-full px-2 py-1 text-[10px] font-mono font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors cursor-pointer"
               >
                 <span>{section.title}</span>
                 {showAdvanced ? (
-                  <ChevronDown className="h-3 w-3" />
+                  <ChevronDown className="h-3 w-3 opacity-60" />
                 ) : (
-                  <ChevronRight className="h-3 w-3" />
+                  <ChevronRight className="h-3 w-3 opacity-60" />
                 )}
               </button>
             )}
@@ -240,48 +245,48 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </nav>
 
       {/* Operator Copilot Quick Trigger */}
-      <div className="p-3 border-t border-[#E5E7EB] dark:border-[#242E42] shrink-0 bg-slate-50/40 dark:bg-slate-900/20">
+      <div className="p-3 border-t border-slate-200/60 dark:border-white/[0.06] shrink-0 bg-slate-50/50 dark:bg-white/[0.02]">
         <button
           onClick={onOpenCopilot}
-          className={`w-full flex items-center justify-between p-2.5 rounded-lg border border-[#D5BEFF] bg-[#F3EEFF]/60 hover:bg-[#F3EEFF] dark:bg-purple-950/20 dark:border-purple-800/40 hover:border-[#6822CC]/40 transition-all group ${
+          className={`w-full flex items-center justify-between p-2.5 rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.04] hover:bg-white dark:hover:bg-white/[0.07] transition-all duration-200 group cursor-pointer shadow-xs ${
             isCollapsed ? 'justify-center' : ''
           }`}
         >
-          <div className="flex items-center gap-2">
-            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-[#6822CC] text-white shadow-sm">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs">
               <Bot className="h-3.5 w-3.5" />
             </div>
             {!isCollapsed && (
               <div className="text-left leading-tight">
-                <span className="text-xs font-bold text-[#1A1A2E] dark:text-white block">Operator Copilot</span>
-                <span className="text-[10px] text-[#6822CC] dark:text-[#B892FF] font-mono">Ask Analytics AI</span>
+                <span className="text-xs font-semibold text-slate-900 dark:text-white block">Operator Copilot</span>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">Analytics & Inquiries</span>
               </div>
             )}
           </div>
           {!isCollapsed && (
-            <span className="text-xs font-mono text-[#6822CC] group-hover:translate-x-0.5 transition-transform">
+            <span className="text-xs font-mono text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200 group-hover:translate-x-0.5 transition-transform">
               ➔
             </span>
           )}
         </button>
       </div>
 
-      {/* System Status Section as requested */}
-      <div className="px-4 py-3 border-t border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] shrink-0">
+      {/* System Status Section */}
+      <div className="px-4 py-3 border-t border-slate-200/60 dark:border-white/[0.06] bg-transparent shrink-0">
         {!isCollapsed ? (
           <div>
-            <div className="text-[10px] font-mono font-bold tracking-wider uppercase text-[#9CA3AF]">
-              SYSTEM STATUS
+            <div className="text-[10px] font-mono font-medium tracking-wider uppercase text-slate-400 dark:text-slate-500">
+              ENGINE STATUS
             </div>
-            <div className="mt-1 flex items-center gap-1.5 text-xs font-semibold text-[#16A34A]">
-              <span className="h-2 w-2 rounded-full bg-[#16A34A] animate-pulse shrink-0" />
-              <span className="truncate">All systems operational</span>
+            <div className="mt-1 flex items-center gap-2 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" />
+              <span className="truncate text-[11px]">All systems operational</span>
             </div>
           </div>
         ) : (
           <Tooltip content="All systems operational" position="right">
             <div className="flex justify-center">
-              <span className="h-2.5 w-2.5 rounded-full bg-[#16A34A] animate-pulse" />
+              <span className="h-2 w-2 rounded-full bg-emerald-500" />
             </div>
           </Tooltip>
         )}

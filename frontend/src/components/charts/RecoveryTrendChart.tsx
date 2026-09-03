@@ -28,16 +28,16 @@ export const RecoveryTrendChart: React.FC<RecoveryTrendChartProps> = ({ data }) 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="rounded-lg border border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] p-3 shadow-md text-xs space-y-1.5">
-          <p className="font-bold text-[#1A1A2E] dark:text-white">{label}</p>
-          <div className="space-y-1 font-mono">
-            <p className="text-[#6822CC] flex items-center justify-between gap-4">
-              <span>Revenue at Risk:</span>
-              <strong className="font-bold">{formatCurrency(payload[0]?.value)}</strong>
+        <div className="rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/95 dark:bg-[oklch(0.24_0.008_223.9)]/95 backdrop-blur-xl p-3 shadow-glass-2 text-xs space-y-1.5">
+          <p className="font-semibold text-slate-900 dark:text-white">{label}</p>
+          <div className="space-y-1 font-mono text-[11px]">
+            <p className="text-slate-500 dark:text-slate-400 flex items-center justify-between gap-4">
+              <span>At Risk:</span>
+              <span className="font-semibold text-slate-700 dark:text-slate-300">{formatCurrency(payload[0]?.value)}</span>
             </p>
-            <p className="text-[#16A34A] flex items-center justify-between gap-4">
-              <span>Recovered Revenue:</span>
-              <strong className="font-bold">{formatCurrency(payload[1]?.value)}</strong>
+            <p className="text-slate-900 dark:text-white flex items-center justify-between gap-4">
+              <span>Recovered:</span>
+              <strong className="font-bold text-slate-950 dark:text-white">{formatCurrency(payload[1]?.value)}</strong>
             </p>
           </div>
         </div>
@@ -51,50 +51,58 @@ export const RecoveryTrendChart: React.FC<RecoveryTrendChartProps> = ({ data }) 
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
           <defs>
-            <linearGradient id="colorAtRisk" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#6822CC" stopOpacity={0.25} />
-              <stop offset="95%" stopColor="#6822CC" stopOpacity={0.0} />
-            </linearGradient>
-            <linearGradient id="colorRecovered" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#16A34A" stopOpacity={0.25} />
-              <stop offset="95%" stopColor="#16A34A" stopOpacity={0.0} />
+            <linearGradient id="fintechRecoveredArea" x1="0" y1="0" x2="0" y2="1">
+              <stop
+                offset="5%"
+                stopColor={isDark ? '#FFFFFF' : '#111827'}
+                stopOpacity={isDark ? 0.08 : 0.05}
+              />
+              <stop
+                offset="95%"
+                stopColor={isDark ? '#FFFFFF' : '#111827'}
+                stopOpacity={0.0}
+              />
             </linearGradient>
           </defs>
           <CartesianGrid
-            strokeDasharray="3 3"
-            stroke={isDark ? '#242E42' : '#F3F4F6'}
+            strokeDasharray="2 4"
+            stroke={isDark ? 'rgba(255,255,255,0.06)' : 'rgba(15,23,42,0.05)'}
             vertical={false}
           />
           <XAxis
             dataKey="date"
-            stroke={isDark ? '#6B7280' : '#9CA3AF'}
-            fontSize={11}
+            stroke={isDark ? 'rgba(255,255,255,0.35)' : 'rgba(15,23,42,0.4)'}
+            fontSize={10}
+            fontFamily="monospace"
             tickLine={false}
+            axisLine={false}
           />
           <YAxis
-            stroke={isDark ? '#6B7280' : '#9CA3AF'}
-            fontSize={11}
+            stroke={isDark ? 'rgba(255,255,255,0.35)' : 'rgba(15,23,42,0.4)'}
+            fontSize={10}
+            fontFamily="monospace"
             tickLine={false}
-            tickFormatter={(val) => `$${val}`}
+            axisLine={false}
+            tickFormatter={(val) => `₹${val}`}
           />
           <Tooltip content={<CustomTooltip />} />
           <Area
             type="monotone"
             dataKey="atRisk"
             name="Revenue at Risk"
-            stroke="#6822CC"
-            strokeWidth={2}
-            fillOpacity={1}
-            fill="url(#colorAtRisk)"
+            stroke={isDark ? 'rgba(255,255,255,0.25)' : 'rgba(15,23,42,0.25)'}
+            strokeWidth={1.5}
+            strokeDasharray="3 3"
+            fill="transparent"
           />
           <Area
             type="monotone"
             dataKey="recovered"
             name="Recovered Revenue"
-            stroke="#16A34A"
-            strokeWidth={2}
+            stroke={isDark ? '#FFFFFF' : '#111827'}
+            strokeWidth={1.75}
             fillOpacity={1}
-            fill="url(#colorRecovered)"
+            fill="url(#fintechRecoveredArea)"
           />
         </AreaChart>
       </ResponsiveContainer>

@@ -1,8 +1,7 @@
 import React from 'react';
-import { ShieldCheck, CheckCircle2, XCircle, AlertTriangle, ArrowRight, Check, X } from 'lucide-react';
+import { ShieldCheck, CheckCircle2, AlertTriangle, ArrowRight, Check, X } from 'lucide-react';
 import { PolicyEvaluationResult } from '../../types';
 import { getActionLabel } from '../../utils/formatters';
-import { Button } from '../ui/Button';
 
 interface PolicyCheckCardProps {
   evaluation?: PolicyEvaluationResult;
@@ -17,10 +16,10 @@ export const PolicyCheckCard: React.FC<PolicyCheckCardProps> = ({
 }) => {
   if (!evaluation) {
     return (
-      <div className="flex h-72 w-full items-center justify-center rounded-[14px] border border-dashed border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] p-6 text-center text-[#9CA3AF] shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+      <div className="flex h-72 w-full items-center justify-center rounded-2xl border border-dashed border-slate-200/80 dark:border-white/10 bg-white/40 dark:bg-white/[0.02] p-6 text-center text-slate-400 shadow-xs">
         <div className="flex flex-col items-center gap-2">
-          <ShieldCheck className="h-8 w-8 text-[#9CA3AF]" />
-          <p className="text-xs font-medium">Policy evaluation will trigger following AI recommendation.</p>
+          <ShieldCheck className="h-7 w-7 text-slate-400" />
+          <p className="text-xs font-mono">Policy evaluation will validate proposals before execution.</p>
         </div>
       </div>
     );
@@ -29,111 +28,93 @@ export const PolicyCheckCard: React.FC<PolicyCheckCardProps> = ({
   const isApproved = evaluation.is_approved;
   const isOverridden = evaluation.original_proposed_action !== evaluation.effective_action;
 
-  // Policy Badge per prompt requirements
-  const renderPolicyBadge = () => {
-    if (isApproved && !isOverridden) {
-      return (
-        <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold font-mono border bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/40">
-          <Check className="h-3.5 w-3.5 text-[#16A34A]" />
-          <span>POLICY APPROVED</span>
-        </span>
-      );
-    }
-    if (isApproved && isOverridden) {
-      return (
-        <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold font-mono border bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 border-amber-200 dark:border-amber-800/40">
-          <AlertTriangle className="h-3.5 w-3.5 text-[#F59E0B]" />
-          <span>POLICY REQUIRES REVIEW</span>
-        </span>
-      );
-    }
-    return (
-      <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold font-mono border bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400 border-rose-200 dark:border-rose-800/40">
-        <X className="h-3.5 w-3.5 text-[#DC2626]" />
-        <span>POLICY BLOCKED</span>
-      </span>
-    );
-  };
-
-  // Structured Policy Checklist - exact 5 items specified
   const defaultPolicyChecks = [
-    { label: 'Customer opted in', passed: !evaluation.applied_rules.some((r) => r.includes('OPT_OUT')) },
-    { label: 'Attempts < 3', passed: !evaluation.applied_rules.some((r) => r.includes('MAX_ATTEMPTS')) },
+    { label: 'Customer eligible', passed: !evaluation.applied_rules.some((r) => r.includes('OPT_OUT')) },
+    { label: 'Attempts within limit (< 3)', passed: !evaluation.applied_rules.some((r) => r.includes('MAX_ATTEMPTS')) },
     { label: 'Cooldown satisfied', passed: !evaluation.applied_rules.some((r) => r.includes('COOLDOWN')) },
-    { label: 'Amount within limit', passed: !evaluation.applied_rules.some((r) => r.includes('MAX_AMOUNT')) },
+    { label: 'Amount within threshold', passed: !evaluation.applied_rules.some((r) => r.includes('MAX_AMOUNT')) },
     { label: 'No duplicate action', passed: !evaluation.applied_rules.some((r) => r.includes('DUPLICATE')) },
   ];
 
   return (
-    <div className="flex flex-col justify-between rounded-xl border-2 border-emerald-500/40 bg-gradient-to-br from-emerald-50/70 via-white to-emerald-50/20 dark:from-emerald-950/30 dark:via-[#131824] dark:to-emerald-950/10 p-6 shadow-sm space-y-4">
-      <div>
-        {/* Header with Professional Policy Indicator Badge */}
-        <div className="flex items-center justify-between border-b border-emerald-200/70 dark:border-emerald-900/40 pb-3">
+    <div className="flex flex-col justify-between rounded-2xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.04] backdrop-blur-md p-6 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-4">
+      <div className="space-y-4">
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-slate-200/60 dark:border-white/[0.06] pb-3.5">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center text-emerald-600 dark:text-emerald-300 shrink-0">
+            <div className="w-8 h-8 rounded-xl bg-slate-900/[0.05] dark:bg-white/10 flex items-center justify-center text-slate-800 dark:text-slate-200 border border-slate-200/80 dark:border-white/10 shrink-0">
               <ShieldCheck className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white block">
+              <span className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-900 dark:text-white block">
                 POLICY ENGINE
               </span>
               <p className="text-[11px] text-slate-500 dark:text-slate-400 font-normal leading-tight mt-0.5">
-                Deterministic rules validate every AI proposal before execution.
+                Deterministic rules validate proposals before execution
               </p>
             </div>
           </div>
 
-          {renderPolicyBadge()}
+          <span
+            className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-mono font-medium border ${
+              isApproved
+                ? 'bg-emerald-500/[0.08] text-emerald-700 dark:text-emerald-400 border-emerald-500/20'
+                : 'bg-rose-500/[0.08] text-rose-700 dark:text-rose-400 border-rose-500/20'
+            }`}
+          >
+            {isApproved ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
+            <span>{isApproved ? 'POLICY APPROVED' : 'POLICY BLOCKED'}</span>
+          </span>
         </div>
 
         {/* Action Decision Box */}
-        <div className="mt-4 rounded-lg border border-emerald-200/60 dark:border-emerald-800/30 bg-white/80 dark:bg-emerald-950/20 p-3.5">
+        <div className="rounded-xl border border-slate-200/70 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.03] p-3.5">
           <div className="flex items-center justify-between text-xs">
             <div>
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-[#6B7280] block">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block">
                 AI Suggested Strategy
               </span>
-              <p className="font-semibold text-[#6B7280] mt-0.5">
+              <p className="font-medium text-slate-700 dark:text-slate-300 mt-0.5 font-sans">
                 {getActionLabel(evaluation.original_proposed_action)}
               </p>
             </div>
-            <ArrowRight className="h-4 w-4 text-[#9CA3AF]" />
+            <ArrowRight className="h-4 w-4 text-slate-400" />
             <div className="text-right">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 block">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block">
                 Authorized Execution Action
               </span>
-              <p className={`font-bold mt-0.5 text-sm ${isOverridden ? 'text-[#F59E0B]' : 'text-[#16A34A]'}`}>
+              <p className="font-semibold text-slate-900 dark:text-white mt-0.5 font-sans">
                 {getActionLabel(evaluation.effective_action)}
               </p>
             </div>
           </div>
 
           {isOverridden && (
-            <div className="mt-3 flex items-center gap-2 rounded-lg bg-amber-50 dark:bg-amber-950/40 px-3 py-2 text-xs font-medium text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800/40">
-              <AlertTriangle className="h-3.5 w-3.5 text-[#F59E0B] shrink-0" />
-              <span>Policy Engine bounded and modified AI suggestion to comply with merchant safety rules.</span>
+            <div className="mt-2.5 flex items-center gap-2 rounded-lg bg-slate-500/[0.06] p-2 text-xs font-normal text-slate-600 dark:text-slate-400 border border-slate-500/15">
+              <AlertTriangle className="h-3.5 w-3.5 text-amber-500 shrink-0" />
+              <span>Policy Engine bounded and modified AI suggestion to comply with safety caps.</span>
             </div>
           )}
         </div>
 
-        {/* Real Payment Operations Policy Checklist */}
-        <div className="mt-4 space-y-2">
-          <span className="text-[11px] font-bold font-mono uppercase tracking-wider text-emerald-800 dark:text-emerald-300 block">
-            Deterministic Guardrail Checklist
+        {/* Deterministic Guardrails Checklist */}
+        <div className="space-y-2">
+          <span className="text-[11px] font-mono font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
+            ENFORCED GUARDRAILS
           </span>
           <div className="space-y-1.5 font-mono text-xs">
             {defaultPolicyChecks.map((check, idx) => (
               <div
                 key={idx}
-                className="flex items-center justify-between rounded-lg border border-emerald-200/60 dark:border-emerald-800/30 bg-white/80 dark:bg-slate-900 px-3.5 py-2 text-xs"
+                className="flex items-center justify-between rounded-xl border border-slate-200/60 dark:border-white/[0.06] bg-white/60 dark:bg-white/[0.02] px-3.5 py-2 text-xs"
               >
                 <div className="flex items-center gap-2">
-                  <span className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-[10px] font-bold">
+                  <span className="w-3.5 h-3.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-[9px] font-bold">
                     ✓
                   </span>
-                  <span className="text-emerald-900 dark:text-emerald-200 font-medium">{check.label}</span>
+                  <span className="text-slate-700 dark:text-slate-300 font-medium">{check.label}</span>
                 </div>
-                <span className="text-[10px] font-bold font-mono text-emerald-600 dark:text-emerald-400 uppercase">
+                <span className="text-[10px] font-mono text-slate-400 uppercase">
                   VERIFIED
                 </span>
               </div>
@@ -141,20 +122,14 @@ export const PolicyCheckCard: React.FC<PolicyCheckCardProps> = ({
           </div>
         </div>
 
-        {/* Action Approved Stamp Banner - Primary Clickable Recovery Trigger */}
+        {/* Action Button */}
         <button
           type="button"
           onClick={() => {
             if (onExecute) onExecute();
           }}
           disabled={!isApproved || isExecuting}
-          className={`w-full mt-4 p-3.5 rounded-lg text-white font-mono font-bold text-center text-xs tracking-wider uppercase shadow-sm border flex items-center justify-center gap-2 transition-all ${
-            isExecuting
-              ? 'bg-emerald-700 border-emerald-600 cursor-wait opacity-90'
-              : isApproved
-              ? 'bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] border-emerald-500 cursor-pointer group shadow-emerald-600/20'
-              : 'bg-slate-400 border-slate-400 cursor-not-allowed'
-          }`}
+          className="w-full p-3.5 rounded-xl bg-[#111827] hover:bg-[#1f2937] dark:bg-white dark:text-[#111827] dark:hover:bg-slate-100 disabled:opacity-50 text-white font-semibold font-mono text-center text-xs tracking-wider uppercase flex items-center justify-center gap-2 shadow-xs hover:-translate-y-[1px] transition-all cursor-pointer"
         >
           {isExecuting ? (
             <>
@@ -163,15 +138,13 @@ export const PolicyCheckCard: React.FC<PolicyCheckCardProps> = ({
             </>
           ) : (
             <>
-              <CheckCircle2 className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
+              <CheckCircle2 className="w-4 h-4" />
               <span>
                 {isApproved
-                  ? 'ACTION APPROVED • CLICK TO EXECUTE RECOVERY'
+                  ? 'ACTION APPROVED • CLICK TO EXECUTE'
                   : 'ACTION BLOCKED'}
               </span>
-              {isApproved && (
-                <ArrowRight className="w-3.5 h-3.5 text-white/80 group-hover:translate-x-1 transition-transform" />
-              )}
+              {isApproved && <ArrowRight className="w-3.5 h-3.5" />}
             </>
           )}
         </button>

@@ -32,7 +32,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   // Tab Title & Subtitle Mapping
   const pageMetaMap: Record<NavTab, { title: string; subtitle: string }> = {
     dashboard: { title: 'Executive Overview', subtitle: 'Real-time payment failure recovery velocity and portfolio health' },
-    'control-center': { title: 'Recovery Control Center', subtitle: 'Real-time operational triage, batch queues, and intervention overrides' },
+    'control-center': { title: 'Recovery Control Center', subtitle: 'Operational triage, batch queues, and manual intervention overrides' },
     intelligence: { title: 'Recovery Intelligence', subtitle: 'Probabilistic yield modeling and dynamic dunning optimization' },
     leakage: { title: 'Revenue Leakage Radar', subtitle: 'Real-time detection of silent churn and recurring billing slippage' },
     predictive: { title: 'Predictive Risk & Forecast', subtitle: 'AI-driven payment decline forecasting and salvage trajectories' },
@@ -60,14 +60,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   const currentMeta = pageMetaMap[currentTab] || { title: 'Payment Operations', subtitle: 'Autonomous revenue protection console' };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-[#E5E7EB] dark:border-[#242E42] bg-white/95 dark:bg-[#131824]/95 px-5 md:px-6 backdrop-blur-sm transition-colors">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-200/80 dark:border-white/[0.08] bg-[#F7F8FA]/90 dark:bg-[oklch(0.218_0.008_223.9)]/90 px-5 md:px-6 backdrop-blur-2xl transition-colors">
       {/* Left: Title & Contextual Subtitle */}
       <div className="flex items-center gap-3 min-w-0">
         <div className="min-w-0">
-          <h1 className="text-sm font-bold text-[#1A1A2E] dark:text-white truncate">
+          <h1 className="text-sm font-bold text-slate-900 dark:text-white tracking-tight truncate">
             {currentMeta.title}
           </h1>
-          <p className="hidden md:block text-[11px] text-[#6B7280] truncate max-w-lg">
+          <p className="hidden md:block text-[11px] text-slate-500 dark:text-slate-400 truncate max-w-lg">
             {currentMeta.subtitle}
           </p>
         </div>
@@ -77,11 +77,11 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="hidden lg:flex items-center justify-center flex-1 max-w-sm mx-4">
         <button
           onClick={onOpenSearch}
-          className="flex items-center gap-2.5 w-full rounded-lg border border-[#E5E7EB] dark:border-[#242E42] bg-slate-50/70 dark:bg-slate-800/50 px-3 py-1.5 text-xs text-[#6B7280] hover:border-[#D1D5DB] dark:hover:border-slate-600 transition-colors shadow-none"
+          className="flex items-center gap-2.5 w-full rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.04] px-3.5 py-1.5 text-xs text-slate-500 dark:text-slate-400 hover:border-slate-300 dark:hover:border-white/20 transition-all duration-200 shadow-xs cursor-pointer"
         >
-          <Search className="h-3.5 w-3.5 shrink-0 text-[#9CA3AF]" />
+          <Search className="h-3.5 w-3.5 shrink-0 text-slate-400" />
           <span className="flex-1 text-left truncate text-[11px]">Search failures, customers, policies...</span>
-          <kbd className="inline-flex items-center rounded border border-[#E5E7EB] dark:border-slate-700 bg-white dark:bg-slate-800 px-1.5 py-0.2 text-[10px] font-mono text-[#9CA3AF]">
+          <kbd className="inline-flex items-center rounded-md border border-slate-200 dark:border-white/10 bg-slate-100/80 dark:bg-white/10 px-1.5 py-0.2 text-[10px] font-mono text-slate-400 dark:text-slate-300">
             ⌘K
           </kbd>
         </button>
@@ -94,12 +94,12 @@ export const Navbar: React.FC<NavbarProps> = ({
           onClick={onSeedData}
           disabled={isSeeding}
           title="Reset and seed realistic test scenarios"
-          className="hidden sm:flex items-center gap-1.5 rounded-lg border border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] px-3 py-1.5 text-xs font-semibold text-[#6B7280] hover:text-[#1A1A2E] dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-all disabled:opacity-50"
+          className="hidden sm:flex items-center gap-1.5 rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.04] px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-white/[0.08] hover:-translate-y-[1px] transition-all disabled:opacity-50 cursor-pointer shadow-xs"
         >
           {isSeeding ? (
-            <RefreshCw className="h-3.5 w-3.5 animate-spin text-[#6822CC]" />
+            <RefreshCw className="h-3.5 w-3.5 animate-spin text-slate-700 dark:text-slate-300" />
           ) : (
-            <Database className="h-3.5 w-3.5 text-[#6822CC]" />
+            <Database className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" />
           )}
           <span>{isSeeding ? 'Seeding...' : 'Seed Data'}</span>
         </button>
@@ -107,7 +107,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Primary Action Button */}
         <button
           onClick={onOpenBatchRunner}
-          className="flex items-center gap-1.5 rounded-lg bg-[#6822CC] hover:bg-[#4B1A99] active:bg-[#3D157D] text-white px-3.5 py-1.5 text-xs font-bold shadow-sm shadow-[#6822CC]/25 transition-all"
+          className="flex items-center gap-1.5 rounded-xl bg-[#111827] hover:bg-[#1f2937] dark:bg-white dark:text-[#111827] dark:hover:bg-slate-100 text-white px-3.5 py-1.5 text-xs font-semibold shadow-xs hover:-translate-y-[1px] transition-all cursor-pointer"
         >
           <Play className="h-3.5 w-3.5 fill-current" />
           <span>Batch Recovery</span>
@@ -117,12 +117,12 @@ export const Navbar: React.FC<NavbarProps> = ({
         <button
           onClick={() => setTheme(isDark ? 'light' : 'dark')}
           title={`Switch to ${isDark ? 'Light' : 'Dark'} mode`}
-          className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] text-[#6B7280] hover:text-[#1A1A2E] dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+          className="flex h-8 w-8 items-center justify-center rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.04] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-white/[0.08] transition-all cursor-pointer shadow-xs"
         >
           {isDark ? (
-            <Sun className="h-4 w-4 text-[#F59E0B]" />
+            <Sun className="h-4 w-4 text-amber-400" />
           ) : (
-            <Moon className="h-4 w-4 text-[#6822CC]" />
+            <Moon className="h-4 w-4 text-slate-600" />
           )}
         </button>
 
@@ -131,29 +131,29 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={() => setShowNotifications(!showNotifications)}
             title="System notifications"
-            className="relative flex h-8 w-8 items-center justify-center rounded-lg border border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] text-[#6B7280] hover:text-[#1A1A2E] dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+            className="relative flex h-8 w-8 items-center justify-center rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.04] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-white/[0.08] transition-all cursor-pointer shadow-xs"
           >
             <Bell className="h-4 w-4" />
-            <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-[#6822CC] ring-2 ring-white dark:ring-[#131824]" />
+            <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-slate-900 dark:bg-white" />
           </button>
 
           {showNotifications && (
             <div
-              className="absolute right-0 mt-2 w-72 rounded-[14px] border border-[#E5E7EB] dark:border-[#242E42] bg-white dark:bg-[#131824] p-3 shadow-lg z-50 text-xs animate-fintech-fade space-y-2.5"
+              className="absolute right-0 mt-2 w-72 rounded-2xl border border-slate-200 dark:border-white/10 bg-white/95 dark:bg-[oklch(0.24_0.008_223.9)]/95 backdrop-blur-xl p-4 shadow-glass-2 z-50 text-xs animate-fintech-fade space-y-2.5"
               onClick={() => setShowNotifications(false)}
             >
-              <div className="flex items-center justify-between border-b border-[#E5E7EB] dark:border-[#242E42] pb-2">
-                <span className="font-bold text-[#1A1A2E] dark:text-white">Audit Notifications</span>
-                <span className="text-[10px] text-[#16A34A] font-mono font-bold">2 New</span>
+              <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/[0.08] pb-2">
+                <span className="font-semibold text-slate-900 dark:text-white">Audit Notifications</span>
+                <span className="text-[10px] text-slate-500 font-mono">2 New</span>
               </div>
               <div className="space-y-2">
-                <div className="rounded-lg bg-slate-50 dark:bg-slate-800/60 p-2 text-[11px] text-[#6B7280]">
-                  <strong className="text-[#1A1A2E] dark:text-white block font-semibold">Policy v2 Evaluated</strong>
-                  <span>Policy Optimizer discovered 2 candidate improvements.</span>
+                <div className="rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-100 dark:border-white/[0.05] p-2.5 text-[11px] text-slate-600 dark:text-slate-300">
+                  <strong className="text-slate-900 dark:text-white block font-medium">Policy v2 Evaluated</strong>
+                  <span className="text-slate-500 dark:text-slate-400">Policy Optimizer discovered 2 candidate improvements.</span>
                 </div>
-                <div className="rounded-lg bg-slate-50 dark:bg-slate-800/60 p-2 text-[11px] text-[#6B7280]">
-                  <strong className="text-[#1A1A2E] dark:text-white block font-semibold">Gateway Health Rebalanced</strong>
-                  <span>Gateway B success rate stabilized at 96.2%.</span>
+                <div className="rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-100 dark:border-white/[0.05] p-2.5 text-[11px] text-slate-600 dark:text-slate-300">
+                  <strong className="text-slate-900 dark:text-white block font-medium">Gateway Health Rebalanced</strong>
+                  <span className="text-slate-500 dark:text-slate-400">Gateway B success rate stabilized at 96.2%.</span>
                 </div>
               </div>
             </div>
@@ -161,10 +161,10 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* User Profile Avatar */}
-        <div className="flex items-center pl-1 sm:pl-2 border-l border-[#E5E7EB] dark:border-[#242E42]">
+        <div className="flex items-center pl-1 sm:pl-2 border-l border-slate-200/80 dark:border-white/[0.08]">
           <div
             title="Payment Operations Lead"
-            className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F3EEFF] text-[#6822CC] font-bold border border-[#D5BEFF] text-xs cursor-default"
+            className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-900/[0.05] dark:bg-white/10 text-slate-800 dark:text-slate-200 font-semibold border border-slate-200/80 dark:border-white/10 font-mono text-xs cursor-default"
           >
             OP
           </div>

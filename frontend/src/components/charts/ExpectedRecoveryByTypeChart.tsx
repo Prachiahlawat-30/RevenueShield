@@ -20,7 +20,6 @@ interface Props {
 export const ExpectedRecoveryByTypeChart: React.FC<Props> = ({ data, height = 220 }) => {
   const { isDark } = useTheme();
 
-  // Shorten failure category labels to fit cleanly without overlap
   const formatShortLabel = (label: string) => {
     if (!label) return '';
     const l = label.toLowerCase();
@@ -44,24 +43,19 @@ export const ExpectedRecoveryByTypeChart: React.FC<Props> = ({ data, height = 22
     if (active && payload && payload.length) {
       const item = payload[0].payload;
       return (
-        <div className={`p-2.5 rounded-fintech-md shadow-xl text-xs space-y-1 border ${
-          isDark ? 'bg-[#0f1420] border-[#263247] text-white' : 'bg-white border-slate-200 text-slate-900'
-        }`}>
-          <p className="font-bold">{item.fullName}</p>
-          <p className="text-fintech-muted">
-            Cases: <span className="font-mono font-bold text-fintech-primary">{item.count}</span>
+        <div className="rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/95 dark:bg-[oklch(0.24_0.008_223.9)]/95 backdrop-blur-xl p-3 shadow-glass-2 text-xs space-y-1">
+          <p className="font-semibold text-slate-900 dark:text-white">{item.fullName}</p>
+          <p className="text-slate-500 dark:text-slate-400 font-mono text-[11px]">
+            Cases: <span className="text-slate-900 dark:text-white font-bold">{item.count}</span>
           </p>
-          <p className="text-fintech-muted">
-            Exposure:{' '}
-            <span className="text-amber-600 dark:text-amber-400 font-mono font-bold">{formatCurrency(item.amount_at_risk)}</span>
+          <p className="text-slate-500 dark:text-slate-400 font-mono text-[11px]">
+            Exposure: <span className="font-bold text-slate-700 dark:text-slate-300">{formatCurrency(item.amount_at_risk)}</span>
           </p>
-          <p className="text-fintech-muted">
-            Expected Yield:{' '}
-            <span className="text-emerald-600 dark:text-emerald-400 font-mono font-bold">{formatCurrency(item.expected_recovery)}</span>
+          <p className="text-slate-900 dark:text-white font-mono text-[11px]">
+            Expected Yield: <strong className="font-bold">{formatCurrency(item.expected_recovery)}</strong>
           </p>
-          <p className="text-fintech-muted">
-            Probability:{' '}
-            <span className="text-brand-600 dark:text-brand-400 font-mono font-bold">{formatPercent(item.average_probability * 100)}</span>
+          <p className="text-slate-500 dark:text-slate-400 font-mono text-[11px]">
+            Probability: <span className="font-semibold text-slate-900 dark:text-white">{formatPercent(item.average_probability * 100)}</span>
           </p>
         </div>
       );
@@ -73,25 +67,40 @@ export const ExpectedRecoveryByTypeChart: React.FC<Props> = ({ data, height = 22
     <div style={{ width: '100%', height }} className="min-w-0 overflow-hidden">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={chartData} margin={{ top: 12, right: 10, left: -15, bottom: 4 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#1e293b' : '#f1f5f9'} vertical={false} />
+          <CartesianGrid
+            strokeDasharray="2 4"
+            stroke={isDark ? 'rgba(255,255,255,0.06)' : 'rgba(15,23,42,0.05)'}
+            vertical={false}
+          />
           <XAxis
             dataKey="name"
-            stroke={isDark ? '#64748b' : '#94a3b8'}
-            fontSize={11}
+            stroke={isDark ? 'rgba(255,255,255,0.35)' : 'rgba(15,23,42,0.4)'}
+            fontSize={10}
+            fontFamily="monospace"
             tickLine={false}
-            interval={0}
-            tick={{ fill: isDark ? '#94a3b8' : '#475569', fontWeight: 500 }}
+            axisLine={false}
           />
           <YAxis
-            stroke={isDark ? '#64748b' : '#94a3b8'}
+            stroke={isDark ? 'rgba(255,255,255,0.35)' : 'rgba(15,23,42,0.4)'}
             fontSize={10}
+            fontFamily="monospace"
             tickLine={false}
-            tickFormatter={(v) => `$${v}`}
-            tick={{ fill: isDark ? '#94a3b8' : '#64748b' }}
+            axisLine={false}
+            tickFormatter={(v) => `₹${v}`}
           />
           <Tooltip content={<CustomTooltip />} />
-          <Bar dataKey="amount_at_risk" fill="#f59e0b" radius={[3, 3, 0, 0]} maxBarSize={28} />
-          <Bar dataKey="expected_recovery" fill="#10b981" radius={[3, 3, 0, 0]} maxBarSize={28} />
+          <Bar
+            dataKey="amount_at_risk"
+            fill={isDark ? 'rgba(255,255,255,0.18)' : 'rgba(15,23,42,0.16)'}
+            radius={[4, 4, 0, 0]}
+            maxBarSize={24}
+          />
+          <Bar
+            dataKey="expected_recovery"
+            fill={isDark ? '#FFFFFF' : '#111827'}
+            radius={[4, 4, 0, 0]}
+            maxBarSize={24}
+          />
         </BarChart>
       </ResponsiveContainer>
     </div>

@@ -104,19 +104,19 @@ export const PaymentDecisionGraph: React.FC<Props> = ({ riskId, onRefresh }) => 
   return (
     <div className="space-y-6 animate-fintech-fade">
       {/* Flagship Header */}
-      <div className="rounded-fintech-lg border border-brand-500/20 bg-fintech-surface p-5 shadow-fintech-sm space-y-4">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-fintech-border pb-4">
+      <div className="rounded-[18px] border border-slate-200/80 dark:border-white/[0.09] bg-white/65 dark:bg-white/[0.045] backdrop-blur-glass p-6 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-4">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-200/60 dark:border-white/[0.06] pb-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="p-1.5 rounded-fintech-sm bg-brand-500/10 text-brand-500 border border-brand-500/20">
+              <span className="p-1.5 rounded-xl bg-slate-900/[0.05] dark:bg-white/10 text-slate-800 dark:text-slate-200 border border-slate-200/80 dark:border-white/10">
                 <Network className="w-4 h-4" />
               </span>
-              <h2 className="text-base font-bold text-fintech-primary">Payment Decision Graph</h2>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-brand-500/10 border border-brand-500/30 text-brand-600 dark:text-brand-400 font-bold uppercase tracking-wider">
+              <h2 className="text-base font-bold text-slate-900 dark:text-white tracking-tight">Payment Decision Graph</h2>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-500/[0.08] border border-slate-500/15 text-slate-700 dark:text-slate-300 font-medium uppercase tracking-wider">
                 Flagship Explainer
               </span>
             </div>
-            <p className="text-xs text-fintech-secondary font-medium leading-relaxed max-w-3xl">
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-normal leading-relaxed max-w-3xl">
               {graphData.differentiator_slogan}
             </p>
           </div>
@@ -145,14 +145,14 @@ export const PaymentDecisionGraph: React.FC<Props> = ({ riskId, onRefresh }) => 
         </div>
 
         {/* Metadata & Filter Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-fintech-muted">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-500">
           <div className="flex items-center gap-3 font-mono text-[11px] flex-wrap">
             <span>
-              Decision ID: <strong className="text-fintech-primary">{graphData.decision_id}</strong>
+              Decision ID: <strong className="text-slate-900 dark:text-white">{graphData.decision_id}</strong>
             </span>
             <span>•</span>
             <span>
-              Version: <strong className="text-fintech-primary">{graphData.decision_version}</strong>
+              Version: <strong className="text-slate-900 dark:text-white">{graphData.decision_version}</strong>
             </span>
             <span>•</span>
             <span>
@@ -161,43 +161,43 @@ export const PaymentDecisionGraph: React.FC<Props> = ({ riskId, onRefresh }) => 
           </div>
 
           {/* Filter Pills */}
-          <div className="flex items-center gap-1 bg-fintech-surface-subtle p-1 rounded-fintech-md border border-fintech-border self-start sm:self-auto">
+          <div className="flex items-center gap-1 bg-white/60 dark:bg-white/[0.04] p-1 rounded-xl border border-slate-200/80 dark:border-white/10 self-start sm:self-auto">
             <button
               onClick={() => setFilterMode('all')}
-              className={`px-2.5 py-1 rounded-fintech-sm text-[11px] font-semibold transition-colors ${
+              className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-medium transition-colors cursor-pointer ${
                 filterMode === 'all'
-                  ? 'bg-brand-500 text-white shadow-fintech-sm'
-                  : 'text-fintech-secondary hover:text-fintech-primary'
+                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs'
+                  : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               All 15 Nodes
             </button>
             <button
               onClick={() => setFilterMode('governance')}
-              className={`px-2.5 py-1 rounded-fintech-sm text-[11px] font-semibold transition-colors ${
+              className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-medium transition-colors cursor-pointer ${
                 filterMode === 'governance'
-                  ? 'bg-brand-500 text-white shadow-fintech-sm'
-                  : 'text-fintech-secondary hover:text-fintech-primary'
+                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs'
+                  : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               AI vs Policy
             </button>
             <button
               onClick={() => setFilterMode('financial')}
-              className={`px-2.5 py-1 rounded-fintech-sm text-[11px] font-semibold transition-colors ${
+              className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-medium transition-colors cursor-pointer ${
                 filterMode === 'financial'
-                  ? 'bg-brand-500 text-white shadow-fintech-sm'
-                  : 'text-fintech-secondary hover:text-fintech-primary'
+                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs'
+                  : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               Economic Yield
             </button>
             <button
               onClick={() => setFilterMode('risk')}
-              className={`px-2.5 py-1 rounded-fintech-sm text-[11px] font-semibold transition-colors ${
+              className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-medium transition-colors cursor-pointer ${
                 filterMode === 'risk'
-                  ? 'bg-brand-500 text-white shadow-fintech-sm'
-                  : 'text-fintech-secondary hover:text-fintech-primary'
+                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs'
+                  : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               Risk & Health

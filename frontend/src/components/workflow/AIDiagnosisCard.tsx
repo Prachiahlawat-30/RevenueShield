@@ -1,7 +1,7 @@
 import React from 'react';
-import { Brain, Sparkles, Clock, MessageSquareQuote, ShieldAlert } from 'lucide-react';
+import { Brain, Sparkles, MessageSquareQuote } from 'lucide-react';
 import { AIDiagnosisResult } from '../../types';
-import { getActionLabel, getFailureTypeLabel } from '../../utils/formatters';
+import { getActionLabel } from '../../utils/formatters';
 import { WhyThisActionButton } from '../ui/WhyThisActionButton';
 
 interface AIDiagnosisCardProps {
@@ -12,10 +12,12 @@ interface AIDiagnosisCardProps {
 export const AIDiagnosisCard: React.FC<AIDiagnosisCardProps> = ({ diagnosis, isLoading }) => {
   if (isLoading) {
     return (
-      <div className="flex h-72 w-full items-center justify-center rounded-fintech-lg border border-fintech-border bg-fintech-surface p-6 shadow-fintech-sm">
+      <div className="flex h-72 w-full items-center justify-center rounded-2xl border border-slate-200/80 dark:border-white/10 bg-white/50 dark:bg-white/[0.03] backdrop-blur-md p-6 shadow-xs">
         <div className="flex flex-col items-center gap-3">
-          <Brain className="h-8 w-8 animate-bounce text-brand-500" />
-          <p className="text-xs font-semibold text-fintech-secondary">AI Root-Cause Analysis in Progress...</p>
+          <Brain className="h-7 w-7 animate-pulse-subtle text-slate-700 dark:text-slate-300" />
+          <p className="text-xs font-mono font-medium text-slate-500 dark:text-slate-400">
+            Synthesizing Failure Context & Trajectory...
+          </p>
         </div>
       </div>
     );
@@ -23,10 +25,10 @@ export const AIDiagnosisCard: React.FC<AIDiagnosisCardProps> = ({ diagnosis, isL
 
   if (!diagnosis) {
     return (
-      <div className="flex h-72 w-full items-center justify-center rounded-fintech-lg border border-dashed border-fintech-border bg-fintech-surface p-6 text-center text-fintech-muted shadow-fintech-sm">
+      <div className="flex h-72 w-full items-center justify-center rounded-2xl border border-dashed border-slate-200/80 dark:border-white/10 bg-white/40 dark:bg-white/[0.02] p-6 text-center text-slate-400 shadow-xs">
         <div className="flex flex-col items-center gap-2">
-          <Brain className="h-8 w-8 text-fintech-muted" />
-          <p className="text-xs font-medium">Click "Diagnose Failure" or "Step Next" to run AI diagnosis.</p>
+          <Brain className="h-7 w-7 text-slate-400" />
+          <p className="text-xs font-mono">Run diagnosis to formulate recovery strategy.</p>
         </div>
       </div>
     );
@@ -35,36 +37,60 @@ export const AIDiagnosisCard: React.FC<AIDiagnosisCardProps> = ({ diagnosis, isL
   const confidencePct = Math.round(diagnosis.confidence_score * 100);
 
   return (
-    <div className="flex flex-col justify-between rounded-xl border-2 border-purple-500/40 bg-gradient-to-br from-purple-50/70 via-white to-purple-50/20 dark:from-purple-950/30 dark:via-[#131824] dark:to-purple-950/10 p-6 shadow-sm space-y-4">
-      <div>
+    <div className="flex flex-col justify-between rounded-2xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.04] backdrop-blur-md p-6 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-4">
+      <div className="space-y-4">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-purple-200/70 dark:border-purple-900/40 pb-3">
+        <div className="flex items-center justify-between border-b border-slate-200/60 dark:border-white/[0.06] pb-3.5">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-300 shrink-0">
+            <div className="w-8 h-8 rounded-xl bg-slate-900/[0.05] dark:bg-white/10 flex items-center justify-center text-slate-800 dark:text-slate-200 border border-slate-200/80 dark:border-white/10 shrink-0">
               <Brain className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white block">
-                AI DIAGNOSIS & RECOMMENDATION
-              </span>
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-900 dark:text-white block">
+                  AI DIAGNOSIS
+                </span>
+                <span className="h-1.5 w-1.5 rounded-full bg-slate-400 animate-pulse" />
+              </div>
               <p className="text-[11px] text-slate-500 dark:text-slate-400 font-normal leading-tight mt-0.5">
-                AI analyzes failure context and proposes the most appropriate recovery strategy.
+                Probabilistic root-cause analysis
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-1.5 rounded-full border border-indigo-200/80 dark:border-indigo-800/50 bg-indigo-50 dark:bg-indigo-950/40 px-2.5 py-0.5 text-xs font-semibold text-indigo-700 dark:text-indigo-300 shadow-xs">
-            <Sparkles className="h-3 w-3 text-indigo-500" />
+          <div className="flex items-center gap-1.5 rounded-full border border-slate-200/80 dark:border-white/10 bg-white/80 dark:bg-white/[0.06] px-2.5 py-0.5 text-xs font-mono font-medium text-slate-800 dark:text-slate-200 shadow-xs">
+            <Sparkles className="h-3 w-3 text-slate-500" />
             <span>Confidence: {confidencePct}%</span>
           </div>
         </div>
 
-        {/* Proposed Strategy / Action with Why this action button */}
-        <div className="mt-4 p-3.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-white/80 dark:bg-slate-900/60 flex items-center justify-between gap-3">
-          <div>
-            <span className="text-[10px] font-mono uppercase tracking-wider text-indigo-600 dark:text-indigo-400 font-bold block">
-              Recommended Action
+        {/* Failure Category & Root Cause Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="p-3.5 rounded-xl border border-slate-200/70 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.03] space-y-1">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block">
+              FAILURE CATEGORY
             </span>
-            <p className="text-sm font-bold text-slate-900 dark:text-white">
+            <p className="text-xs font-semibold text-slate-900 dark:text-white font-mono">
+              Temporary Decline
+            </p>
+          </div>
+
+          <div className="p-3.5 rounded-xl border border-slate-200/70 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.03] space-y-1">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block">
+              ROOT CAUSE
+            </span>
+            <p className="text-xs font-medium text-slate-700 dark:text-slate-300 truncate">
+              {diagnosis.root_cause_summary || 'Temporary issuer or network issue detected.'}
+            </p>
+          </div>
+        </div>
+
+        {/* Proposed Strategy / Action */}
+        <div className="p-3.5 rounded-xl border border-slate-200/70 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.03] flex items-center justify-between gap-3">
+          <div>
+            <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block">
+              RECOMMENDED ACTION
+            </span>
+            <p className="text-sm font-semibold text-slate-900 dark:text-white font-sans mt-0.5">
               {getActionLabel(diagnosis.recommended_action)}
             </p>
           </div>
@@ -80,44 +106,33 @@ export const AIDiagnosisCard: React.FC<AIDiagnosisCardProps> = ({ diagnosis, isL
           />
         </div>
 
-        {/* Root Cause Reason */}
-        <div className="mt-3 p-3.5 rounded-lg border border-purple-200/70 dark:border-purple-800/40 bg-white/80 dark:bg-purple-950/20 space-y-1">
-          <span className="text-[10px] font-mono uppercase tracking-wider text-[#6B7280] dark:text-slate-400 font-bold block">
-            Reason:
+        {/* Reason */}
+        <div className="p-3.5 rounded-xl border border-slate-200/70 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.03] space-y-1">
+          <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block">
+            REASON
           </span>
-          <p className="text-xs font-semibold text-[#1A1A2E] dark:text-slate-200 leading-relaxed font-mono">
-            {diagnosis.root_cause_summary || 'Temporary issuer decline'}
+          <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-normal">
+            {diagnosis.action_rationale || 'The transaction appears suitable for a controlled retry.'}
           </p>
-          {diagnosis.action_rationale && (
-            <p className="mt-1 text-[11px] italic text-purple-700 dark:text-purple-400">
-              Rationale: {diagnosis.action_rationale}
-            </p>
-          )}
         </div>
 
         {/* Customer Message Draft */}
         {diagnosis.customer_communication_draft && (
-          <div className="mt-3 rounded-fintech-md border border-fintech-border bg-fintech-surface-subtle p-3">
-            <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-fintech-muted">
-              <MessageSquareQuote className="h-3.5 w-3.5 text-brand-500" />
-              <span>Personalized Outreach Draft</span>
-            </div>
-            <p className="mt-1 text-xs font-mono text-fintech-secondary bg-fintech-surface p-2.5 rounded-fintech-sm border border-fintech-border">
+          <div className="rounded-xl border border-slate-200/60 dark:border-white/[0.05] bg-white/40 dark:bg-white/[0.02] p-3 space-y-1.5">
+            <span className="flex items-center gap-1 text-[10px] font-mono font-medium text-slate-400 uppercase">
+              <MessageSquareQuote className="h-3.5 w-3.5" />
+              <span>OUTREACH DRAFT</span>
+            </span>
+            <p className="text-[11px] text-slate-600 dark:text-slate-300 italic font-sans leading-relaxed">
               "{diagnosis.customer_communication_draft}"
             </p>
           </div>
         )}
       </div>
 
-      {/* Suggested Cooldown */}
-      <div className="flex items-center justify-between border-t border-fintech-border pt-3 text-xs text-fintech-muted font-mono">
-        <div className="flex items-center gap-1.5">
-          <Clock className="h-3.5 w-3.5 text-brand-500" />
-          <span>Optimal Retry Window:</span>
-        </div>
-        <span className="font-bold text-fintech-primary">
-          {diagnosis.suggested_cooldown_hours ? `+${diagnosis.suggested_cooldown_hours} hours cooldown` : 'Immediate Execution'}
-        </span>
+      <div className="pt-3 border-t border-slate-200/60 dark:border-white/[0.06] flex items-center justify-between text-[11px] font-mono text-slate-400">
+        <span>Status: Recommendation Ready</span>
+        <span>Awaiting Policy Clearance</span>
       </div>
     </div>
   );

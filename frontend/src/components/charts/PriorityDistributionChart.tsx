@@ -26,18 +26,20 @@ export const PriorityDistributionChart: React.FC<Props> = ({
   const { isDark } = useTheme();
 
   const bands = [
-    { key: 'CRITICAL', label: 'Critical', color: '#f43f5e' },
-    { key: 'HIGH', label: 'High', color: '#f59e0b' },
-    { key: 'MEDIUM', label: 'Medium', color: '#3b82f6' },
-    { key: 'LOW', label: 'Low', color: '#64748b' },
+    { key: 'CRITICAL', label: 'Critical', opacity: 1.0 },
+    { key: 'HIGH', label: 'High', opacity: 0.75 },
+    { key: 'MEDIUM', label: 'Medium', opacity: 0.5 },
+    { key: 'LOW', label: 'Low', opacity: 0.28 },
   ];
 
   const chartData = bands.map((b) => ({
     band: b.key,
     label: b.label,
     count: data[b.key] || 0,
-    color: b.color,
+    opacity: b.opacity,
   }));
+
+  const baseColor = isDark ? '#FFFFFF' : '#111827';
 
   return (
     <div style={{ width: '100%', height }} className="min-w-0">
@@ -45,30 +47,30 @@ export const PriorityDistributionChart: React.FC<Props> = ({
         <BarChart data={chartData} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
           <XAxis
             dataKey="label"
-            stroke={isDark ? '#64748b' : '#94a3b8'}
+            stroke={isDark ? 'rgba(255,255,255,0.35)' : 'rgba(15,23,42,0.4)'}
             fontSize={10}
+            fontFamily="monospace"
             tickLine={false}
-            tick={{ fill: isDark ? '#94a3b8' : '#64748b' }}
+            axisLine={false}
           />
           <YAxis
-            stroke={isDark ? '#64748b' : '#94a3b8'}
+            stroke={isDark ? 'rgba(255,255,255,0.35)' : 'rgba(15,23,42,0.4)'}
             fontSize={10}
+            fontFamily="monospace"
             tickLine={false}
+            axisLine={false}
             allowDecimals={false}
-            tick={{ fill: isDark ? '#94a3b8' : '#64748b' }}
           />
           <Tooltip
-            cursor={{ fill: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)' }}
+            cursor={{ fill: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.03)' }}
             content={({ active, payload }) => {
               if (active && payload && payload.length) {
                 const item = payload[0].payload;
                 return (
-                  <div className={`p-2 rounded-fintech-sm shadow-md text-xs border ${
-                    isDark ? 'bg-[#0f1420] border-[#263247] text-white' : 'bg-white border-slate-200 text-slate-900'
-                  }`}>
-                    <p className="font-bold">{item.label} Priority</p>
-                    <p className="font-mono text-fintech-muted">
-                      Count: <strong className="text-fintech-primary">{item.count}</strong>
+                  <div className="rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/95 dark:bg-[oklch(0.24_0.008_223.9)]/95 backdrop-blur-xl p-2.5 shadow-glass-2 text-xs space-y-1">
+                    <p className="font-semibold text-slate-900 dark:text-white">{item.label} Priority</p>
+                    <p className="font-mono text-slate-500 text-[11px]">
+                      Count: <strong className="text-slate-900 dark:text-white">{item.count}</strong>
                     </p>
                   </div>
                 );
@@ -78,8 +80,8 @@ export const PriorityDistributionChart: React.FC<Props> = ({
           />
           <Bar
             dataKey="count"
-            radius={[3, 3, 0, 0]}
-            maxBarSize={28}
+            radius={[4, 4, 0, 0]}
+            maxBarSize={24}
             onClick={(entry: any) => {
               const bandKey = entry?.band || entry?.payload?.band;
               if (onSelectBand && bandKey) {
@@ -91,8 +93,12 @@ export const PriorityDistributionChart: React.FC<Props> = ({
             {chartData.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
-                fill={entry.color}
-                opacity={selectedBand === 'all' || selectedBand === entry.band ? 1 : 0.35}
+                fill={baseColor}
+                opacity={
+                  selectedBand === 'all' || !selectedBand || selectedBand === entry.band
+                    ? entry.opacity
+                    : 0.2
+                }
               />
             ))}
           </Bar>
