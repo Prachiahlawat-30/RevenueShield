@@ -14,8 +14,17 @@ import {
   Filter,
   Lock,
   Code,
+  UserPlus,
+  X,
+  Sparkles,
 } from 'lucide-react';
-import { getCustomers, getCustomerDetail, toggleCustomerOptOut, CustomerDetail } from '../api/customers';
+import {
+  getCustomers,
+  getCustomerDetail,
+  toggleCustomerOptOut,
+  createCustomer,
+  CustomerDetail,
+} from '../api/customers';
 import { Customer } from '../types';
 import { Button } from '../components/ui/Button';
 import { TableSkeleton } from '../components/ui/Skeleton';
@@ -31,6 +40,19 @@ export const CustomersPage: React.FC = () => {
   const [inspectDrawerData, setInspectDrawerData] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [filterMode, setFilterMode] = useState<'ALL' | 'ACTIVE' | 'OPTED_OUT'>('ALL');
+
+  // Add Account / Customer Injection Modal State
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [newCustomerForm, setNewCustomerForm] = useState({
+    name: '',
+    email: '',
+    phone: '+91 98765 43210',
+    card_last4: '4242',
+    card_expiry: '12/28',
+    is_opted_out: false,
+  });
+  const [isCreatingCustomer, setIsCreatingCustomer] = useState(false);
+  const [createSuccessNotice, setCreateSuccessNotice] = useState<string | null>(null);
 
   const fetchCustomers = async () => {
     setIsLoading(true);
@@ -113,6 +135,44 @@ export const CustomersPage: React.FC = () => {
     }
   };
 
+  const handleCreateCustomerSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newCustomerForm.name.trim() || !newCustomerForm.email.trim()) return;
+
+    setIsCreatingCustomer(true);
+    try {
+      const created = await createCustomer({
+        name: newCustomerForm.name.trim(),
+        email: newCustomerForm.email.trim(),
+        phone: newCustomerForm.phone.trim(),
+        card_last4: newCustomerForm.card_last4.trim() || '4242',
+        card_expiry: newCustomerForm.card_expiry.trim() || '12/28',
+        is_opted_out: newCustomerForm.is_opted_out,
+      });
+
+      setIsAddModalOpen(false);
+      setNewCustomerForm({
+        name: '',
+        email: '',
+        phone: '+91 98765 43210',
+        card_last4: '4242',
+        card_expiry: '12/28',
+        is_opted_out: false,
+      });
+
+      setCreateSuccessNotice(`Enrolled ${created.name} into RecoverAI active policy guardrails!`);
+      setTimeout(() => setCreateSuccessNotice(null), 4000);
+
+      await fetchCustomers();
+      await handleSelectCustomer(created.id);
+    } catch (err: any) {
+      console.error('Failed to create customer', err);
+      alert(err?.response?.data?.detail || 'Failed to inject customer profile.');
+    } finally {
+      setIsCreatingCustomer(false);
+    }
+  };
+
   // KPI Metrics
   const activeCount = useMemo(() => customers.filter((c) => !c.is_opted_out).length, [customers]);
   const optedOutCount = useMemo(() => customers.filter((c) => c.is_opted_out).length, [customers]);
@@ -143,16 +203,43 @@ export const CustomersPage: React.FC = () => {
           </p>
         </div>
 
-        <Button
-          variant="outline"
-          size="sm"
-          icon={RefreshCw}
-          isLoading={isLoading}
-          onClick={fetchCustomers}
-        >
-          Refresh Accounts
-        </Button>
+        <div className="flex items-center gap-2 flex-wrap">
+          <Button
+            variant="outline"
+            size="sm"
+            icon={RefreshCw}
+            isLoading={isLoading}
+            onClick={fetchCustomers}
+          >
+            Refresh Accounts
+          </Button>
+
+          <Button
+            variant="primary"
+            size="sm"
+            icon={UserPlus}
+            onClick={() => setIsAddModalOpen(true)}
+          >
+            Add Account
+          </Button>
+        </div>
       </div>
+
+      {/* Success Notification Banner */}
+      {createSuccessNotice && (
+        <div className="p-3.5 rounded-[12px] bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-between text-xs text-emerald-800 dark:text-emerald-300 animate-in fade-in slide-in-from-top-2">
+          <div className="flex items-center gap-2">
+            <CheckCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+            <span className="font-medium">{createSuccessNotice}</span>
+          </div>
+          <button
+            onClick={() => setCreateSuccessNotice(null)}
+            className="text-emerald-600 hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-200"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
 
       {/* KPI Quick-Stats Strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -546,6 +633,156 @@ export const CustomersPage: React.FC = () => {
           title={`Customer Audit Dossier: ${inspectDrawerData.account?.name || 'Account'}`}
           data={inspectDrawerData}
         />
+      )}
+
+      {/* Modal: Inject / Add Customer Account */}
+      {isAddModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-sm p-4 animate-fintech-fade">
+          <div
+            className="w-full max-w-md rounded-[18px] border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-[#12161F] p-6 shadow-2xl space-y-4 animate-in zoom-in-95 duration-150"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-white/[0.06] pb-3">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 rounded-[8px] bg-[#3B82F6]/10 text-[#3B82F6] border border-[#3B82F6]/20">
+                  <UserPlus className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-[#F5F6FA]">
+                    Direct Customer Injection
+                  </h3>
+                  <span className="text-[11px] text-slate-500 dark:text-[#6B7280]">
+                    Enroll account into RecoverAI PolicyEngine
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsAddModalOpen(false)}
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-900 dark:hover:text-white"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateCustomerSubmit} className="space-y-3.5 text-xs">
+              <div>
+                <label className="block text-slate-700 dark:text-[#F5F6FA] font-medium mb-1">
+                  Company / Customer Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Apex Dynamic Corp"
+                  value={newCustomerForm.name}
+                  onChange={(e) => setNewCustomerForm({ ...newCustomerForm, name: e.target.value })}
+                  className="w-full rounded-[8px] border border-slate-200 dark:border-white/[0.08] bg-slate-50 dark:bg-[#0E121A] px-3 py-2 text-slate-900 dark:text-[#F5F6FA] focus:outline-none focus:border-[#3B82F6]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-slate-700 dark:text-[#F5F6FA] font-medium mb-1">
+                  Billing Email *
+                </label>
+                <input
+                  type="email"
+                  required
+                  placeholder="e.g. finance@apexdynamic.io"
+                  value={newCustomerForm.email}
+                  onChange={(e) => setNewCustomerForm({ ...newCustomerForm, email: e.target.value })}
+                  className="w-full rounded-[8px] border border-slate-200 dark:border-white/[0.08] bg-slate-50 dark:bg-[#0E121A] px-3 py-2 text-slate-900 dark:text-[#F5F6FA] focus:outline-none focus:border-[#3B82F6]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-slate-700 dark:text-[#F5F6FA] font-medium mb-1">
+                  Contact Phone (WhatsApp Dunning)
+                </label>
+                <input
+                  type="text"
+                  placeholder="+91 98765 43210"
+                  value={newCustomerForm.phone}
+                  onChange={(e) => setNewCustomerForm({ ...newCustomerForm, phone: e.target.value })}
+                  className="w-full rounded-[8px] border border-slate-200 dark:border-white/[0.08] bg-slate-50 dark:bg-[#0E121A] px-3 py-2 text-slate-900 dark:text-[#F5F6FA] font-mono focus:outline-none focus:border-[#3B82F6]"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-slate-700 dark:text-[#F5F6FA] font-medium mb-1">
+                    Card Last 4
+                  </label>
+                  <input
+                    type="text"
+                    maxLength={4}
+                    placeholder="4242"
+                    value={newCustomerForm.card_last4}
+                    onChange={(e) => setNewCustomerForm({ ...newCustomerForm, card_last4: e.target.value })}
+                    className="w-full rounded-[8px] border border-slate-200 dark:border-white/[0.08] bg-slate-50 dark:bg-[#0E121A] px-3 py-2 text-slate-900 dark:text-[#F5F6FA] font-mono focus:outline-none focus:border-[#3B82F6]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-700 dark:text-[#F5F6FA] font-medium mb-1">
+                    Card Expiry
+                  </label>
+                  <input
+                    type="text"
+                    maxLength={5}
+                    placeholder="12/28"
+                    value={newCustomerForm.card_expiry}
+                    onChange={(e) => setNewCustomerForm({ ...newCustomerForm, card_expiry: e.target.value })}
+                    className="w-full rounded-[8px] border border-slate-200 dark:border-white/[0.08] bg-slate-50 dark:bg-[#0E121A] px-3 py-2 text-slate-900 dark:text-[#F5F6FA] font-mono focus:outline-none focus:border-[#3B82F6]"
+                  />
+                </div>
+              </div>
+
+              <div className="p-3 rounded-[8px] bg-slate-50 dark:bg-[#0E121A] border border-slate-200/80 dark:border-white/[0.06] flex items-center justify-between">
+                <div>
+                  <span className="font-semibold text-slate-900 dark:text-[#F5F6FA] block">
+                    Policy Enforcement State
+                  </span>
+                  <span className="text-[11px] text-slate-500 dark:text-[#6B7280]">
+                    Enable automated recovery sequences
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setNewCustomerForm({
+                      ...newCustomerForm,
+                      is_opted_out: !newCustomerForm.is_opted_out,
+                    })
+                  }
+                  className={`px-2.5 py-1 rounded-[6px] text-xs font-semibold border cursor-pointer ${
+                    newCustomerForm.is_opted_out
+                      ? 'bg-rose-500/15 text-rose-600 border-rose-500/25'
+                      : 'bg-emerald-500/15 text-emerald-600 border-emerald-500/25'
+                  }`}
+                >
+                  {newCustomerForm.is_opted_out ? 'Opted Out' : 'Active'}
+                </button>
+              </div>
+
+              <div className="pt-2 flex items-center justify-end gap-2 border-t border-slate-200/80 dark:border-white/[0.06]">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsAddModalOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="sm"
+                  isLoading={isCreatingCustomer}
+                >
+                  Inject Account
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
     </div>
   );

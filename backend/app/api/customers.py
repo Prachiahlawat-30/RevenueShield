@@ -10,7 +10,7 @@ from sqlalchemy import or_
 
 from app.core.database import get_db
 from app.models.customer import Customer
-from app.schemas.customer import CustomerResponse, CustomerUpdate
+from app.schemas.customer import CustomerResponse, CustomerUpdate, CustomerCreate
 from app.schemas.transaction import TransactionResponse
 from app.schemas.revenue_risk import RevenueRiskResponse
 from app.schemas.tier2_schemas import CustomerRecoveryProfileResponse
@@ -82,6 +82,34 @@ def list_customers(
         page_size=page_size,
         total_pages=total_pages,
     )
+
+
+@router.post("", response_model=CustomerResponse, status_code=201, summary="Inject / Create customer directly")
+def create_customer(
+    customer_in: CustomerCreate,
+    db: Session = Depends(get_db),
+) -> CustomerResponse:
+    """Directly inject a new customer profile into RecoverAI via REST API."""
+    existing = db.query(Customer).filter_by(email=customer_in.email).first()
+    if existing:
+        raise HTTPException(status_code=400, detail=f"Customer with email '{customer_in.email}' already exists.")
+
+    customer = Customer(
+        id=uuid.uuid4(),
+        external_id=customer_in.external_id,
+        name=customer_in.name,
+        email=customer_in.email,
+        phone=customer_in.phone,
+        payment_method_type=customer_in.payment_method_type or "card",
+        card_last4=customer_in.card_last4 or "4242",
+        card_expiry=customer_in.card_expiry or "12/28",
+        is_opted_out=customer_in.is_opted_out,
+        risk_score=customer_in.risk_score,
+    )
+    db.add(customer)
+    db.commit()
+    db.refresh(customer)
+    return CustomerResponse.model_validate(customer)
 
 
 @router.get("/{customer_id}", response_model=CustomerDetailResponse, summary="Get customer 360 overview")

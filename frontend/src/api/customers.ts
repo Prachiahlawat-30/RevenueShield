@@ -40,3 +40,23 @@ export const toggleCustomerOptOut = async (
   });
   return res.data;
 };
+
+export interface CreateCustomerPayload {
+  name: string;
+  email: string;
+  phone?: string;
+  external_id?: string;
+  payment_method_type?: string;
+  card_last4?: string;
+  card_expiry?: string;
+  is_opted_out?: boolean;
+  risk_score?: number;
+}
+
+export const createCustomer = async (payload: CreateCustomerPayload): Promise<Customer> => {
+  const res = await apiClient.post<Customer>('/customers', {
+    ...payload,
+    external_id: payload.external_id || `CUST_${Date.now().toString().slice(-6)}`,
+  });
+  return res.data;
+};
