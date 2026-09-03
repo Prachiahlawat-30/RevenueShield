@@ -211,7 +211,7 @@ export const CustomersPage: React.FC = () => {
 
       {/* Main Grid: Customer Table + Customer Dossier */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 items-start">
-        {/* Customer Table */}
+        {/* Customer Table - 7 Cols */}
         <div className="lg:col-span-7 rounded-[16px] border border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#12161F] shadow-sm dark:shadow-fintech-card overflow-hidden transition-colors flex flex-col">
           <div className="p-4 border-b border-slate-200 dark:border-white/[0.06] flex items-center justify-between">
             <div>
@@ -225,27 +225,31 @@ export const CustomersPage: React.FC = () => {
             </span>
           </div>
 
-          <div className="overflow-x-auto max-h-[640px] overflow-y-auto fintech-table-sticky-header">
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="border-b border-slate-200 dark:border-white/[0.06] text-slate-400 dark:text-[#6B7280] uppercase text-[10px] font-semibold tracking-[0.04em] bg-slate-50/80 dark:bg-[#0E121A]/80 backdrop-blur-sm">
+          {/* Table Container - table-fixed ensures 100% fit with ZERO horizontal scroll */}
+          <div className="max-h-[640px] overflow-y-auto">
+            <table className="w-full text-left text-xs table-fixed">
+              <colgroup>
+                <col className="w-[52%]" />
+                <col className="w-[24%]" />
+                <col className="w-[24%]" />
+              </colgroup>
+              <thead className="sticky top-0 z-10">
+                <tr className="border-b border-slate-200 dark:border-white/[0.06] text-slate-400 dark:text-[#6B7280] uppercase text-[10px] font-semibold tracking-[0.04em] bg-slate-50 dark:bg-[#0E121A]">
                   <th className="px-4 py-3 font-semibold">Customer</th>
-                  <th className="px-4 py-3 font-semibold">Payment Method</th>
-                  <th className="px-4 py-3 font-semibold">Expiry</th>
-                  <th className="px-4 py-3 font-semibold">Policy State</th>
-                  <th className="px-4 py-3 text-right font-semibold">Action</th>
+                  <th className="px-3 py-3 font-semibold">Card & Expiry</th>
+                  <th className="px-3 py-3 font-semibold text-right sm:text-left">Policy State</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-white/[0.04]">
                 {isLoading ? (
                   <tr>
-                    <td colSpan={5} className="p-4">
-                      <TableSkeleton rows={6} cols={5} />
+                    <td colSpan={3} className="p-4">
+                      <TableSkeleton rows={6} cols={3} />
                     </td>
                   </tr>
                 ) : filteredCustomers.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="py-12 text-center text-slate-400 dark:text-[#6B7280]">
+                    <td colSpan={3} className="py-12 text-center text-slate-400 dark:text-[#6B7280]">
                       No customers match your search criteria.
                     </td>
                   </tr>
@@ -271,69 +275,56 @@ export const CustomersPage: React.FC = () => {
                             : 'border-l-transparent hover:bg-slate-50 dark:hover:bg-white/[0.02]'
                         }`}
                       >
-                        <td className="px-4 py-3.5">
-                          <div className="flex items-center gap-3">
+                        {/* Customer Column */}
+                        <td className="px-4 py-3.5 overflow-hidden">
+                          <div className="flex items-center gap-2.5 min-w-0">
                             <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/[0.06] border border-slate-200 dark:border-white/[0.08] flex items-center justify-center text-[11px] font-bold text-slate-700 dark:text-slate-200 shrink-0">
                               {initials}
                             </div>
-                            <div className="min-w-0">
-                              <div className="flex items-center gap-2">
-                                <span className="font-semibold text-slate-900 dark:text-[#F5F6FA] truncate max-w-[150px]">
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                <span className="font-semibold text-slate-900 dark:text-[#F5F6FA] truncate">
                                   {c.name}
                                 </span>
                                 <CustomerValueBadge customerId={c.id} />
                               </div>
-                              <div className="text-[11px] text-slate-500 dark:text-[#6B7280] truncate max-w-[180px]">
+                              <div className="text-[11px] text-slate-500 dark:text-[#6B7280] truncate font-mono">
                                 {c.email}
                               </div>
                             </div>
                           </div>
                         </td>
 
-                        <td className="px-4 py-3.5 text-slate-600 dark:text-[#9CA3B0] font-mono whitespace-nowrap">
-                          •••• {c.card_last4 || '4242'}
+                        {/* Card & Expiry Column */}
+                        <td className="px-3 py-3.5 text-slate-600 dark:text-[#9CA3B0] font-mono whitespace-nowrap overflow-hidden">
+                          <div>•••• {c.card_last4 || '4242'}</div>
+                          <div className="text-[10px] text-slate-400 dark:text-[#6B7280]">Exp {c.card_expiry || '12/28'}</div>
                         </td>
 
-                        <td className="px-4 py-3.5 text-slate-600 dark:text-[#9CA3B0] tabular-nums font-mono whitespace-nowrap">
-                          {c.card_expiry || '12/28'}
-                        </td>
-
-                        <td className="px-4 py-3.5">
+                        {/* Policy State Column - strictly whitespace-nowrap, never wraps */}
+                        <td className="px-3 py-3.5 text-right sm:text-left whitespace-nowrap overflow-hidden">
                           <button
                             type="button"
                             onClick={(e) => handleToggleOptOut(c, e)}
-                            className={`h-5 px-2.5 rounded-full inline-flex items-center gap-1 text-[10px] font-semibold border transition-colors cursor-pointer ${
+                            className={`h-6 px-2.5 rounded-full inline-flex items-center gap-1.5 text-[11px] font-semibold border transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                               c.is_opted_out
-                                ? 'border-[#F0625A]/30 bg-[#F0625A]/15 text-[#E11D48] dark:text-[#F0625A] hover:bg-[#F0625A]/25'
-                                : 'border-[#10B981]/30 bg-[#10B981]/15 text-[#059669] dark:text-[#10B981] hover:bg-[#10B981]/25'
+                                ? 'border-rose-500/30 bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-500/20'
+                                : 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20'
                             }`}
                             title="Click to toggle compliance opt-out state"
                           >
                             {c.is_opted_out ? (
                               <>
-                                <XCircle className="h-3 w-3" />
-                                <span>Opted Out</span>
+                                <XCircle className="h-3 w-3 shrink-0 text-rose-500" />
+                                <span className="whitespace-nowrap">Opted Out</span>
                               </>
                             ) : (
                               <>
-                                <CheckCircle className="h-3 w-3" />
-                                <span>Active</span>
+                                <CheckCircle className="h-3 w-3 shrink-0 text-emerald-500" />
+                                <span className="whitespace-nowrap">Active</span>
                               </>
                             )}
                           </button>
-                        </td>
-
-                        <td className="px-4 py-3.5 text-right whitespace-nowrap">
-                          <span
-                            className={`inline-flex items-center text-xs font-semibold ${
-                              isSelected
-                                ? 'text-[#2563EB] dark:text-[#3B82F6]'
-                                : 'text-slate-400 dark:text-[#6B7280] hover:text-[#2563EB] dark:hover:text-[#3B82F6]'
-                            }`}
-                          >
-                            Inspect
-                            <ChevronRight className="h-3.5 w-3.5 ml-0.5" />
-                          </span>
                         </td>
                       </tr>
                     );
@@ -344,14 +335,14 @@ export const CustomersPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Customer Detail Dossier - Sticky */}
+        {/* Customer Detail Dossier - 5 Cols (Sticky & Seamlessly Fitted) */}
         <div className="lg:col-span-5 sticky top-6 self-start rounded-[16px] border border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#12161F] p-5 shadow-sm dark:shadow-fintech-card space-y-4 transition-colors">
           {selectedCustomer ? (
             <div className="space-y-4">
-              {/* Profile Card Header */}
-              <div className="border-b border-slate-200 dark:border-white/[0.06] pb-3.5 flex items-start justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-11 h-11 rounded-[12px] bg-gradient-to-br from-[#3B82F6]/20 to-[#8B5CF6]/20 border border-[#3B82F6]/30 flex items-center justify-center text-sm font-bold text-[#2563EB] dark:text-[#3B82F6] shrink-0">
+              {/* Account Header with Non-Wrapping Button */}
+              <div className="border-b border-slate-200 dark:border-white/[0.06] pb-3.5 flex items-start justify-between gap-2">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-10 h-10 rounded-[10px] bg-[#3B82F6]/10 border border-[#3B82F6]/20 flex items-center justify-center text-xs font-bold text-[#3B82F6] shrink-0">
                     {selectedCustomer.name
                       ? selectedCustomer.name
                           .split(' ')
@@ -361,29 +352,27 @@ export const CustomersPage: React.FC = () => {
                           .toUpperCase()
                       : 'AC'}
                   </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-base font-bold text-slate-900 dark:text-[#F5F6FA]">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <h3 className="text-sm font-bold text-slate-900 dark:text-[#F5F6FA] truncate">
                         {selectedCustomer.name}
                       </h3>
                       <CustomerValueBadge customerId={selectedCustomer.id} />
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-[#6B7280] mt-0.5">
-                      <span className="font-mono">{selectedCustomer.external_id}</span>
-                      <span>•</span>
-                      <span className="truncate max-w-[150px]">{selectedCustomer.email}</span>
+                    <div className="text-[11px] text-slate-400 dark:text-[#6B7280] font-mono truncate">
+                      {selectedCustomer.external_id}
                     </div>
                   </div>
                 </div>
 
-                {/* Quick Toggle Opt-Out Button */}
+                {/* Quick Toggle Opt-Out Button - Strictly whitespace-nowrap and shrink-0 */}
                 <button
                   type="button"
                   onClick={() => handleToggleOptOut(selectedCustomer)}
-                  className={`px-2.5 py-1 rounded-[8px] text-[10px] font-semibold border transition-all cursor-pointer ${
+                  className={`px-2.5 py-1 rounded-[8px] text-[10px] font-semibold border transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                     selectedCustomer.is_opted_out
-                      ? 'bg-[#F0625A]/15 text-[#E11D48] dark:text-[#F0625A] border-[#F0625A]/30'
-                      : 'bg-[#10B981]/15 text-[#059669] dark:text-[#10B981] border-[#10B981]/30'
+                      ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/25 hover:bg-rose-500/20'
+                      : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/25 hover:bg-emerald-500/20'
                   }`}
                   title="Toggle customer opt-out status"
                 >
@@ -391,41 +380,29 @@ export const CustomersPage: React.FC = () => {
                 </button>
               </div>
 
-              {/* Recovery Intelligence Profile Card */}
+              {/* Recovery Intelligence Profile */}
               <CustomerRecoveryProfileCard customerId={selectedCustomer.id} />
 
-              {/* Vaulted Payment Method Card */}
+              {/* Vaulted Payment Credentials */}
               <div className="space-y-1.5">
                 <span className="text-[10px] font-bold tracking-[0.04em] text-slate-400 dark:text-[#6B7280] uppercase">
                   Vaulted Payment Credentials
                 </span>
-                <div className="rounded-[12px] border border-slate-200 dark:border-white/[0.06] bg-slate-50 dark:bg-[#0E121A] p-3.5 space-y-2 text-xs">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <CreditCard className="w-4 h-4 text-[#3B82F6]" />
-                      <span className="font-semibold text-slate-900 dark:text-[#F5F6FA] font-mono">
+                <div className="rounded-[10px] bg-slate-50 dark:bg-[#0E121A] border border-slate-200/80 dark:border-white/[0.06] p-3 flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-2">
+                    <CreditCard className="w-4 h-4 text-[#3B82F6] shrink-0" />
+                    <div>
+                      <span className="font-mono font-bold text-slate-900 dark:text-[#F5F6FA]">
                         •••• {selectedCustomer.card_last4 || '4242'}
                       </span>
-                    </div>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-semibold">
-                      Network Tokenized
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2 pt-1 border-t border-slate-200 dark:border-white/[0.04] text-[11px]">
-                    <div>
-                      <span className="text-slate-500 dark:text-[#6B7280] block">Expiry</span>
-                      <span className="font-mono font-semibold text-slate-900 dark:text-[#F5F6FA]">
-                        {selectedCustomer.card_expiry || '12/28'}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-slate-500 dark:text-[#6B7280] block">Method Type</span>
-                      <span className="font-semibold text-slate-900 dark:text-[#F5F6FA]">
-                        {selectedCustomer.payment_method_type || 'Credit / Debit Card'}
+                      <span className="text-[11px] text-slate-400 dark:text-[#6B7280] ml-2 font-mono">
+                        Exp {selectedCustomer.card_expiry || '12/28'}
                       </span>
                     </div>
                   </div>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-semibold whitespace-nowrap shrink-0">
+                    Network Tokenized
+                  </span>
                 </div>
               </div>
 
@@ -435,21 +412,21 @@ export const CustomersPage: React.FC = () => {
                   <span className="text-[10px] font-bold tracking-[0.04em] text-slate-400 dark:text-[#6B7280] uppercase">
                     Payment History Timeline
                   </span>
-                  <span className="text-[11px] text-slate-500 dark:text-[#6B7280] font-mono">
+                  <span className="text-[10px] text-slate-400 dark:text-[#6B7280] font-mono">
                     {selectedCustomer.transactions.length} entries
                   </span>
                 </div>
 
-                <div className="space-y-2 max-h-52 overflow-y-auto pr-1">
+                <div className="space-y-1.5 max-h-44 overflow-y-auto pr-1">
                   {selectedCustomer.transactions.length === 0 ? (
-                    <p className="text-xs text-slate-400 dark:text-[#6B7280] py-4 text-center">
-                      No transaction records found for this account.
+                    <p className="text-xs text-slate-400 dark:text-[#6B7280] py-3 text-center">
+                      No transaction records found.
                     </p>
                   ) : (
                     selectedCustomer.transactions.map((tx) => (
                       <div
                         key={tx.id}
-                        className="rounded-[10px] border border-slate-200 dark:border-white/[0.04] bg-slate-50 dark:bg-[#0E121A] p-3 text-xs flex items-center justify-between transition-colors hover:border-slate-300 dark:hover:border-white/[0.08]"
+                        className="rounded-[8px] border border-slate-200/70 dark:border-white/[0.04] bg-slate-50 dark:bg-[#0E121A] p-2.5 text-xs flex items-center justify-between"
                       >
                         <div className="space-y-0.5 min-w-0">
                           <div className="flex items-center gap-2">
@@ -457,7 +434,7 @@ export const CustomersPage: React.FC = () => {
                               {formatCurrency(tx.amount)}
                             </span>
                             <span
-                              className={`h-4.5 px-1.5 rounded-full inline-flex items-center text-[9px] font-semibold uppercase border ${
+                              className={`h-4 px-1.5 rounded-full inline-flex items-center text-[9px] font-semibold uppercase border ${
                                 tx.status === 'succeeded'
                                   ? 'bg-[#10B981]/15 text-[#059669] dark:text-[#10B981] border-[#10B981]/25'
                                   : 'bg-[#F0625A]/15 text-[#E11D48] dark:text-[#F0625A] border-[#F0625A]/25'
@@ -472,7 +449,7 @@ export const CustomersPage: React.FC = () => {
                         </div>
 
                         {tx.failure_reason && (
-                          <span className="text-[11px] text-slate-600 dark:text-[#9CA3B0] max-w-[140px] truncate text-right font-medium">
+                          <span className="text-[10px] text-slate-500 dark:text-[#9CA3B0] max-w-[130px] truncate text-right font-medium">
                             {getFailureTypeLabel(tx.failure_reason)}
                           </span>
                         )}
