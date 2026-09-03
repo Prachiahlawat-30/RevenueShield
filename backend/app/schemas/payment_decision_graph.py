@@ -116,6 +116,6 @@ class PaymentDecisionGraphResponse(BaseModel):
     ai_vs_policy: AiVsPolicyComparison
     timeline: List[DecisionTimelineEvent]
     differentiator_slogan: str = (
-        "RecoverAI doesn't ask AI how to move money. It uses AI to understand revenue risk, "
+        "RevenueShield doesn't ask AI how to move money. It uses AI to understand revenue risk, "
         "while deterministic policy decides what the system is allowed to do."
     )

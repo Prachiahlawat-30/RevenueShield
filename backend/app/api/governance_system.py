@@ -36,7 +36,7 @@ def download_monthly_recovery_report_csv(db: Session = Depends(get_db)):
     return Response(
         content=report.csv_data,
         media_type="text/csv",
-        headers={"Content-Disposition": 'attachment; filename="RecoverAI_Monthly_Report_August_2026.csv"'},
+        headers={"Content-Disposition": 'attachment; filename="RevenueShield_Monthly_Report_August_2026.csv"'},
     )
 
 

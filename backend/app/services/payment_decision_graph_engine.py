@@ -41,7 +41,7 @@ class PaymentDecisionGraphEngine:
     STRATEGY_VERSION = "v4.0.0"
 
     DIFFERENTIATOR_SLOGAN = (
-        "RecoverAI doesn't ask AI how to move money. It uses AI to understand revenue risk, "
+        "RevenueShield doesn't ask AI how to move money. It uses AI to understand revenue risk, "
         "while deterministic policy decides what the system is allowed to do."
     )
 

@@ -46,27 +46,27 @@ class NextBestActionEngine:
         # 1. Customer Opt-Out Stop
         if action == RecoveryAction.STOP:
             return (
-                "RecoverAI recommends `stop` because this customer has explicitly opted out of automated "
+                "RevenueShield recommends `stop` because this customer has explicitly opted out of automated "
                 "recovery interventions, requiring immediate workflow termination under deterministic safety policy."
             )
 
         # 2. High-Value / VIP Escalation
         if action == RecoveryAction.ESCALATE_TO_HUMAN and amount > Decimal("1000.00"):
             return (
-                f"RecoverAI recommends `escalate_to_human` because the transaction amount (${amount:,.2f}) "
+                f"RevenueShield recommends `escalate_to_human` because the transaction amount (${amount:,.2f}) "
                 f"exceeds the $1,000 automated recovery threshold, requiring dedicated human specialist handling "
                 f"to maximize recovery yield on high-exposure revenue."
             )
         elif action == RecoveryAction.ESCALATE_TO_HUMAN and (customer and float(getattr(customer, "risk_score", 0) or 0) >= 80.0):
             return (
-                f"RecoverAI recommends `escalate_to_human` because this is a high-value account (${amount:,.2f}) "
+                f"RevenueShield recommends `escalate_to_human` because this is a high-value account (${amount:,.2f}) "
                 f"requiring white-glove VIP concierge handling to preserve customer lifetime value and eliminate churn risk."
             )
 
         # 3. Unknown Failure Escalation
         if action == RecoveryAction.ESCALATE_TO_HUMAN and failure_type == FailureType.UNKNOWN_FAILURE.value:
             return (
-                f"RecoverAI recommends `escalate_to_human` because unrecognized processor decline code "
+                f"RevenueShield recommends `escalate_to_human` because unrecognized processor decline code "
                 f"requires manual operations review to prevent erroneous dunning, offering {prob_pct}% expected resolution."
             )
 
@@ -75,7 +75,7 @@ class NextBestActionEngine:
             card_str = f"card ending in {customer.card_last4}" if (customer and customer.card_last4) else "card credentials"
             expiry_str = f"expired {customer.card_expiry}" if (customer and customer.card_expiry) else "expired"
             return (
-                f"RecoverAI recommends `request_payment_method_update` because this customer's {card_str} is {expiry_str}; "
+                f"RevenueShield recommends `request_payment_method_update` because this customer's {card_str} is {expiry_str}; "
                 f"direct retry is prohibited by safety policy, making credential update the highest expected-value intervention "
                 f"(${net_rec:,.2f} net expected recovery at {prob_pct}% probability)."
             )
@@ -83,7 +83,7 @@ class NextBestActionEngine:
         # 5. Insufficient Funds -> Payment Reminder
         if action == RecoveryAction.SEND_PAYMENT_REMINDER and failure_type == FailureType.INSUFFICIENT_FUNDS.value:
             return (
-                f"RecoverAI recommends `send_payment_reminder` because this customer category historically recovers "
+                f"RevenueShield recommends `send_payment_reminder` because this customer category historically recovers "
                 f"{prob_pct}% of insufficient-funds failures after receiving a polite reminder, making it the highest "
                 f"expected-value intervention (${net_rec:,.2f} net expected recovery, ${cost:.2f} marginal cost)."
             )
@@ -92,21 +92,21 @@ class NextBestActionEngine:
         if action == RecoveryAction.RETRY_PAYMENT and failure_type in [FailureType.TEMPORARY_DECLINE.value, FailureType.NETWORK_ERROR.value]:
             fail_label = "gateway network timeout" if failure_type == FailureType.NETWORK_ERROR.value else "issuer temporary decline"
             return (
-                f"RecoverAI recommends `retry_payment` because {fail_label} events historically recover {prob_pct}% "
+                f"RevenueShield recommends `retry_payment` because {fail_label} events historically recover {prob_pct}% "
                 f"on direct re-attempt, yielding ${net_rec:,.2f} net expected recovery with minimal customer friction."
             )
 
         # 7. Card Updated -> Direct Retry
         if action == RecoveryAction.RETRY_PAYMENT and failure_type == FailureType.EXPIRED_CARD.value:
             return (
-                f"RecoverAI recommends `retry_payment` because customer payment credentials were successfully updated "
+                f"RevenueShield recommends `retry_payment` because customer payment credentials were successfully updated "
                 f"(expiry: {customer.card_expiry if customer else 'active'}), restoring recovery likelihood to {prob_pct}% "
                 f"(${net_rec:,.2f} net expected yield)."
             )
 
         # 8. Generic deterministic fallback
         return (
-            f"RecoverAI recommends `{action.value}` based on multi-action valuation, yielding ${net_rec:,.2f} "
+            f"RevenueShield recommends `{action.value}` based on multi-action valuation, yielding ${net_rec:,.2f} "
             f"net expected recovery at {prob_pct}% probability with ${cost:.2f} intervention cost."
         )
 

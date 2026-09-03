@@ -11,6 +11,7 @@ import {
   Sparkles,
   Radar,
   Sliders,
+  Shield,
   ShieldCheck,
   FlaskConical,
   Scale,
@@ -180,12 +181,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {!isCollapsed ? (
           <div className="flex items-center gap-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-[#3B82F6] text-white shadow-sm">
-              <Zap className="h-4 w-4 fill-current" />
+              <Shield className="h-4 w-4 fill-current" />
             </div>
             <div>
               <div className="flex items-center gap-1.5 leading-none">
                 <span className="text-sm font-semibold tracking-tight text-slate-900 dark:text-[#F5F6FA]">
-                  RecoverAI
+                  RevenueShield
                 </span>
                 <span className="h-4.5 px-1.5 rounded-full inline-flex items-center text-[9px] font-medium bg-slate-100 dark:bg-white/[0.05] text-slate-600 dark:text-[#9CA3B0] border border-slate-200 dark:border-white/[0.08]">
                   Ops
@@ -200,7 +201,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             title="Expand sidebar"
             className="group relative mx-auto flex h-8 w-8 items-center justify-center rounded-[10px] bg-[#3B82F6] text-white shadow-sm transition-all cursor-pointer hover:bg-[#2563EB]"
           >
-            <Zap className="h-4 w-4 fill-current group-hover:hidden" />
+            <Shield className="h-4 w-4 fill-current group-hover:hidden" />
             <PanelLeftOpen className="h-4 w-4 hidden group-hover:block" />
           </button>
         )}

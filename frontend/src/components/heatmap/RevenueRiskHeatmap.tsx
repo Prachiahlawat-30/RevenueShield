@@ -152,7 +152,7 @@ export const RevenueRiskHeatmap: React.FC = () => {
 
               <div className="pt-2 border-t border-fintech-border space-y-1">
                 <span className="text-[10px] font-bold text-fintech-muted uppercase block font-mono">
-                  RecoverAI Timing Recommendation
+                  RevenueShield Timing Recommendation
                 </span>
                 <p className="text-[11px] text-emerald-700 dark:text-emerald-400 font-medium">
                   {hoveredCell.failure_rate_pct > 35

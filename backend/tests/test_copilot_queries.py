@@ -53,4 +53,4 @@ def test_copilot_fallback_no_zero_roi(client):
     assert res.status_code == 200
     data = res.json()
     assert "0.0x" not in data["answer"]
-    assert "RecoverAI is currently tracking" in data["answer"]
+    assert "RevenueShield is currently tracking" in data["answer"]

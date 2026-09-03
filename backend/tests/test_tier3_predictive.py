@@ -367,7 +367,7 @@ def test_channel_optimization_engine(db):
     assert res.best_channel in ["sms", "in_app"]
     assert res.expected_response_probability >= 0.70
     assert len(res.channel_rankings) == 4
-    assert "RecoverAI recommends" in res.selection_reason
+    assert "RevenueShield recommends" in res.selection_reason
 
 
 def test_personalized_communication_service(db):
@@ -641,7 +641,7 @@ def test_monthly_report_and_recovery_leaderboards(client, db):
     assert float(rep_data["recovered"]) > 0
     assert float(rep_data["prevented"]) > 0
     assert rep_data["recovery_rate_pct"] > 50.0
-    assert "RecoverAI Revenue Recovery Report" in rep_data["csv_data"]
+    assert "RevenueShield Revenue Recovery Report" in rep_data["csv_data"]
 
     # 2. GET /api/governance-system/monthly-report/csv
     res_csv = client.get("/api/governance-system/monthly-report/csv")
@@ -735,7 +735,7 @@ def test_demo_lab_scenarios_and_reset(client, db):
     r1 = res_run1.json()
     assert r1["final_status"] == "ESCALATED_TO_HUMAN"
     assert "PolicyEngine Rule 2" in r1["step_3_policy_gate"]
-    assert "RecoverAI doesn't ask AI" in r1["differentiator_slogan"]
+    assert "RevenueShield doesn't ask AI" in r1["differentiator_slogan"]
 
     # 4. POST /api/demo-lab/run-scenario (Gateway degradation)
     res_run2 = client.post("/api/demo-lab/run-scenario", json={"scenario_id": "gateway_degradation"})

@@ -36,7 +36,7 @@ export const AuthorizationFunnelChart: React.FC = () => {
   const chartData = funnelData.stages.map((s) => ({
     name: s.stage_name,
     Baseline: s.baseline_count,
-    'RecoverAI Optimized': s.optimized_count,
+    'RevenueShield Optimized': s.optimized_count,
     lift: s.lift_pct,
   }));
 
@@ -49,7 +49,7 @@ export const AuthorizationFunnelChart: React.FC = () => {
             <h3 className="text-sm font-bold text-fintech-primary">Pre-Authorization Conversion Funnel</h3>
           </div>
           <p className="text-xs text-fintech-secondary mt-0.5">
-            Checkout intent to completed payment: Baseline vs RecoverAI Adaptive Strategy
+            Checkout intent to completed payment: Baseline vs RevenueShield Adaptive Strategy
           </p>
         </div>
 
@@ -92,7 +92,7 @@ export const AuthorizationFunnelChart: React.FC = () => {
               )}
             />
             <Bar dataKey="Baseline" fill={isDark ? '#475569' : '#94a3b8'} radius={[4, 4, 0, 0]} />
-            <Bar dataKey="RecoverAI Optimized" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="RevenueShield Optimized" fill="#3b82f6" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>

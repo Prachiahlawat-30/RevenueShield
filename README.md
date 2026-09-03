@@ -1,4 +1,4 @@
-# ⚡ RecoverAI — Autonomous Revenue Recovery & Payment Intelligence
+# 🛡️ RevenueShield — Autonomous Revenue Recovery & Payment Intelligence
 
 > **Autonomous, policy-bounded revenue recovery intelligence that detects payment degradations, diagnoses root causes, determines optimal interventions, and recovers lost revenue across checkouts, recurring mandates, and B2B receivables.**
 
@@ -28,8 +28,8 @@ Over **$440B+** is lost globally each year to false payment declines, unoptimize
 * **Traditional Payment Processors** rely on *dumb retry loops* that blindly re-attempt charges at fixed intervals, triggering excessive gateway penalty fees, card scheme flags, and customer friction.
 * **Unconstrained AI / LLMs** cannot be trusted with actual money movement due to stochastic hallucinations, regulatory non-compliance, and lack of deterministic bounds.
 
-### **The RecoverAI Solution: Probabilistic AI + Deterministic Safety Guardrails**
-RecoverAI completely decouples **recovery formulation** from **execution authority**:
+### **The RevenueShield Solution: Probabilistic AI + Deterministic Safety Guardrails**
+RevenueShield completely decouples **recovery formulation** from **execution authority**:
 1. **AI Diagnosis Engine (Probabilistic)**: Analyzes issuer decline codes, customer historical liquidity timing, network telemetry, and salvage propensity to propose high-yield recovery playbooks.
 2. **Policy Engine (Deterministic)**: Enforces immutable financial safety guardrails that **AI can NEVER bypass** (e.g., hard stop after 3 attempts, mandatory 24h cooldown windows, customer opt-out verification, max exposure bounds).
 3. **Recovery Engine (Execution Rails)**: Executes only verified actions across payment gateways (Smart Retries, UPI Autopay sequencing, Timed Reminders, Dynamic Routing).
@@ -70,7 +70,7 @@ MONEY RECOVERED
 
 ## 🛡️ AI Recommendation vs. Deterministic Policy Verification
 
-RecoverAI guarantees operational safety through architectural separation of powers:
+RevenueShield guarantees operational safety through architectural separation of powers:
 
 ```
 ┌────────────────────────────────────────┐     ┌────────────────────────────────────────┐
@@ -98,7 +98,7 @@ RecoverAI guarantees operational safety through architectural separation of powe
 
 ## ⏱️ Visual State Timeline (Deterministic Causal Progression)
 
-Every transaction in RecoverAI features a live, functional, deterministic state progression timeline:
+Every transaction in RevenueShield features a live, functional, deterministic state progression timeline:
 
 ```
 ✓ DETECTED
@@ -124,7 +124,7 @@ Every transaction in RecoverAI features a live, functional, deterministic state 
 
 ## 💡 Explainable AI: "Why this action?"
 
-RecoverAI avoids black-box decisioning. Clicking the **`Why this action?`** button launches an accessible, non-overlapping explainability modal detailing:
+RevenueShield avoids black-box decisioning. Clicking the **`Why this action?`** button launches an accessible, non-overlapping explainability modal detailing:
 * **Evaluated Strategy**: The exact playbook selected (e.g. `Retry Payment` or `Escalate to Human`).
 * **Decision Evidence**:
   * *Temporary decline detected (issuer response code 99).*
@@ -138,7 +138,7 @@ RecoverAI avoids black-box decisioning. Clicking the **`Why this action?`** butt
 ## 🌍 Platform Modules & Capabilities
 
 ### 1. 🌍 Global Payment Intelligence
-* High-level command view answering: *"Where are payments succeeding, where are they failing, why are they failing, and where is RecoverAI losing or recovering the most revenue?"*
+* High-level command view answering: *"Where are payments succeeding, where are they failing, why are they failing, and where is RevenueShield losing or recovering the most revenue?"*
 * Slices multi-currency performance across regions (North America, Europe, APAC, Latin America), PSP gateways (Stripe, Razorpay, Adyen), and payment rails (Cards, UPI, SEPA, ACH).
 * Real-time degradation heatmaps and cross-gateway latency benchmarking.
 

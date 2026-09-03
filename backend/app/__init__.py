@@ -1,1 +1,1 @@
-"""RecoverAI Backend Application Package."""
+"""RevenueShield Backend Application Package."""

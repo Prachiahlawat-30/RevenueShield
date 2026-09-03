@@ -27,7 +27,7 @@ def test_api_health_endpoint(client):
     res = client.get("/api/health")
     assert res.status_code == 200
     assert res.json()["status"] == "ok"
-    assert res.json()["service"] == "recoverai-api"
+    assert res.json()["service"] == "revenueshield-api"
 
 
 def test_api_simulation_seed(client):

@@ -248,7 +248,7 @@ export const SpecializedUseCasesPage: React.FC = () => {
   const handleCopyWebhookPayload = () => {
     if (!conversationalResponse) return;
     const payload = {
-      event: 'recoverai.conversational_recovery.dispatched',
+      event: 'revenueshield.conversational_recovery.dispatched',
       timestamp: new Date().toISOString(),
       recipient: {
         customer_id: 'cust_001',
@@ -768,7 +768,7 @@ export const SpecializedUseCasesPage: React.FC = () => {
                       <div className="flex items-center gap-2">
                         <Zap className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                         <span className="font-mono font-bold text-slate-900 dark:text-white">
-                          pay.recoverai.io/quick/settle
+                          pay.revenueshield.io/quick/settle
                         </span>
                       </div>
                       <button
@@ -1175,11 +1175,11 @@ export const SpecializedUseCasesPage: React.FC = () => {
             <div className="flex items-center gap-2 text-indigo-900 dark:text-indigo-200">
               <Calendar className="w-4 h-4 text-indigo-600" />
               <h4 className="text-xs font-bold uppercase font-mono tracking-wider">
-                Why RecoverAI Delays Month-End Mandate Debits to Salary Windows
+                Why RevenueShield Delays Month-End Mandate Debits to Salary Windows
               </h4>
             </div>
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-              Historical banking data shows that recurring debits attempted between the <strong>28th and 31st</strong> fail at a <strong>3.4x higher rate</strong> due to month-end account balance dips. RecoverAI automatically pauses mandate debits and aligns execution with the customer's verified salary credit window (<strong>1st–5th of month</strong>), clearing charges during <strong>NACH Cycle 1 (09:00 AM)</strong> when liquidity is peak.
+              Historical banking data shows that recurring debits attempted between the <strong>28th and 31st</strong> fail at a <strong>3.4x higher rate</strong> due to month-end account balance dips. RevenueShield automatically pauses mandate debits and aligns execution with the customer's verified salary credit window (<strong>1st–5th of month</strong>), clearing charges during <strong>NACH Cycle 1 (09:00 AM)</strong> when liquidity is peak.
             </p>
           </div>
 
@@ -1847,7 +1847,7 @@ export const SpecializedUseCasesPage: React.FC = () => {
                     2. Failed Subscription Dunning & Yield Decay Curves
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Bounded retry sequence showing diminishing returns across attempts, proving why RecoverAI stops at Attempt 3.
+                    Bounded retry sequence showing diminishing returns across attempts, proving why RevenueShield stops at Attempt 3.
                   </p>
                 </div>
               </div>
@@ -1902,7 +1902,7 @@ export const SpecializedUseCasesPage: React.FC = () => {
             <div className="p-3.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 text-xs text-slate-600 dark:text-slate-300 space-y-1">
               <strong>Deterministic Policy Guardrail:</strong>
               <p>
-                Attempt 4 generates only 1.2% salvage at a cost of $890 per $1,000 recovered, crossing the merchant's net-negative margin boundary. RecoverAI's Policy Engine automatically stops autonomous retries and halts processing to preserve card scheme reputation.
+                Attempt 4 generates only 1.2% salvage at a cost of $890 per $1,000 recovered, crossing the merchant's net-negative margin boundary. RevenueShield's Policy Engine automatically stops autonomous retries and halts processing to preserve card scheme reputation.
               </p>
             </div>
           </div>

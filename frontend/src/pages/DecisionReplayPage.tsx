@@ -87,7 +87,7 @@ export const DecisionReplayPage: React.FC = () => {
             Decision Replay & Audit Trace
           </h1>
           <p className="mt-1 text-sm text-fintech-secondary max-w-3xl">
-            Reconstruct historical recovery cases step-by-step: what RecoverAI knew, what it predicted, what it recommended, what PolicyEngine decided, and what settled.
+            Reconstruct historical recovery cases step-by-step: what RevenueShield knew, what it predicted, what it recommended, what PolicyEngine decided, and what settled.
           </p>
         </div>
 
@@ -163,7 +163,7 @@ export const DecisionReplayPage: React.FC = () => {
         <div className="space-y-6">
           {/* 5 Reconstructed Pillar Cards */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-5 text-xs">
-            {/* 1. What RecoverAI Knew */}
+            {/* 1. What RevenueShield Knew */}
             <div className="rounded-fintech-lg border border-fintech-border bg-fintech-surface p-4 space-y-2 shadow-fintech-sm">
               <div className="flex items-center gap-1.5 text-fintech-muted font-bold uppercase text-[10px]">
                 <Database className="w-3.5 h-3.5 text-brand-500" />

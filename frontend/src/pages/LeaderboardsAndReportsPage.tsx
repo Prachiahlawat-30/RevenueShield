@@ -50,7 +50,7 @@ export const LeaderboardsAndReportsPage: React.FC = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    link.setAttribute('download', `RecoverAI_Monthly_Report_${report.period.replace(' ', '_')}.csv`);
+    link.setAttribute('download', `RevenueShield_Monthly_Report_${report.period.replace(' ', '_')}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

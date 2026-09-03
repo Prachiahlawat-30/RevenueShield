@@ -417,7 +417,7 @@ export const MainWorkflowVisualizer: React.FC<MainWorkflowVisualizerProps> = ({
         <Info className="w-4 h-4 text-slate-400 dark:text-[#6B7280] shrink-0 mt-0.5" />
         <div className="leading-relaxed">
           <strong className="text-slate-900 dark:text-[#F5F6FA] font-medium">Deterministic policy enforcement: </strong>
-          Unlike legacy dunning systems that indiscriminately re-attempt card debits, RecoverAI immediately isolates failed transactions into a monitored risk exposure ledger. Every recovery intervention is synthesized using causal machine learning, but strictly bounded by deterministic merchant compliance guardrails before reaching any payment rail.
+          Unlike legacy dunning systems that indiscriminately re-attempt card debits, RevenueShield immediately isolates failed transactions into a monitored risk exposure ledger. Every recovery intervention is synthesized using causal machine learning, but strictly bounded by deterministic merchant compliance guardrails before reaching any payment rail.
         </div>
       </div>
     </div>

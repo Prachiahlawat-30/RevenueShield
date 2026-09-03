@@ -328,7 +328,7 @@ export const CommandSearchModal: React.FC<CommandSearchModalProps> = ({
 
         {/* Footer */}
         <div className="flex items-center justify-between border-t border-fintech-border px-4 py-2 bg-fintech-surface-subtle/50 text-[11px] text-fintech-muted font-mono">
-          <span>RecoverAI Payment Command</span>
+          <span>RevenueShield Payment Command</span>
           <span>Press ↵ to run</span>
         </div>
       </div>

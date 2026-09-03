@@ -43,6 +43,7 @@ coverage.xml
 *.log
 *.sqlite
 *.sqlite3
+*.db
 pgdata/
 recoverai_pgdata/
 

@@ -12,7 +12,7 @@ export const WhyThisPathPanel: React.FC<Props> = ({ factors }) => {
       <div className="flex items-center justify-between border-b border-fintech-border pb-3">
         <div className="flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-brand-500" />
-          <h3 className="text-sm font-bold text-fintech-primary">Why Did RecoverAI Choose This Path?</h3>
+          <h3 className="text-sm font-bold text-fintech-primary">Why Did RevenueShield Choose This Path?</h3>
         </div>
         <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-fintech-surface-subtle text-fintech-muted border border-fintech-border font-semibold">
           Decision Telemetry

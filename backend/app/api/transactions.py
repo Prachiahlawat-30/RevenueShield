@@ -121,7 +121,7 @@ def download_sample_csv():
     return Response(
         content=csv_content,
         media_type="text/csv",
-        headers={"Content-Disposition": "attachment; filename=recoverai_transactions_template.csv"},
+        headers={"Content-Disposition": "attachment; filename=revenueshield_transactions_template.csv"},
     )
 
 
@@ -136,7 +136,7 @@ async def import_transactions_csv(
 ) -> BatchImportResponse:
     """
     Parse a CSV file containing transaction failure rows, create Customer records,
-    persist failed Transactions, and run RecoverAI Risk Engine to calculate revenue at risk.
+    persist failed Transactions, and run RevenueShield Risk Engine to calculate revenue at risk.
     """
     if not file.filename.lower().endswith(".csv"):
         raise HTTPException(

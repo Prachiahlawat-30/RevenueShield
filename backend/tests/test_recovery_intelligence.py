@@ -151,7 +151,7 @@ def test_next_best_action_selection_and_factual_explanations():
     )
     res_exp = NextBestActionEngine.evaluate_actions(risk_exp, customer)
     assert res_exp.recommended_action == RecoveryAction.REQUEST_PAYMENT_METHOD_UPDATE
-    assert "RecoverAI recommends `request_payment_method_update`" in res_exp.reason
+    assert "RevenueShield recommends `request_payment_method_update`" in res_exp.reason
     assert "card ending in 1881 is expired" in res_exp.reason
     assert len(res_exp.candidates) >= 4
 
@@ -167,7 +167,7 @@ def test_next_best_action_selection_and_factual_explanations():
     )
     res_funds = NextBestActionEngine.evaluate_actions(risk_funds, customer)
     assert res_funds.recommended_action == RecoveryAction.SEND_PAYMENT_REMINDER
-    assert "RecoverAI recommends `send_payment_reminder`" in res_funds.reason
+    assert "RevenueShield recommends `send_payment_reminder`" in res_funds.reason
     assert "recovers 78% of insufficient-funds failures after receiving a polite reminder" in res_funds.reason
 
     # 3. Temporary decline selects retry with factual explanation
@@ -182,7 +182,7 @@ def test_next_best_action_selection_and_factual_explanations():
     )
     res_temp = NextBestActionEngine.evaluate_actions(risk_temp, customer)
     assert res_temp.recommended_action == RecoveryAction.RETRY_PAYMENT
-    assert "RecoverAI recommends `retry_payment`" in res_temp.reason
+    assert "RevenueShield recommends `retry_payment`" in res_temp.reason
 
     # 4. High value ($1,500) selects human escalation
     risk_high = RevenueRisk(
@@ -258,7 +258,7 @@ def test_intelligence_api_summary_and_opportunities(client):
     assert "recommended_action" in first_opp
     assert "recommended_delay_label" in first_opp
     assert "reason" in first_opp
-    assert "RecoverAI recommends" in first_opp["reason"]
+    assert "RevenueShield recommends" in first_opp["reason"]
     assert len(first_opp["candidates"]) >= 4
 
     # 4. Test Opportunity Detail

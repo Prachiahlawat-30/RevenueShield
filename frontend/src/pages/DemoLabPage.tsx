@@ -183,10 +183,10 @@ export const DemoLabPage: React.FC<DemoLabPageProps> = ({ onNavigateToTab }) => 
           <Sparkles className="w-5 h-5 text-brand-500 shrink-0 mt-0.5" />
           <div>
             <span className="text-[10px] font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400 block">
-              The RecoverAI Differentiator
+              The RevenueShield Differentiator
             </span>
             <p className="text-sm sm:text-base font-bold text-fintech-primary mt-0.5 leading-relaxed">
-              "RecoverAI doesn't ask AI how to move money. It uses AI to diagnose revenue risk, while deterministic policy decides what the system is allowed to do."
+              "RevenueShield doesn't ask AI how to move money. It uses AI to diagnose revenue risk, while deterministic policy decides what the system is allowed to do."
             </p>
           </div>
         </div>

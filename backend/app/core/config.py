@@ -15,12 +15,12 @@ class Settings(BaseSettings):
         case_sensitive=True,
     )
 
-    PROJECT_NAME: str = "RecoverAI API"
+    PROJECT_NAME: str = "RevenueShield API"
     VERSION: str = "0.1.0"
     API_V1_STR: str = "/api"
 
     # Database Settings
-    DATABASE_URL: str = "postgresql+psycopg://postgres:postgres@localhost:5433/recoverai"
+    DATABASE_URL: str = "postgresql+psycopg://postgres:postgres@localhost:5433/revenueshield"
 
     # AI Configuration (OpenAI Python SDK)
     OPENAI_API_KEY: str = ""
@@ -42,6 +42,9 @@ class Settings(BaseSettings):
         "http://localhost:3000",
         "http://127.0.0.1:5173",
         "http://127.0.0.1:3000",
+        "https://revenueshield.vercel.app",
+        "https://revenue-shield.vercel.app",
+        "https://revenueshield.onrender.com",
         "https://recover-ai-nu.vercel.app",
         "https://recoverai.vercel.app",
         "https://recover-ai.vercel.app",

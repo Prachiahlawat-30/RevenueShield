@@ -1058,7 +1058,7 @@ export const GlobalPaymentIntelligencePage: React.FC<GlobalPaymentIntelligencePa
           </div>
 
           <div className="space-y-1">
-            <p className="text-xs text-fintech-secondary">RecoverAI currently identifies:</p>
+            <p className="text-xs text-fintech-secondary">RevenueShield currently identifies:</p>
             <p className="text-2xl font-black text-brand-600 dark:text-brand-400 font-mono tracking-tight">
               {formatIndianLakhs(data.recovery_opportunity.recoverable_revenue)}
             </p>
@@ -1146,14 +1146,14 @@ export const GlobalPaymentIntelligencePage: React.FC<GlobalPaymentIntelligencePa
         </div>
       </div>
 
-      {/* 11. RECOVERAI INSIGHTS & "WHY THIS MATTERS" (2-Column Grid) */}
+      {/* 11. REVENUESHIELD INSIGHTS & "WHY THIS MATTERS" (2-Column Grid) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* Data-Backed Insights */}
         <div className="lg:col-span-7 p-5 rounded-fintech-lg bg-fintech-surface border border-fintech-border shadow-fintech-sm space-y-3">
           <div className="flex items-center gap-2">
             <Zap className="w-4 h-4 text-brand-500" />
             <h2 className="text-xs font-bold text-fintech-primary uppercase tracking-wider font-mono">
-              RecoverAI Intelligence Insights
+              RevenueShield Intelligence Insights
             </h2>
           </div>
           <p className="text-[11px] text-fintech-secondary">
@@ -1187,7 +1187,7 @@ export const GlobalPaymentIntelligencePage: React.FC<GlobalPaymentIntelligencePa
               Traditional recovery tools treat all declines identically, leading to repeated bank blocks and customer churn.
             </p>
             <p className="text-xs text-fintech-secondary leading-relaxed font-medium">
-              RecoverAI observes these global patterns to pinpoint exactly <strong>where</strong> revenue is being lost,
+              RevenueShield observes these global patterns to pinpoint exactly <strong>where</strong> revenue is being lost,
               <strong>why</strong> it is failing, and <strong>which targeted recovery intervention</strong> yields the highest net financial salvage.
             </p>
           </div>

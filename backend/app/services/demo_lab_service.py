@@ -22,7 +22,7 @@ class DemoLabService:
     """Provides bulletproof demo scenario generation and deterministic execution for live evaluations."""
 
     DIFFERENTIATOR_SLOGAN = (
-        "RecoverAI doesn't ask AI how to move money. It uses AI to understand revenue risk, "
+        "RevenueShield doesn't ask AI how to move money. It uses AI to understand revenue risk, "
         "while deterministic policy decides what the system is allowed to do."
     )
 

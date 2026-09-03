@@ -63,7 +63,7 @@ export const OperatorCopilotDrawer: React.FC<OperatorCopilotDrawerProps> = ({
               <Bot className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-sm font-bold text-fintech-primary">RecoverAI Operator Copilot</h2>
+              <h2 className="text-sm font-bold text-fintech-primary">RevenueShield Operator Copilot</h2>
               <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1 font-mono">
                 <ShieldCheck className="w-3 h-3" /> Grounded in Telemetry & Policy
               </span>

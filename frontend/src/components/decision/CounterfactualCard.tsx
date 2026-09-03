@@ -52,10 +52,10 @@ export const CounterfactualCard: React.FC<CounterfactualCardProps> = ({ riskId }
 
       {/* Comparison Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-        {/* Without RecoverAI */}
+        {/* Without RevenueShield */}
         <div className="p-3.5 rounded-fintech-md bg-fintech-surface border border-rose-500/30 space-y-1 shadow-fintech-sm">
           <span className="text-[10px] text-rose-700 dark:text-rose-400 font-bold uppercase font-mono">
-            Without RecoverAI (Standard Fallback)
+            Without RevenueShield (Standard Fallback)
           </span>
           <p className="font-mono text-sm font-black text-rose-600 dark:text-rose-400">
             {formatCurrency(data.without_recoverai_expected_loss)} Loss
@@ -63,10 +63,10 @@ export const CounterfactualCard: React.FC<CounterfactualCardProps> = ({ riskId }
           <p className="text-[11px] text-fintech-muted">Blind retries / customer churn outcome</p>
         </div>
 
-        {/* With RecoverAI */}
+        {/* With RevenueShield */}
         <div className="p-3.5 rounded-fintech-md bg-fintech-surface border border-emerald-500/30 space-y-1 shadow-fintech-sm">
           <span className="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold uppercase font-mono">
-            With RecoverAI (Executed Policy)
+            With RevenueShield (Executed Policy)
           </span>
           <p className="font-mono text-sm font-black text-emerald-600 dark:text-emerald-400">
             {formatCurrency(data.with_recoverai_recovered)} Recovered

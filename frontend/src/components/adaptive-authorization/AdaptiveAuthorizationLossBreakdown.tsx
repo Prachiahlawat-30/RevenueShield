@@ -48,7 +48,7 @@ export const AdaptiveAuthorizationLossBreakdown: React.FC = () => {
 
         <div className="flex items-center gap-3">
           <div className="text-right">
-            <span className="text-[10px] text-fintech-muted uppercase font-mono block">Preventable by RecoverAI</span>
+            <span className="text-[10px] text-fintech-muted uppercase font-mono block">Preventable by RevenueShield</span>
             <span className="font-mono text-sm font-bold text-emerald-600 dark:text-emerald-400">
               {formatCurrency(data.preventable_total)}
             </span>

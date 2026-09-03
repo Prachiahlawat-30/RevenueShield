@@ -101,7 +101,7 @@ export const RecommendationsFeedPage: React.FC<RecommendationsFeedPageProps> = (
             Autonomous Recommendations
           </h1>
           <p className="mt-1 text-sm text-fintech-secondary max-w-3xl">
-            RecoverAI continuously scans processor health, customer risk signals, and decline codes to proactively surface high-yield interventions.
+            RevenueShield continuously scans processor health, customer risk signals, and decline codes to proactively surface high-yield interventions.
           </p>
         </div>
 

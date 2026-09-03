@@ -37,7 +37,7 @@ class MonthlyReportService:
         # Construct CSV Data
         csv_lines = [
             "Metric,Value,Unit",
-            "Report Title,RecoverAI Revenue Recovery Report,Text",
+            "Report Title,RevenueShield Revenue Recovery Report,Text",
             "Period,August 2026,Date",
             f"Revenue At Risk,{rev_at_risk:.2f},USD",
             f"Recovered Amount,{rec_so_far:.2f},USD",
@@ -53,7 +53,7 @@ class MonthlyReportService:
         csv_payload = "\n".join(csv_lines)
 
         return MonthlyRecoveryReportResponse(
-            report_title="RecoverAI Revenue Recovery Report",
+            report_title="RevenueShield Revenue Recovery Report",
             period="August 2026",
             revenue_at_risk=rev_at_risk,
             recovered=rec_so_far,

@@ -72,7 +72,7 @@ class ChannelOptimizationEngine:
 
         best = scores[0]
         reason = (
-            f"RecoverAI recommends `{best.channel}` ({best.channel_label}) with {int(best.expected_response_probability * 100)}% "
+            f"RevenueShield recommends `{best.channel}` ({best.channel_label}) with {int(best.expected_response_probability * 100)}% "
             f"expected response probability based on verified delivery channel availability and highest historical customer engagement."
         )
 

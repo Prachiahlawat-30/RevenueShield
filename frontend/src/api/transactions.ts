@@ -55,7 +55,7 @@ export const downloadSampleCsv = async (): Promise<void> => {
   const url = window.URL.createObjectURL(new Blob([res.data]));
   const link = document.createElement('a');
   link.href = url;
-  link.setAttribute('download', 'recoverai_transactions_template.csv');
+  link.setAttribute('download', 'revenueshield_transactions_template.csv');
   document.body.appendChild(link);
   link.click();
   link.remove();

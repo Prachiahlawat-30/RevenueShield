@@ -1,4 +1,4 @@
-"""RecoverAI FastAPI application entrypoint with all domain, intelligence, predictive, and proactive routers registered."""
+"""RevenueShield FastAPI application entrypoint with all domain, intelligence, predictive, and proactive routers registered."""
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -65,7 +65,7 @@ def create_application() -> FastAPI:
     @app.get("/", summary="Root Health & Service Status")
     def root():
         return {
-            "service": "RecoverAI Payment Intelligence & Revenue Recovery Platform",
+            "service": "RevenueShield Payment Intelligence & Revenue Recovery Platform",
             "version": settings.VERSION,
             "status": "online",
             "documentation": "/docs",

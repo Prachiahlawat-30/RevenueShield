@@ -180,21 +180,21 @@ export const RecoveryControlCenterPage: React.FC<RecoveryControlCenterPageProps>
         </Button>
       </div>
 
-      {/* The Central RecoverAI Differentiator Statement */}
+      {/* The Central RevenueShield Differentiator Statement */}
       <div className="rounded-fintech-lg border border-emerald-500/30 bg-emerald-500/5 p-4 shadow-fintech-sm">
         <div className="flex items-center gap-3">
           <Sparkles className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
           <p className="text-xs sm:text-sm font-bold text-fintech-primary leading-relaxed">
-            "RecoverAI doesn't ask AI how to move money. It uses AI to understand revenue risk, while deterministic policy decides what the system is allowed to do."
+            "RevenueShield doesn't ask AI how to move money. It uses AI to understand revenue risk, while deterministic policy decides what the system is allowed to do."
           </p>
         </div>
       </div>
 
-      {/* RecoverAI Live Recommendations Ticker Strip */}
+      {/* RevenueShield Live Recommendations Ticker Strip */}
       <div className="rounded-fintech-lg border border-brand-500/30 bg-brand-500/5 p-4 space-y-2 shadow-fintech-sm">
         <div className="flex items-center gap-2 text-xs font-bold text-brand-700 dark:text-brand-300 uppercase tracking-wider font-mono">
           <Flame className="w-4 h-4 text-rose-500" />
-          <span>RECOVERAI LIVE PROACTIVE RECOMMENDATIONS</span>
+          <span>REVENUESHIELD LIVE PROACTIVE RECOMMENDATIONS</span>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
           <div className="p-3 rounded-fintech-md bg-fintech-surface border border-fintech-border shadow-fintech-sm">

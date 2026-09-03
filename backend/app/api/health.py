@@ -17,11 +17,11 @@ router = APIRouter(tags=["health"])
     "/health",
     response_model=HealthResponse,
     summary="Health check",
-    description="Check if the RecoverAI API is active and healthy.",
+    description="Check if the RevenueShield API is active and healthy.",
 )
 def get_health() -> HealthResponse:
     """Return API health status."""
     return HealthResponse(
         status="ok",
-        service="recoverai-api",
+        service="revenueshield-api",
     )

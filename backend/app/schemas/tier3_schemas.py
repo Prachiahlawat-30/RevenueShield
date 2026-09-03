@@ -797,7 +797,7 @@ class MerchantActionPlanResponse(BaseModel):
 class MonthlyRecoveryReportResponse(BaseModel):
     """Formal executive monthly revenue recovery report."""
 
-    report_title: str = "RecoverAI Revenue Recovery Report"
+    report_title: str = "RevenueShield Revenue Recovery Report"
     period: str = "August 2026"
     revenue_at_risk: Decimal
     recovered: Decimal
@@ -970,7 +970,7 @@ class DemoScenarioExecutionResponse(BaseModel):
     step_4_execution_result: str
     final_status: str
     audit_trace_id: str
-    differentiator_slogan: str = "RecoverAI doesn't ask AI how to move money. It uses AI to understand revenue risk, while deterministic policy decides what the system is allowed to do."
+    differentiator_slogan: str = "RevenueShield doesn't ask AI how to move money. It uses AI to understand revenue risk, while deterministic policy decides what the system is allowed to do."
     executed_at: datetime
 
 

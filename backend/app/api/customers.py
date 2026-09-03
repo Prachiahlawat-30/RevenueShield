@@ -89,7 +89,7 @@ def create_customer(
     customer_in: CustomerCreate,
     db: Session = Depends(get_db),
 ) -> CustomerResponse:
-    """Directly inject a new customer profile into RecoverAI via REST API."""
+    """Directly inject a new customer profile into RevenueShield via REST API."""
     existing = db.query(Customer).filter_by(email=customer_in.email).first()
     if existing:
         raise HTTPException(status_code=400, detail=f"Customer with email '{customer_in.email}' already exists.")

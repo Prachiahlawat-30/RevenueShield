@@ -160,7 +160,7 @@ export const CustomersPage: React.FC = () => {
         is_opted_out: false,
       });
 
-      setCreateSuccessNotice(`Enrolled ${created.name} into RecoverAI active policy guardrails!`);
+      setCreateSuccessNotice(`Enrolled ${created.name} into RevenueShield active policy guardrails!`);
       setTimeout(() => setCreateSuccessNotice(null), 4000);
 
       await fetchCustomers();
@@ -652,7 +652,7 @@ export const CustomersPage: React.FC = () => {
                     Direct Customer Injection
                   </h3>
                   <span className="text-[11px] text-slate-500 dark:text-[#6B7280]">
-                    Enroll account into RecoverAI PolicyEngine
+                    Enroll account into RevenueShield PolicyEngine
                   </span>
                 </div>
               </div>

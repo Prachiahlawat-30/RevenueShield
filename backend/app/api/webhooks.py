@@ -147,7 +147,7 @@ def process_razorpay_payment_failed(payload: Dict[str, Any], db: Session) -> Dic
 
     return {
         "status": "success",
-        "message": "Razorpay payment failure successfully ingested and analyzed by RecoverAI",
+        "message": "Razorpay payment failure successfully ingested and analyzed by RevenueShield",
         "event": "payment.failed",
         "razorpay_payment_id": razorpay_payment_id,
         "transaction_id": str(transaction.id),
@@ -252,7 +252,7 @@ def simulate_razorpay_webhook(
 
     mock_payload = {
         "entity": "event",
-        "account_id": "acc_RecoverAIRazorpay01",
+        "account_id": "acc_RevenueShieldRazorpay01",
         "event": "payment.failed",
         "contains": ["payment"],
         "payload": {

@@ -143,7 +143,7 @@ export const PolicyOptimizerPage: React.FC = () => {
             Self-Learning Policy Optimizer
           </h1>
           <p className="mt-1 text-xs text-fintech-secondary max-w-3xl leading-relaxed">
-            RecoverAI continuously evaluates recovery telemetry to discover high-yield policy improvements and submits candidate recommendations for human review before updating production bounds.
+            RevenueShield continuously evaluates recovery telemetry to discover high-yield policy improvements and submits candidate recommendations for human review before updating production bounds.
           </p>
         </div>
 

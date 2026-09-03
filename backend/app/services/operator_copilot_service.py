@@ -313,7 +313,7 @@ class OperatorCopilotService:
         return CopilotQueryResponse(
             query=req.query,
             answer=(
-                f"RecoverAI is currently tracking ${summary.revenue_at_risk:,.2f} in payment failure exposure "
+                f"RevenueShield is currently tracking ${summary.revenue_at_risk:,.2f} in payment failure exposure "
                 f"across {total_failed_txns} risk records. Projected autonomous recoverable revenue is "
                 f"${summary.expected_recoverable_revenue:,.2f} at a {summary.recovery_rate * 100:.1f}% weighted recovery rate. "
                 f"You can ask about gateway degradation, failure root causes, or mitigation strategies."
