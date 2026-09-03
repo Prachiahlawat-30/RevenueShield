@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, AlertTriangle, TrendingUp, ShieldCheck, Zap, Layers } from 'lucide-react';
 import { getExecutiveMoneyStory } from '../../api/tier3';
 import { ExecutiveMoneyStoryResponse } from '../../types';
 import { formatCurrency } from '../../utils/formatters';
@@ -32,7 +32,7 @@ export const ExecutiveMoneyStoryBanner: React.FC<ExecutiveMoneyStoryBannerProps>
 
   if (loading || !data) {
     return (
-      <div className="rounded-[18px] border border-slate-200/80 dark:border-white/[0.09] bg-white/65 dark:bg-white/[0.045] backdrop-blur-glass p-6 animate-pulse">
+      <div className="rounded-[18px] border border-slate-200/80 dark:border-white/[0.08] bg-white/65 dark:bg-white/[0.045] backdrop-blur-glass p-6 animate-pulse">
         <div className="h-5 w-60 bg-slate-200 dark:bg-white/10 rounded-lg mb-4"></div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           {[...Array(5)].map((_, i) => (
@@ -43,13 +43,20 @@ export const ExecutiveMoneyStoryBanner: React.FC<ExecutiveMoneyStoryBannerProps>
     );
   }
 
+  const lossGradients = [
+    'bg-gradient-to-r from-rose-500 to-rose-400',
+    'bg-gradient-to-r from-amber-500 to-amber-400',
+    'bg-gradient-to-r from-indigo-500 to-indigo-400',
+    'bg-gradient-to-r from-cyan-500 to-cyan-400',
+  ];
+
   return (
-    <div className="rounded-[18px] border border-slate-200/80 dark:border-white/[0.09] bg-white/65 dark:bg-white/[0.045] backdrop-blur-glass p-6 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-6">
+    <div className="rounded-[18px] border border-slate-200/80 dark:border-white/[0.08] bg-white/65 dark:bg-white/[0.045] backdrop-blur-glass p-6 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-6">
       {/* Top Title & Narrative */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/60 dark:border-white/[0.06] pb-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="rounded-md bg-slate-500/[0.06] px-2.5 py-0.5 text-[11px] font-mono font-medium text-slate-700 dark:text-slate-300 uppercase tracking-wider border border-slate-500/15">
+            <span className="rounded-md bg-indigo-500/10 px-2.5 py-0.5 text-[11px] font-mono font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider border border-indigo-500/20">
               EXECUTIVE BRIEFING
             </span>
             <span className="text-xs text-slate-500 dark:text-slate-400">Continuous Revenue Protection</span>
@@ -75,13 +82,16 @@ export const ExecutiveMoneyStoryBanner: React.FC<ExecutiveMoneyStoryBannerProps>
         )}
       </div>
 
-      {/* 5 Core Macro Financial Cards */}
+      {/* 5 Core Macro Financial Cards with Visual Accents */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
         {/* 1. Revenue At Risk */}
-        <div className="rounded-xl border border-slate-200/60 dark:border-white/[0.06] bg-white/40 dark:bg-white/[0.02] p-4 space-y-1">
-          <span className="text-[11px] font-mono font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
-            MONEY AT RISK
-          </span>
+        <div className="rounded-xl border border-rose-500/20 bg-rose-500/[0.04] p-4 space-y-1.5 shadow-xs">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-mono font-medium uppercase tracking-wider text-rose-600 dark:text-rose-400 block">
+              MONEY AT RISK
+            </span>
+            <AlertTriangle className="w-3.5 h-3.5 text-rose-500" />
+          </div>
           <span className="text-xl font-bold font-mono text-slate-900 dark:text-white block truncate">
             {formatCurrency(data.revenue_at_risk)}
           </span>
@@ -89,10 +99,13 @@ export const ExecutiveMoneyStoryBanner: React.FC<ExecutiveMoneyStoryBannerProps>
         </div>
 
         {/* 2. Expected Recoverable */}
-        <div className="rounded-xl border border-slate-200/60 dark:border-white/[0.06] bg-white/40 dark:bg-white/[0.02] p-4 space-y-1">
-          <span className="text-[11px] font-mono font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
-            EXPECTED RECOVERABLE
-          </span>
+        <div className="rounded-xl border border-indigo-500/20 bg-indigo-500/[0.04] p-4 space-y-1.5 shadow-xs">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-mono font-medium uppercase tracking-wider text-indigo-600 dark:text-indigo-400 block">
+              EXPECTED RECOVERABLE
+            </span>
+            <TrendingUp className="w-3.5 h-3.5 text-indigo-500" />
+          </div>
           <span className="text-xl font-bold font-mono text-slate-900 dark:text-white block truncate">
             {formatCurrency(data.expected_recoverable)}
           </span>
@@ -100,10 +113,13 @@ export const ExecutiveMoneyStoryBanner: React.FC<ExecutiveMoneyStoryBannerProps>
         </div>
 
         {/* 3. Recovered */}
-        <div className="rounded-xl border border-emerald-500/20 dark:border-emerald-500/20 bg-emerald-500/[0.04] p-4 space-y-1">
-          <span className="text-[11px] font-mono font-medium uppercase tracking-wider text-emerald-800 dark:text-emerald-400 block">
-            SETTLED FUNDS
-          </span>
+        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/[0.06] p-4 space-y-1.5 shadow-[0_0_15px_rgba(16,185,129,0.12)]">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 block">
+              SETTLED FUNDS
+            </span>
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+          </div>
           <span className="text-xl font-bold font-mono text-emerald-600 dark:text-emerald-400 block truncate">
             {formatCurrency(data.recovered_so_far)}
           </span>
@@ -111,10 +127,13 @@ export const ExecutiveMoneyStoryBanner: React.FC<ExecutiveMoneyStoryBannerProps>
         </div>
 
         {/* 4. Protected Pre-Failure */}
-        <div className="rounded-xl border border-slate-200/60 dark:border-white/[0.06] bg-white/40 dark:bg-white/[0.02] p-4 space-y-1">
-          <span className="text-[11px] font-mono font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
-            PRE-AUTH PROTECTED
-          </span>
+        <div className="rounded-xl border border-cyan-500/20 bg-cyan-500/[0.04] p-4 space-y-1.5 shadow-xs">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-mono font-medium uppercase tracking-wider text-cyan-600 dark:text-cyan-400 block">
+              PRE-AUTH PROTECTED
+            </span>
+            <Zap className="w-3.5 h-3.5 text-cyan-500" />
+          </div>
           <span className="text-xl font-bold font-mono text-slate-900 dark:text-white block truncate">
             {formatCurrency(data.protected_before_failure)}
           </span>
@@ -122,10 +141,13 @@ export const ExecutiveMoneyStoryBanner: React.FC<ExecutiveMoneyStoryBannerProps>
         </div>
 
         {/* 5. Remaining Opportunity */}
-        <div className="rounded-xl border border-slate-200/60 dark:border-white/[0.06] bg-white/40 dark:bg-white/[0.02] p-4 space-y-1">
-          <span className="text-[11px] font-mono font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
-            PIPELINE QUEUE
-          </span>
+        <div className="rounded-xl border border-amber-500/20 bg-amber-500/[0.04] p-4 space-y-1.5 shadow-xs">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-mono font-medium uppercase tracking-wider text-amber-600 dark:text-amber-400 block">
+              PIPELINE QUEUE
+            </span>
+            <Layers className="w-3.5 h-3.5 text-amber-500" />
+          </div>
           <span className="text-xl font-bold font-mono text-slate-900 dark:text-white block truncate">
             {formatCurrency(data.remaining_opportunity)}
           </span>
@@ -144,18 +166,15 @@ export const ExecutiveMoneyStoryBanner: React.FC<ExecutiveMoneyStoryBannerProps>
             {data.top_failure_causes.map((c, idx) => (
               <div key={idx} className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-medium text-slate-900 dark:text-white">{c.failure_category}</span>
-                  <span className="font-mono text-slate-700 dark:text-slate-300 font-semibold">
+                  <span className="font-semibold text-slate-900 dark:text-white">{c.failure_category}</span>
+                  <span className="font-mono text-slate-800 dark:text-slate-200 font-semibold">
                     {formatCurrency(c.amount_lost)} ({c.percentage_share}%)
                   </span>
                 </div>
-                <div className="h-1.5 w-full bg-slate-200/60 dark:bg-white/[0.06] rounded-full overflow-hidden">
+                <div className="h-2 w-full bg-slate-200/60 dark:bg-white/[0.06] rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-slate-900 dark:bg-white rounded-full transition-all duration-500"
-                    style={{
-                      width: `${c.percentage_share}%`,
-                      opacity: 0.85 - idx * 0.2,
-                    }}
+                    className={`h-full rounded-full ${lossGradients[idx % lossGradients.length]} transition-all duration-500`}
+                    style={{ width: `${c.percentage_share}%` }}
                   />
                 </div>
                 <span className="text-[10px] text-slate-500 dark:text-slate-400 block font-mono">
@@ -167,13 +186,13 @@ export const ExecutiveMoneyStoryBanner: React.FC<ExecutiveMoneyStoryBannerProps>
         </div>
 
         {/* What should we do next? */}
-        <div className="rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.04] p-5 space-y-3 flex flex-col justify-between">
+        <div className="rounded-xl border border-indigo-500/20 bg-indigo-500/[0.03] p-5 space-y-3 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-500 dark:text-slate-400 font-mono font-medium uppercase text-[10px] tracking-wider block">
+              <span className="text-indigo-600 dark:text-indigo-400 font-mono font-semibold uppercase text-[10px] tracking-wider block">
                 RECOMMENDED ACTION
               </span>
-              <span className="rounded-full bg-slate-500/[0.08] px-2 py-0.5 text-[9px] font-mono font-medium text-slate-700 dark:text-slate-300 uppercase border border-slate-500/15">
+              <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-[9px] font-mono font-bold text-amber-600 dark:text-amber-400 uppercase border border-amber-500/20">
                 {data.action_urgency} URGENCY
               </span>
             </div>
@@ -183,7 +202,7 @@ export const ExecutiveMoneyStoryBanner: React.FC<ExecutiveMoneyStoryBannerProps>
             </h4>
             <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
               Addressing Gateway Alpha degradation via dynamic routing will protect an estimated{' '}
-              <strong className="text-slate-900 dark:text-white font-mono">
+              <strong className="text-emerald-600 dark:text-emerald-400 font-mono">
                 {formatCurrency(data.action_expected_yield)}/hour
               </strong>{' '}
               with zero merchant operational disruption.
@@ -192,7 +211,7 @@ export const ExecutiveMoneyStoryBanner: React.FC<ExecutiveMoneyStoryBannerProps>
 
           <div className="pt-3 border-t border-slate-200/60 dark:border-white/[0.06] flex items-center justify-between">
             <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
-              Expected Yield: <strong className="text-slate-900 dark:text-white">+{formatCurrency(data.action_expected_yield)}/hr</strong>
+              Expected Yield: <strong className="text-emerald-600 dark:text-emerald-400 font-mono">+{formatCurrency(data.action_expected_yield)}/hr</strong>
             </span>
             {onNavigateToRecommendations && (
               <Button

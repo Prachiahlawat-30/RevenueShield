@@ -25,10 +25,20 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   tooltip,
   subtext,
   className = '',
+  accent = 'default',
 }) => {
+  const accentStyles = {
+    default: 'bg-slate-500/[0.08] text-slate-600 dark:text-slate-300 border-slate-500/15',
+    success: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 shadow-[0_0_12px_rgba(16,185,129,0.15)]',
+    danger: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20 shadow-[0_0_12px_rgba(244,63,94,0.15)]',
+    warning: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20 shadow-[0_0_12px_rgba(245,158,11,0.15)]',
+    purple: 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20 shadow-[0_0_12px_rgba(99,102,241,0.15)]',
+    blue: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/20 shadow-[0_0_12px_rgba(6,182,212,0.15)]',
+  };
+
   return (
     <div
-      className={`rounded-[18px] border border-slate-200/80 dark:border-white/[0.09] bg-white/65 dark:bg-white/[0.045] backdrop-blur-glass p-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-all duration-200 hover:-translate-y-[1px] hover:bg-white/80 dark:hover:bg-white/[0.07] ${className}`}
+      className={`rounded-[18px] border border-slate-200/80 dark:border-white/[0.08] bg-white/65 dark:bg-white/[0.045] backdrop-blur-glass p-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-all duration-200 hover:-translate-y-[1px] hover:bg-white/80 dark:hover:bg-white/[0.07] ${className}`}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5 text-[11px] font-mono font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">
@@ -40,7 +50,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({
           )}
         </div>
         {Icon && (
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-900/[0.04] dark:bg-white/[0.06] text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-white/10 shadow-xs">
+          <div className={`flex h-8 w-8 items-center justify-center rounded-xl border ${accentStyles[accent]}`}>
             <Icon className="h-4 w-4" />
           </div>
         )}
@@ -56,7 +66,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({
         <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs">
           {delta !== undefined && (
             <span
-              className={`inline-flex items-center gap-1 font-mono text-[11px] font-medium ${
+              className={`inline-flex items-center gap-1 font-mono text-[11px] font-bold ${
                 deltaType === 'positive'
                   ? 'text-emerald-600 dark:text-emerald-400'
                   : deltaType === 'negative'

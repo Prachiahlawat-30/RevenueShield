@@ -26,20 +26,18 @@ export const PriorityDistributionChart: React.FC<Props> = ({
   const { isDark } = useTheme();
 
   const bands = [
-    { key: 'CRITICAL', label: 'Critical', opacity: 1.0 },
-    { key: 'HIGH', label: 'High', opacity: 0.75 },
-    { key: 'MEDIUM', label: 'Medium', opacity: 0.5 },
-    { key: 'LOW', label: 'Low', opacity: 0.28 },
+    { key: 'CRITICAL', label: 'Critical', color: '#EF4444' },
+    { key: 'HIGH', label: 'High', color: '#F59E0B' },
+    { key: 'MEDIUM', label: 'Medium', color: '#3B82F6' },
+    { key: 'LOW', label: 'Low', color: '#10B981' },
   ];
 
   const chartData = bands.map((b) => ({
     band: b.key,
     label: b.label,
     count: data[b.key] || 0,
-    opacity: b.opacity,
+    color: b.color,
   }));
-
-  const baseColor = isDark ? '#FFFFFF' : '#111827';
 
   return (
     <div style={{ width: '100%', height }} className="min-w-0">
@@ -47,14 +45,14 @@ export const PriorityDistributionChart: React.FC<Props> = ({
         <BarChart data={chartData} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
           <XAxis
             dataKey="label"
-            stroke={isDark ? 'rgba(255,255,255,0.35)' : 'rgba(15,23,42,0.4)'}
+            stroke={isDark ? 'rgba(255,255,255,0.45)' : 'rgba(15,23,42,0.5)'}
             fontSize={10}
             fontFamily="monospace"
             tickLine={false}
             axisLine={false}
           />
           <YAxis
-            stroke={isDark ? 'rgba(255,255,255,0.35)' : 'rgba(15,23,42,0.4)'}
+            stroke={isDark ? 'rgba(255,255,255,0.45)' : 'rgba(15,23,42,0.5)'}
             fontSize={10}
             fontFamily="monospace"
             tickLine={false}
@@ -67,10 +65,13 @@ export const PriorityDistributionChart: React.FC<Props> = ({
               if (active && payload && payload.length) {
                 const item = payload[0].payload;
                 return (
-                  <div className="rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/95 dark:bg-[oklch(0.24_0.008_223.9)]/95 backdrop-blur-xl p-2.5 shadow-glass-2 text-xs space-y-1">
-                    <p className="font-semibold text-slate-900 dark:text-white">{item.label} Priority</p>
+                  <div className="rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/95 dark:bg-[#0E131F]/95 backdrop-blur-xl p-2.5 shadow-glass-3 text-xs space-y-1">
+                    <p className="font-semibold text-slate-900 dark:text-white flex items-center gap-1.5 font-mono">
+                      <span className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
+                      <span>{item.label} Priority</span>
+                    </p>
                     <p className="font-mono text-slate-500 text-[11px]">
-                      Count: <strong className="text-slate-900 dark:text-white">{item.count}</strong>
+                      Active cases: <strong className="text-slate-900 dark:text-white">{item.count}</strong>
                     </p>
                   </div>
                 );
@@ -93,11 +94,11 @@ export const PriorityDistributionChart: React.FC<Props> = ({
             {chartData.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
-                fill={baseColor}
+                fill={entry.color}
                 opacity={
                   selectedBand === 'all' || !selectedBand || selectedBand === entry.band
-                    ? entry.opacity
-                    : 0.2
+                    ? 1.0
+                    : 0.3
                 }
               />
             ))}

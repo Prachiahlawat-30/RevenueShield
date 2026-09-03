@@ -60,7 +60,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const currentMeta = pageMetaMap[currentTab] || { title: 'Payment Operations', subtitle: 'Autonomous revenue protection console' };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-200/80 dark:border-white/[0.08] bg-[#F7F8FA]/90 dark:bg-[oklch(0.218_0.008_223.9)]/90 px-5 md:px-6 backdrop-blur-2xl transition-colors">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-200/80 dark:border-white/[0.08] bg-[#F7F8FA]/90 dark:bg-[#090D16]/95 px-5 md:px-6 backdrop-blur-2xl transition-colors">
       {/* Left: Title & Contextual Subtitle */}
       <div className="flex items-center gap-3 min-w-0">
         <div className="min-w-0">

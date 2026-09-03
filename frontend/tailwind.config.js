@@ -38,11 +38,6 @@ export default {
           900: '#1E1B4B',
           950: '#0F172A',
         },
-        slate: {
-          850: 'oklch(0.24 0.008 223.9)',
-          900: 'oklch(0.218 0.008 223.9)',
-          950: 'oklch(0.18 0.008 223.9)',
-        },
       },
       fontFamily: {
         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
@@ -55,6 +50,9 @@ export default {
         'glass-1': '0 1px 3px 0 rgba(0, 0, 0, 0.02)',
         'glass-2': '0 4px 16px -2px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
         'glass-3': '0 16px 40px -8px rgba(0, 0, 0, 0.12), 0 24px 64px -12px rgba(0, 0, 0, 0.08)',
+        'glow-emerald': '0 0 20px -3px rgba(16, 185, 129, 0.25)',
+        'glow-indigo': '0 0 20px -3px rgba(99, 102, 241, 0.25)',
+        'glow-cyan': '0 0 20px -3px rgba(6, 182, 212, 0.25)',
       },
       borderRadius: {
         'fintech-sm': '6px',
@@ -68,8 +66,24 @@ export default {
         'glass': '18px',
         'glass-deep': '24px',
       },
-      transitionTimingFunction: {
-        'fintech': 'cubic-bezier(0.16, 1, 0.3, 1)',
+      animation: {
+        'pulse-subtle': 'pulseSubtle 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'fintech-fade': 'fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'shimmer-soft': 'shimmerSoft 2s infinite',
+      },
+      keyframes: {
+        pulseSubtle: {
+          '0%, 100%': { opacity: 1 },
+          '50%': { opacity: 0.5 },
+        },
+        fadeIn: {
+          '0%': { opacity: 0, transform: 'translateY(2px)' },
+          '100%': { opacity: 1, transform: 'translateY(0)' },
+        },
+        shimmerSoft: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
+        },
       },
     },
   },

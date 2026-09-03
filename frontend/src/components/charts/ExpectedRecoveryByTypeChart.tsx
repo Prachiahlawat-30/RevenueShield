@@ -43,20 +43,32 @@ export const ExpectedRecoveryByTypeChart: React.FC<Props> = ({ data, height = 22
     if (active && payload && payload.length) {
       const item = payload[0].payload;
       return (
-        <div className="rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/95 dark:bg-[oklch(0.24_0.008_223.9)]/95 backdrop-blur-xl p-3 shadow-glass-2 text-xs space-y-1">
-          <p className="font-semibold text-slate-900 dark:text-white">{item.fullName}</p>
-          <p className="text-slate-500 dark:text-slate-400 font-mono text-[11px]">
-            Cases: <span className="text-slate-900 dark:text-white font-bold">{item.count}</span>
-          </p>
-          <p className="text-slate-500 dark:text-slate-400 font-mono text-[11px]">
-            Exposure: <span className="font-bold text-slate-700 dark:text-slate-300">{formatCurrency(item.amount_at_risk)}</span>
-          </p>
-          <p className="text-slate-900 dark:text-white font-mono text-[11px]">
-            Expected Yield: <strong className="font-bold">{formatCurrency(item.expected_recovery)}</strong>
-          </p>
-          <p className="text-slate-500 dark:text-slate-400 font-mono text-[11px]">
-            Probability: <span className="font-semibold text-slate-900 dark:text-white">{formatPercent(item.average_probability * 100)}</span>
-          </p>
+        <div className="rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/95 dark:bg-[#0E131F]/95 backdrop-blur-xl p-3 shadow-glass-3 text-xs space-y-1.5">
+          <p className="font-semibold text-slate-900 dark:text-white font-mono">{item.fullName}</p>
+          <div className="space-y-1 font-mono text-[11px]">
+            <p className="text-slate-500 dark:text-slate-400 flex items-center justify-between gap-4">
+              <span>Active Cases:</span>
+              <strong className="text-slate-800 dark:text-slate-200">{item.count}</strong>
+            </p>
+            <p className="flex items-center justify-between gap-4 text-indigo-500">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-indigo-500" />
+                <span>Exposure:</span>
+              </span>
+              <strong className="font-bold">{formatCurrency(item.amount_at_risk)}</strong>
+            </p>
+            <p className="flex items-center justify-between gap-4 text-emerald-500">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                <span>Expected Yield:</span>
+              </span>
+              <strong className="font-bold">{formatCurrency(item.expected_recovery)}</strong>
+            </p>
+            <p className="text-slate-500 dark:text-slate-400 flex items-center justify-between gap-4 pt-1 border-t border-slate-200/60 dark:border-white/[0.06]">
+              <span>Recovery Probability:</span>
+              <span className="font-bold text-emerald-500">{formatPercent(item.average_probability * 100)}</span>
+            </p>
+          </div>
         </div>
       );
     }
@@ -68,20 +80,20 @@ export const ExpectedRecoveryByTypeChart: React.FC<Props> = ({ data, height = 22
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={chartData} margin={{ top: 12, right: 10, left: -15, bottom: 4 }}>
           <CartesianGrid
-            strokeDasharray="2 4"
-            stroke={isDark ? 'rgba(255,255,255,0.06)' : 'rgba(15,23,42,0.05)'}
+            strokeDasharray="3 3"
+            stroke={isDark ? 'rgba(255,255,255,0.06)' : 'rgba(15,23,42,0.06)'}
             vertical={false}
           />
           <XAxis
             dataKey="name"
-            stroke={isDark ? 'rgba(255,255,255,0.35)' : 'rgba(15,23,42,0.4)'}
+            stroke={isDark ? 'rgba(255,255,255,0.45)' : 'rgba(15,23,42,0.5)'}
             fontSize={10}
             fontFamily="monospace"
             tickLine={false}
             axisLine={false}
           />
           <YAxis
-            stroke={isDark ? 'rgba(255,255,255,0.35)' : 'rgba(15,23,42,0.4)'}
+            stroke={isDark ? 'rgba(255,255,255,0.45)' : 'rgba(15,23,42,0.5)'}
             fontSize={10}
             fontFamily="monospace"
             tickLine={false}
@@ -91,13 +103,13 @@ export const ExpectedRecoveryByTypeChart: React.FC<Props> = ({ data, height = 22
           <Tooltip content={<CustomTooltip />} />
           <Bar
             dataKey="amount_at_risk"
-            fill={isDark ? 'rgba(255,255,255,0.18)' : 'rgba(15,23,42,0.16)'}
+            fill="#6366F1"
             radius={[4, 4, 0, 0]}
             maxBarSize={24}
           />
           <Bar
             dataKey="expected_recovery"
-            fill={isDark ? '#FFFFFF' : '#111827'}
+            fill="#10B981"
             radius={[4, 4, 0, 0]}
             maxBarSize={24}
           />
