@@ -21,27 +21,27 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const baseClasses =
-    'inline-flex items-center justify-center font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-slate-400/20 disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.99] cursor-pointer';
+    'inline-flex items-center justify-center font-medium transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/30 disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.99] cursor-pointer';
 
   const sizeClasses = {
-    sm: 'px-3 py-1.5 text-xs rounded-xl gap-1.5',
-    md: 'px-4 py-2 text-xs font-semibold rounded-xl gap-2',
-    lg: 'px-5 py-2.5 text-sm font-semibold rounded-xl gap-2.5',
+    sm: 'px-3 py-1.5 text-xs rounded-[10px] gap-1.5',
+    md: 'px-4 py-2 text-xs rounded-[12px] gap-2',
+    lg: 'px-5 py-2.5 text-sm rounded-[12px] gap-2.5',
   };
 
   const variantClasses = {
     primary:
-      'bg-[#111827] text-white hover:bg-[#1f2937] dark:bg-white dark:text-[#111827] dark:hover:bg-slate-100 border border-transparent shadow-xs hover:-translate-y-[1px]',
+      'bg-[#3B82F6] hover:bg-[#2563EB] text-white border border-transparent shadow-sm',
     secondary:
-      'bg-white/60 dark:bg-white/5 hover:bg-white/90 dark:hover:bg-white/10 text-slate-900 dark:text-white border border-slate-200/80 dark:border-white/10 backdrop-blur-md shadow-xs hover:-translate-y-[1px]',
+      'bg-[#171C28] hover:bg-[#1C2333] text-[#F5F6FA] border border-white/[0.08] shadow-sm',
     outline:
-      'bg-transparent hover:bg-slate-900/5 dark:hover:bg-white/5 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-white/10 hover:-translate-y-[1px]',
+      'bg-transparent hover:bg-white/[0.04] text-[#F5F6FA] border border-white/[0.08]',
     ghost:
-      'bg-transparent hover:bg-slate-900/5 dark:hover:bg-white/5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-transparent',
+      'bg-transparent hover:bg-white/[0.04] text-[#9CA3B0] hover:text-[#F5F6FA] border border-transparent',
     danger:
-      'bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/20',
+      'bg-[#F0625A] hover:bg-[#E0534B] text-white border border-transparent shadow-sm',
     success:
-      'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20',
+      'bg-[#10B981] hover:bg-[#059669] text-white border border-transparent shadow-sm',
   };
 
   return (

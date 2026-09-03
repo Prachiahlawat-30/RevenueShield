@@ -40,43 +40,43 @@ export const WhyThisActionButton: React.FC<WhyThisActionButtonProps> = ({
 
   return (
     <>
-      {/* Trigger Button - Clean & Crisp */}
+      {/* Trigger Button */}
       <button
         type="button"
         onClick={(e) => {
           e.stopPropagation();
           setIsOpen(true);
         }}
-        className={`inline-flex items-center gap-1.5 rounded-xl font-mono text-[11px] font-medium transition-all cursor-pointer ${
+        className={`inline-flex items-center gap-1.5 rounded-[10px] text-[11px] font-medium transition-colors cursor-pointer ${
           size === 'sm' ? 'px-2.5 py-1' : 'px-3 py-1.5'
-        } bg-white/60 dark:bg-white/[0.04] text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-white/[0.08] hover:text-slate-950 dark:hover:text-white border border-slate-200/80 dark:border-white/10 shadow-xs hover:-translate-y-[1px] ${className}`}
+        } bg-[#171C28] hover:bg-[#1C2333] text-[#9CA3B0] hover:text-[#F5F6FA] border border-white/[0.08] shadow-sm ${className}`}
         title="View explainable AI reasoning behind this recovery action"
       >
-        <HelpCircle className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+        <HelpCircle className="w-3.5 h-3.5 text-[#6B7280] shrink-0" />
         <span>Why this action?</span>
       </button>
 
-      {/* Centered Modal with Backdrop */}
+      {/* Centered Modal with Solid Surface #171C28 */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md animate-fintech-fade"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70"
           onClick={() => setIsOpen(false)}
         >
           <div
-            className="w-full max-w-md rounded-[20px] border border-slate-200/80 dark:border-white/10 bg-white/95 dark:bg-[oklch(0.24_0.008_223.9)]/95 p-6 shadow-glass-3 space-y-4 backdrop-blur-2xl animate-in fade-in zoom-in-95 duration-150"
+            className="w-full max-w-md rounded-[16px] border border-white/[0.08] bg-[#171C28] p-6 shadow-fintech-elevated space-y-4"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="flex items-center justify-between pb-3 border-b border-slate-200/60 dark:border-white/[0.06]">
+            <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-slate-900/[0.05] dark:bg-white/10 flex items-center justify-center text-slate-800 dark:text-slate-200 border border-slate-200/80 dark:border-white/10">
+                <div className="w-8 h-8 rounded-[10px] bg-[#8B7CF6]/15 flex items-center justify-center text-[#8B7CF6]">
                   <Sparkles className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-slate-900 dark:text-white">
+                  <h4 className="text-sm font-semibold text-[#F5F6FA]">
                     Why this action?
                   </h4>
-                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
+                  <span className="text-[11px] text-[#6B7280]">
                     Explainable AI & Policy Telemetry
                   </span>
                 </div>
@@ -85,7 +85,7 @@ export const WhyThisActionButton: React.FC<WhyThisActionButtonProps> = ({
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/10 transition cursor-pointer"
+                className="p-1.5 rounded-[8px] text-[#6B7280] hover:text-[#F5F6FA] hover:bg-white/[0.06] transition cursor-pointer"
                 aria-label="Close"
               >
                 <X className="w-4 h-4" />
@@ -93,51 +93,55 @@ export const WhyThisActionButton: React.FC<WhyThisActionButtonProps> = ({
             </div>
 
             {/* Evaluated Strategy */}
-            <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/60 dark:border-white/[0.06]">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block">
-                EVALUATED STRATEGY
+            <div className="p-3.5 rounded-[12px] bg-[#12161F] border border-white/[0.06]">
+              <span className="text-[11px] font-medium tracking-[0.04em] text-[#6B7280] uppercase block">
+                Evaluated strategy
               </span>
-              <p className="text-sm font-semibold text-slate-900 dark:text-white mt-0.5 font-sans">
+              <p className="text-sm font-semibold text-[#F5F6FA] mt-0.5">
                 {actionName}
               </p>
             </div>
 
             {/* Decision Evidence */}
             <div className="space-y-2">
-              <span className="text-xs font-mono font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
-                DECISION EVIDENCE
+              <span className="text-[11px] font-medium tracking-[0.04em] text-[#6B7280] uppercase block">
+                Decision evidence
               </span>
-              <ul className="space-y-2 text-xs text-slate-700 dark:text-slate-300 font-normal">
+              <ul className="space-y-2 text-xs text-[#9CA3B0]">
                 {effectiveReasons.map((reason, idx) => (
-                  <li key={idx} className="flex items-start gap-2.5 p-2.5 rounded-xl bg-slate-50/70 dark:bg-white/[0.02] border border-slate-200/50 dark:border-white/[0.04]">
-                    <span className="text-slate-400 font-mono shrink-0 mt-0.5">•</span>
-                    <span className="leading-relaxed">{reason}</span>
+                  <li key={idx} className="flex items-start gap-2.5 p-2.5 rounded-[10px] bg-[#12161F] border border-white/[0.04]">
+                    <span className="text-[#3B82F6] shrink-0 mt-0.5">•</span>
+                    <span className="leading-relaxed text-[#F5F6FA]">{reason}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
             {/* Confidence & Policy Check Footer */}
-            <div className="pt-3 border-t border-slate-200/60 dark:border-white/[0.06] flex items-center justify-between text-xs font-mono">
-              <div className="flex items-center gap-1.5 text-slate-800 dark:text-slate-200 font-medium bg-slate-500/[0.06] px-2.5 py-1 rounded-lg border border-slate-500/15">
-                <Sparkles className="w-3.5 h-3.5 text-slate-500" />
-                <span>AI confidence: {confidenceScore}%</span>
+            <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs">
+              <div className="flex items-center gap-1.5">
+                <span className="h-5 px-2 rounded-full inline-flex items-center gap-1 text-[10px] font-medium bg-[#8B7CF6]/10 text-[#8B7CF6] border border-[#8B7CF6]/20">
+                  <Sparkles className="w-2.5 h-2.5" />
+                  <span>{confidenceScore}% AI confidence</span>
+                </span>
               </div>
 
-              <div className="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-medium bg-emerald-500/[0.08] px-2.5 py-1 rounded-lg border border-emerald-500/20">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                <span>Policy: Approved</span>
+              <div className="flex items-center gap-1 text-[#10B981] font-medium text-xs">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                <span>Policy approved</span>
               </div>
             </div>
 
-            {/* Dismiss Button */}
-            <button
-              type="button"
-              onClick={() => setIsOpen(false)}
-              className="w-full py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/15 text-slate-700 dark:text-slate-200 text-xs font-semibold transition cursor-pointer"
-            >
-              Got it, close explanation
-            </button>
+            {/* Modal Actions */}
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="w-full py-2.5 rounded-[10px] bg-[#3B82F6] hover:bg-[#2563EB] text-white text-xs font-medium transition-colors cursor-pointer shadow-sm"
+              >
+                Close explanation
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -13,33 +13,30 @@ interface ConversionFunnelChartProps {
 export const ConversionFunnelChart: React.FC<ConversionFunnelChartProps> = ({ stages }) => {
   const maxCount = Math.max(...stages.map((s) => s.count), 1);
 
-  const colors = [
-    'bg-gradient-to-r from-indigo-500 to-indigo-400',
-    'bg-gradient-to-r from-purple-500 to-purple-400',
-    'bg-gradient-to-r from-cyan-500 to-cyan-400',
-    'bg-gradient-to-r from-emerald-500 to-emerald-400',
-    'bg-gradient-to-r from-amber-500 to-amber-400',
-  ];
-
   return (
-    <div className="space-y-3.5">
+    <div className="space-y-4">
       {stages.map((item, idx) => {
         const widthPct = Math.max(8, Math.round((item.count / maxCount) * 100));
-        const barColor = colors[idx % colors.length];
+        const isFinal = idx === stages.length - 1;
 
         return (
-          <div key={item.stage} className="space-y-1">
+          <div key={item.stage} className="space-y-1.5">
             <div className="flex items-center justify-between text-xs">
-              <span className="font-semibold text-slate-900 dark:text-white text-xs font-mono">{item.stage}</span>
-              <span className="font-bold text-slate-900 dark:text-white font-mono text-xs">{item.count} cases</span>
+              <span className="font-medium text-[#F5F6FA] text-xs">{item.stage}</span>
+              <span className="font-semibold text-[#F5F6FA] text-xs tabular-nums">{item.count} cases</span>
             </div>
-            <div className="relative h-2 w-full rounded-full bg-slate-200/60 dark:bg-white/[0.06] overflow-hidden">
+            <div className="relative h-1.5 w-full rounded-full bg-white/[0.04] overflow-hidden">
               <div
-                className={`h-full rounded-full ${barColor} transition-all duration-500`}
-                style={{ width: `${widthPct}%` }}
+                className={`h-full rounded-full transition-all duration-300 ${
+                  isFinal ? 'bg-[#10B981]' : 'bg-[#3B82F6]'
+                }`}
+                style={{
+                  width: `${widthPct}%`,
+                  opacity: isFinal ? 1.0 : 0.6 + (idx / stages.length) * 0.4,
+                }}
               />
             </div>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">{item.description}</p>
+            <p className="text-[11px] text-[#6B7280]">{item.description}</p>
           </div>
         );
       })}

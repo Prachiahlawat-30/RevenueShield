@@ -12,7 +12,6 @@ interface MetricCardProps {
   tooltip?: string;
   subtext?: string;
   className?: string;
-  accent?: 'default' | 'success' | 'danger' | 'warning' | 'purple' | 'blue';
 }
 
 export const MetricCard: React.FC<MetricCardProps> = ({
@@ -20,44 +19,34 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   value,
   delta,
   deltaType = 'positive',
-  deltaLabel = 'vs prev 14d',
+  deltaLabel = 'vs prev period',
   icon: Icon,
   tooltip,
   subtext,
   className = '',
-  accent = 'default',
 }) => {
-  const accentStyles = {
-    default: 'bg-slate-500/[0.08] text-slate-600 dark:text-slate-300 border-slate-500/15',
-    success: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 shadow-[0_0_12px_rgba(16,185,129,0.15)]',
-    danger: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20 shadow-[0_0_12px_rgba(244,63,94,0.15)]',
-    warning: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20 shadow-[0_0_12px_rgba(245,158,11,0.15)]',
-    purple: 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20 shadow-[0_0_12px_rgba(99,102,241,0.15)]',
-    blue: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/20 shadow-[0_0_12px_rgba(6,182,212,0.15)]',
-  };
-
   return (
     <div
-      className={`rounded-[18px] border border-slate-200/80 dark:border-white/[0.08] bg-white/65 dark:bg-white/[0.045] backdrop-blur-glass p-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-all duration-200 hover:-translate-y-[1px] hover:bg-white/80 dark:hover:bg-white/[0.07] ${className}`}
+      className={`rounded-[16px] border border-white/[0.06] bg-[#12161F] p-6 shadow-fintech-card transition-all duration-150 ${className}`}
     >
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1.5 text-[11px] font-mono font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">
+        <div className="flex items-center gap-1.5 text-[11px] font-medium tracking-[0.04em] text-[#6B7280] uppercase">
           <span>{label}</span>
           {tooltip && (
             <Tooltip content={tooltip}>
-              <HelpCircle className="h-3.5 w-3.5 cursor-help text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors" />
+              <HelpCircle className="h-3.5 w-3.5 cursor-help text-[#6B7280] hover:text-[#9CA3B0] transition-colors" />
             </Tooltip>
           )}
         </div>
         {Icon && (
-          <div className={`flex h-8 w-8 items-center justify-center rounded-xl border ${accentStyles[accent]}`}>
+          <div className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-white/[0.04] border border-white/[0.06] text-[#9CA3B0]">
             <Icon className="h-4 w-4" />
           </div>
         )}
       </div>
 
       <div className="mt-3 flex items-baseline justify-between">
-        <div className="text-2xl font-bold font-sans tracking-tight text-slate-900 dark:text-white sm:text-3xl">
+        <div className="text-[28px] font-semibold tracking-tight text-[#F5F6FA] tabular-nums">
           {value}
         </div>
       </div>
@@ -66,12 +55,12 @@ export const MetricCard: React.FC<MetricCardProps> = ({
         <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs">
           {delta !== undefined && (
             <span
-              className={`inline-flex items-center gap-1 font-mono text-[11px] font-bold ${
+              className={`inline-flex items-center gap-1 text-xs font-medium tabular-nums ${
                 deltaType === 'positive'
-                  ? 'text-emerald-600 dark:text-emerald-400'
+                  ? 'text-[#10B981]'
                   : deltaType === 'negative'
-                  ? 'text-rose-600 dark:text-rose-400'
-                  : 'text-slate-500'
+                  ? 'text-[#F0625A]'
+                  : 'text-[#9CA3B0]'
               }`}
             >
               {deltaType === 'positive' && <TrendingUp className="h-3 w-3" />}
@@ -80,12 +69,12 @@ export const MetricCard: React.FC<MetricCardProps> = ({
             </span>
           )}
           {deltaLabel && delta !== undefined && (
-            <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
+            <span className="text-xs text-[#6B7280]">
               {deltaLabel}
             </span>
           )}
           {subtext && !delta && (
-            <span className="text-[11px] text-slate-500 dark:text-slate-400">
+            <span className="text-xs text-[#6B7280]">
               {subtext}
             </span>
           )}

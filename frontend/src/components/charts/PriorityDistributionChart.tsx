@@ -8,7 +8,6 @@ import {
   Tooltip,
   Cell,
 } from 'recharts';
-import { useTheme } from '../../context/ThemeContext';
 
 interface Props {
   data: Record<string, number>;
@@ -23,11 +22,9 @@ export const PriorityDistributionChart: React.FC<Props> = ({
   onSelectBand,
   height = 140,
 }) => {
-  const { isDark } = useTheme();
-
   const bands = [
-    { key: 'CRITICAL', label: 'Critical', color: '#EF4444' },
-    { key: 'HIGH', label: 'High', color: '#F59E0B' },
+    { key: 'CRITICAL', label: 'Critical', color: '#F0625A' },
+    { key: 'HIGH', label: 'High', color: '#E8A33D' },
     { key: 'MEDIUM', label: 'Medium', color: '#3B82F6' },
     { key: 'LOW', label: 'Low', color: '#10B981' },
   ];
@@ -45,33 +42,31 @@ export const PriorityDistributionChart: React.FC<Props> = ({
         <BarChart data={chartData} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
           <XAxis
             dataKey="label"
-            stroke={isDark ? 'rgba(255,255,255,0.45)' : 'rgba(15,23,42,0.5)'}
-            fontSize={10}
-            fontFamily="monospace"
+            stroke="#6B7280"
+            fontSize={11}
             tickLine={false}
             axisLine={false}
           />
           <YAxis
-            stroke={isDark ? 'rgba(255,255,255,0.45)' : 'rgba(15,23,42,0.5)'}
-            fontSize={10}
-            fontFamily="monospace"
+            stroke="#6B7280"
+            fontSize={11}
             tickLine={false}
             axisLine={false}
             allowDecimals={false}
           />
           <Tooltip
-            cursor={{ fill: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.03)' }}
+            cursor={{ fill: 'rgba(255, 255, 255, 0.03)' }}
             content={({ active, payload }) => {
               if (active && payload && payload.length) {
                 const item = payload[0].payload;
                 return (
-                  <div className="rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/95 dark:bg-[#0E131F]/95 backdrop-blur-xl p-2.5 shadow-glass-3 text-xs space-y-1">
-                    <p className="font-semibold text-slate-900 dark:text-white flex items-center gap-1.5 font-mono">
+                  <div className="rounded-[12px] border border-white/[0.08] bg-[#171C28] p-2.5 shadow-fintech-elevated text-xs space-y-1">
+                    <p className="font-medium text-[#F5F6FA] flex items-center gap-1.5">
                       <span className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
                       <span>{item.label} Priority</span>
                     </p>
-                    <p className="font-mono text-slate-500 text-[11px]">
-                      Active cases: <strong className="text-slate-900 dark:text-white">{item.count}</strong>
+                    <p className="text-[#9CA3B0] text-[11px]">
+                      Active cases: <strong className="text-[#F5F6FA] tabular-nums">{item.count}</strong>
                     </p>
                   </div>
                 );
@@ -82,7 +77,7 @@ export const PriorityDistributionChart: React.FC<Props> = ({
           <Bar
             dataKey="count"
             radius={[4, 4, 0, 0]}
-            maxBarSize={24}
+            maxBarSize={22}
             onClick={(entry: any) => {
               const bandKey = entry?.band || entry?.payload?.band;
               if (onSelectBand && bandKey) {
@@ -98,7 +93,7 @@ export const PriorityDistributionChart: React.FC<Props> = ({
                 opacity={
                   selectedBand === 'all' || !selectedBand || selectedBand === entry.band
                     ? 1.0
-                    : 0.3
+                    : 0.25
                 }
               />
             ))}

@@ -8,7 +8,7 @@ import {
   Check,
 } from 'lucide-react';
 import { RevenueRisk, AIDiagnosisResult, PolicyEvaluationResult, RecoveryExecutionResult } from '../../types';
-import { formatCurrency, getActionLabel, getFailureTypeLabel } from '../../utils/formatters';
+import { getActionLabel, getFailureTypeLabel } from '../../utils/formatters';
 
 interface TransactionStateTimelineProps {
   risk?: RevenueRisk | null;
@@ -89,7 +89,6 @@ export const TransactionStateTimeline: React.FC<TransactionStateTimelineProps> =
   const isEscalated = risk ? risk.status === 'escalated' : false;
   const isStopped = risk ? risk.status === 'stopped' : false;
 
-  const currencySymbol = risk?.currency === 'USD' ? '$' : '₹';
   const amountVal =
     risk?.amount_recovered && Number(risk.amount_recovered) > 0
       ? Number(risk.amount_recovered)
@@ -97,27 +96,27 @@ export const TransactionStateTimeline: React.FC<TransactionStateTimelineProps> =
       ? Number(risk.amount_at_risk)
       : 8500;
 
-  const formattedAmount = `${currencySymbol}${amountVal.toLocaleString('en-IN')}`;
+  const formattedAmount = `₹${amountVal.toLocaleString('en-IN')}`;
 
   const steps = [
     {
       id: 'DETECTED',
       status: 'completed',
-      title: 'DETECTED',
+      title: 'Detected',
       subtitle: detectedTime,
       detail: risk ? getFailureTypeLabel(risk.detected_failure_type) : 'Temporary decline detected',
     },
     {
       id: 'DIAGNOSING',
       status: hasDiagnosis ? 'completed' : stage === 'DIAGNOSING' ? 'active' : 'pending',
-      title: 'DIAGNOSING',
+      title: 'Diagnosing',
       subtitle: hasDiagnosis ? diagnosingTime : 'Diagnostic analysis',
       detail: diagnosis?.root_cause_summary || (risk ? getFailureTypeLabel(risk.detected_failure_type) : 'Issuer failure context'),
     },
     {
       id: 'ACTION_SELECTED',
       status: hasDiagnosis ? 'completed' : 'pending',
-      title: 'ACTION SELECTED',
+      title: 'Action selected',
       subtitle: hasDiagnosis ? actionName : 'Pending diagnosis',
       detail: hasDiagnosis ? `AI confidence: ${confidenceScore}%` : 'Optimal intervention',
     },
@@ -130,7 +129,7 @@ export const TransactionStateTimeline: React.FC<TransactionStateTimelineProps> =
         : stage === 'POLICY_CHECK'
         ? 'active'
         : 'pending',
-      title: 'POLICY CHECK',
+      title: 'Policy check',
       subtitle: isPolicyChecked
         ? isApproved
           ? 'Approved'
@@ -138,75 +137,76 @@ export const TransactionStateTimeline: React.FC<TransactionStateTimelineProps> =
         : 'Safety check',
       detail: isPolicyChecked
         ? isApproved
-          ? 'Cooldown satisfied • Retry limit not reached'
-          : policyEvaluation?.rejection_reason || 'Rule limit reached'
-        : 'Deterministic guardrails',
+          ? 'Deterministic rules passed'
+          : 'Bounded by risk invariant'
+        : 'Validation against rules',
     },
     {
       id: 'EXECUTED',
       status: hasExecuted
         ? 'completed'
-        : isExecuting || stage === 'EXECUTING'
+        : stage === 'EXECUTING'
         ? 'active'
         : 'pending',
-      title: 'EXECUTED',
-      subtitle: hasExecuted
-        ? executionChannel
-        : isExecuting
-        ? 'Dispatching retry...'
-        : 'Awaiting execution',
-      detail: hasExecuted ? executedTime : 'Optimal routing channel',
+      title: 'Executed',
+      subtitle: hasExecuted ? executionChannel : 'Gateway simulator',
+      detail: hasExecuted ? executedTime : 'Controlled execution rail',
     },
     {
       id: 'RECOVERED',
-      status: isRecovered ? 'success' : isEscalated ? 'escalated' : isStopped ? 'stopped' : 'pending',
-      title: isRecovered
-        ? 'RECOVERED'
+      status: isRecovered
+        ? 'success'
         : isEscalated
-        ? 'ESCALATED'
+        ? 'escalated'
         : isStopped
-        ? 'STOPPED'
-        : 'RECOVERY PENDING',
+        ? 'blocked'
+        : 'pending',
+      title: isRecovered
+        ? 'Recovered'
+        : isEscalated
+        ? 'Escalated'
+        : isStopped
+        ? 'Terminated'
+        : 'Expected yield',
       subtitle: isRecovered
         ? formattedAmount
         : isEscalated
-        ? 'Human review'
+        ? 'Human Review'
         : isStopped
-        ? 'Max attempts reached'
-        : `${formattedAmount} at risk`,
+        ? 'Zero Yield'
+        : formattedAmount,
       detail: isRecovered
-        ? 'Settled to merchant ledger'
+        ? 'Merchant ledger settled'
         : isEscalated
-        ? 'Sent to operator queue'
+        ? 'Manual intervention needed'
         : isStopped
-        ? 'Retry ceiling enforced'
-        : 'Awaiting capture settlement',
-      isHero: true,
+        ? 'Retry budget exhausted'
+        : 'Estimated recoverable',
     },
   ];
 
   return (
     <div
-      className={`rounded-[18px] border border-slate-200/80 dark:border-white/[0.09] bg-white/65 dark:bg-white/[0.045] backdrop-blur-glass p-6 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-5 ${className}`}
+      className={`w-full rounded-[16px] border border-white/[0.06] bg-[#12161F] p-6 shadow-fintech-card space-y-5 ${className}`}
     >
-      {/* Top Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200/60 dark:border-white/[0.06]">
+      {/* Header */}
+      <div className="flex items-center justify-between border-b border-white/[0.06] pb-3.5">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-slate-900/[0.05] dark:bg-white/10 text-slate-800 dark:text-slate-200 flex items-center justify-center border border-slate-200/80 dark:border-white/10">
+          <div className="w-8 h-8 rounded-[10px] bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-[#9CA3B0]">
             <Layers className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-xs font-mono font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              STATE TIMELINE
+            <h3 className="text-xs font-medium tracking-[0.04em] text-[#6B7280] uppercase">
+              State timeline
             </h3>
-            <p className="text-[11px] text-slate-900 dark:text-white font-mono font-semibold truncate max-w-xs">
+            <p className="text-xs text-[#F5F6FA] font-medium truncate max-w-xs">
               TXN {risk?.transaction_id || risk?.id || 'Active Case'}
             </p>
           </div>
         </div>
 
         {risk?.customer?.name && (
-          <span className="text-[11px] font-mono font-medium px-2.5 py-0.5 rounded-md bg-slate-500/[0.06] text-slate-700 dark:text-slate-300 border border-slate-500/15">
+          <span className="h-5 px-2 rounded-full inline-flex items-center text-[10px] font-medium bg-white/[0.05] text-[#9CA3B0] border border-white/[0.08]">
             {risk.customer.name}
           </span>
         )}
@@ -224,40 +224,40 @@ export const TransactionStateTimeline: React.FC<TransactionStateTimelineProps> =
 
           return (
             <React.Fragment key={step.id}>
-              {/* Step Card with subtle fintech styling */}
+              {/* Step Card */}
               <div
-                className={`w-full text-center p-3.5 rounded-xl border transition-all duration-200 ${
+                className={`w-full text-center p-3.5 rounded-[12px] border transition-colors ${
                   isSuccess
-                    ? 'border-emerald-500/30 bg-emerald-500/[0.04] dark:bg-emerald-500/[0.06] shadow-glass-1 ring-1 ring-emerald-500/20'
+                    ? 'border-[#10B981]/20 bg-[#10B981]/[0.05]'
                     : isEscalatedStatus
-                    ? 'border-amber-500/30 bg-amber-500/[0.04] dark:bg-amber-500/[0.06]'
+                    ? 'border-[#E8A33D]/20 bg-[#E8A33D]/[0.05]'
                     : isBlocked
-                    ? 'border-rose-500/30 bg-rose-500/[0.04] dark:bg-rose-500/[0.06]'
+                    ? 'border-[#F0625A]/20 bg-[#F0625A]/[0.05]'
                     : isActive
-                    ? 'border-slate-400/40 bg-white/80 dark:bg-white/[0.08] ring-1 ring-slate-400/20 animate-pulse-subtle'
+                    ? 'border-[#3B82F6]/30 bg-[#3B82F6]/[0.05]'
                     : isCompleted
-                    ? 'border-slate-200/80 dark:border-white/[0.08] bg-white/50 dark:bg-white/[0.03]'
-                    : 'border-dashed border-slate-200/60 dark:border-white/[0.05] bg-white/20 dark:bg-white/[0.01] opacity-50'
+                    ? 'border-white/[0.06] bg-[#0E121A]'
+                    : 'border-dashed border-white/[0.04] bg-[#0E121A]/40 opacity-50'
                 }`}
               >
                 {/* Status Header */}
-                <div className="flex items-center justify-center gap-1.5 font-mono text-xs tracking-wider">
-                  {isActive && <Loader2 className="w-3.5 h-3.5 animate-spin text-slate-700 dark:text-slate-300" />}
-                  {isCompleted && <Check className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300" />}
-                  {isSuccess && <span className="text-emerald-600 dark:text-emerald-400 font-bold">✓</span>}
+                <div className="flex items-center justify-center gap-1.5 text-xs font-medium tracking-[0.02em]">
+                  {isActive && <Loader2 className="w-3.5 h-3.5 animate-spin text-[#3B82F6]" />}
+                  {isCompleted && <Check className="w-3.5 h-3.5 text-[#9CA3B0]" />}
+                  {isSuccess && <span className="text-[#10B981] font-bold">✓</span>}
                   <span
                     className={
                       isSuccess
-                        ? 'text-emerald-600 dark:text-emerald-400 font-semibold text-xs'
+                        ? 'text-[#10B981] font-semibold text-xs'
                         : isBlocked
-                        ? 'text-rose-600 dark:text-rose-400 font-semibold'
+                        ? 'text-[#F0625A] font-semibold text-xs'
                         : isEscalatedStatus
-                        ? 'text-amber-600 dark:text-amber-400 font-semibold'
+                        ? 'text-[#E8A33D] font-semibold text-xs'
                         : isActive
-                        ? 'text-slate-900 dark:text-white font-semibold'
+                        ? 'text-[#3B82F6] font-semibold text-xs'
                         : isCompleted
-                        ? 'text-slate-700 dark:text-slate-300 font-medium'
-                        : 'text-slate-400'
+                        ? 'text-[#F5F6FA] font-medium text-xs'
+                        : 'text-[#6B7280] text-xs'
                     }
                   >
                     {step.title}
@@ -266,23 +266,23 @@ export const TransactionStateTimeline: React.FC<TransactionStateTimelineProps> =
 
                 {/* Subtitle / Value */}
                 <div
-                  className={`mt-1 font-mono ${
+                  className={`mt-1 tabular-nums ${
                     isSuccess
-                      ? 'text-2xl text-slate-900 dark:text-white font-bold font-sans'
+                      ? 'text-2xl text-[#10B981] font-semibold'
                       : isBlocked
-                      ? 'text-sm text-rose-700 dark:text-rose-300 font-medium'
+                      ? 'text-sm text-[#F0625A] font-medium'
                       : isEscalatedStatus
-                      ? 'text-sm text-amber-700 dark:text-amber-300 font-medium'
+                      ? 'text-sm text-[#E8A33D] font-medium'
                       : isCompleted
-                      ? 'text-sm text-slate-900 dark:text-white font-semibold'
-                      : 'text-xs text-slate-400 font-normal'
+                      ? 'text-sm text-[#F5F6FA] font-medium'
+                      : 'text-xs text-[#6B7280]'
                   }`}
                 >
                   {step.subtitle}
                 </div>
 
                 {/* Micro Detail */}
-                <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate font-sans">
+                <div className="text-[11px] text-[#6B7280] mt-0.5 truncate">
                   {step.detail}
                 </div>
               </div>
@@ -291,9 +291,7 @@ export const TransactionStateTimeline: React.FC<TransactionStateTimelineProps> =
               {!isLast && (
                 <div
                   className={`flex justify-center py-0.5 transition-colors ${
-                    isCompleted
-                      ? 'text-slate-400 dark:text-slate-600'
-                      : 'text-slate-300 dark:text-slate-700'
+                    isCompleted ? 'text-[#6B7280]' : 'text-[#6B7280]/40'
                   }`}
                 >
                   <ArrowDown className="w-3.5 h-3.5" />
@@ -306,22 +304,22 @@ export const TransactionStateTimeline: React.FC<TransactionStateTimelineProps> =
 
       {/* Interactive Action Trigger */}
       {onExecuteStep && !isRecovered && isApproved && (
-        <div className="pt-3 border-t border-slate-200/60 dark:border-white/[0.06]">
+        <div className="pt-3 border-t border-white/[0.06]">
           <button
             type="button"
             onClick={onExecuteStep}
             disabled={isExecuting}
-            className="w-full py-2.5 px-3 rounded-xl bg-[#111827] hover:bg-[#1f2937] dark:bg-white dark:text-[#111827] dark:hover:bg-slate-100 disabled:opacity-50 text-white text-xs font-semibold font-mono uppercase tracking-wider flex items-center justify-center gap-2 shadow-xs hover:-translate-y-[1px] transition-all cursor-pointer"
+            className="w-full py-2.5 px-3 rounded-[10px] bg-[#3B82F6] hover:bg-[#2563EB] disabled:opacity-50 text-white text-xs font-medium flex items-center justify-center gap-2 shadow-sm transition-colors cursor-pointer"
           >
             {isExecuting ? (
               <>
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                <span>EXECUTING STEP...</span>
+                <span>Executing step...</span>
               </>
             ) : (
               <>
                 <Zap className="w-3.5 h-3.5" />
-                <span>EXECUTE RECOVERY ACTION</span>
+                <span>Execute recovery action</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </>
             )}

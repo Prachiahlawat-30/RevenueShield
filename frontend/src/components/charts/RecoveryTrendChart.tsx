@@ -2,6 +2,7 @@ import React from 'react';
 import {
   AreaChart,
   Area,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -9,46 +10,72 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { DailyRecoveryTrend } from '../../types';
-import { formatCurrency } from '../../utils/formatters';
-import { useTheme } from '../../context/ThemeContext';
+import { formatCurrency, formatDate } from '../../utils/formatters';
+import { BarChart3 } from 'lucide-react';
 
 interface RecoveryTrendChartProps {
   data: DailyRecoveryTrend[];
 }
 
 export const RecoveryTrendChart: React.FC<RecoveryTrendChartProps> = ({ data }) => {
-  const { isDark } = useTheme();
+  // Check if all amounts are 0 or data is empty
+  const hasData =
+    data &&
+    data.length > 0 &&
+    data.some(
+      (d) =>
+        (typeof d.amount_recovered === 'number' && d.amount_recovered > 0) ||
+        (typeof d.amount_at_risk === 'number' && d.amount_at_risk > 0) ||
+        (typeof d.amount_recovered === 'string' && parseFloat(d.amount_recovered) > 0)
+    );
+
+  if (!hasData) {
+    return (
+      <div className="h-64 w-full flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/[0.08] rounded-[12px]">
+        <div className="w-10 h-10 rounded-full bg-white/[0.04] flex items-center justify-center text-[#6B7280] mb-3">
+          <BarChart3 className="w-5 h-5" />
+        </div>
+        <p className="text-xs font-medium text-[#F5F6FA]">Not enough trend data yet</p>
+        <p className="text-[11px] text-[#6B7280] mt-1 max-w-xs">
+          Daily recovery trends will populate automatically as failed payment events are processed.
+        </p>
+      </div>
+    );
+  }
 
   const chartData = data.map((item) => ({
-    date: item.date,
-    atRisk: typeof item.amount_at_risk === 'string' ? parseFloat(item.amount_at_risk) : item.amount_at_risk,
+    date: formatDate(item.date),
+    rawDate: item.date,
     recovered: typeof item.amount_recovered === 'string' ? parseFloat(item.amount_recovered) : item.amount_recovered,
+    atRisk: typeof item.amount_at_risk === 'string' ? parseFloat(item.amount_at_risk) : item.amount_at_risk,
   }));
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/95 dark:bg-[#0E131F]/95 backdrop-blur-xl p-3.5 shadow-glass-3 text-xs space-y-2">
-          <p className="font-semibold text-slate-900 dark:text-white font-mono">{label}</p>
-          <div className="space-y-1.5 font-mono text-[11px]">
-            <div className="flex items-center justify-between gap-5">
-              <span className="flex items-center gap-1.5 text-rose-500 dark:text-rose-400">
-                <span className="w-2 h-2 rounded-full bg-rose-500" />
-                <span>At Risk:</span>
+        <div className="rounded-[12px] border border-white/[0.08] bg-[#171C28] p-3 shadow-fintech-elevated text-xs space-y-1.5 min-w-[170px]">
+          <p className="font-medium text-[#F5F6FA] pb-1 border-b border-white/[0.06]">{label}</p>
+          <div className="space-y-1.5 text-xs">
+            <div className="flex items-center justify-between gap-4">
+              <span className="flex items-center gap-1.5 text-[#3B82F6]">
+                <span className="w-2 h-2 rounded-full bg-[#3B82F6]" />
+                <span>Recovered:</span>
               </span>
-              <span className="font-bold text-slate-800 dark:text-slate-200">
+              <span className="font-semibold text-[#F5F6FA] tabular-nums">
                 {formatCurrency(payload[0]?.value)}
               </span>
             </div>
-            <div className="flex items-center justify-between gap-5">
-              <span className="flex items-center gap-1.5 text-emerald-500 dark:text-emerald-400">
-                <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                <span>Recovered:</span>
-              </span>
-              <strong className="font-bold text-emerald-600 dark:text-emerald-400">
-                {formatCurrency(payload[1]?.value)}
-              </strong>
-            </div>
+            {payload[1] && (
+              <div className="flex items-center justify-between gap-4">
+                <span className="flex items-center gap-1.5 text-[#F0625A]">
+                  <span className="w-2 h-2 rounded-full bg-[#F0625A]" />
+                  <span>At Risk:</span>
+                </span>
+                <span className="font-semibold text-[#F0625A] tabular-nums">
+                  {formatCurrency(payload[1]?.value)}
+                </span>
+              </div>
+            )}
           </div>
         </div>
       );
@@ -59,73 +86,55 @@ export const RecoveryTrendChart: React.FC<RecoveryTrendChartProps> = ({ data }) 
   return (
     <div className="h-64 w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
+        <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
           <defs>
-            <linearGradient id="fintechEmeraldArea" x1="0" y1="0" x2="0" y2="1">
-              <stop
-                offset="0%"
-                stopColor="#10B981"
-                stopOpacity={isDark ? 0.35 : 0.25}
-              />
-              <stop
-                offset="95%"
-                stopColor="#10B981"
-                stopOpacity={0.0}
-              />
-            </linearGradient>
-            <linearGradient id="fintechRiskLine" x1="0" y1="0" x2="0" y2="1">
-              <stop
-                offset="0%"
-                stopColor="#F43F5E"
-                stopOpacity={isDark ? 0.15 : 0.1}
-              />
-              <stop
-                offset="95%"
-                stopColor="#F43F5E"
-                stopOpacity={0.0}
-              />
+            <linearGradient id="fintechRecoveredGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#3B82F6" stopOpacity={0.16} />
+              <stop offset="100%" stopColor="#3B82F6" stopOpacity={0.0} />
             </linearGradient>
           </defs>
+
           <CartesianGrid
             strokeDasharray="3 3"
-            stroke={isDark ? 'rgba(255,255,255,0.06)' : 'rgba(15,23,42,0.06)'}
+            stroke="rgba(255, 255, 255, 0.05)"
             vertical={false}
           />
+
           <XAxis
             dataKey="date"
-            stroke={isDark ? 'rgba(255,255,255,0.45)' : 'rgba(15,23,42,0.5)'}
-            fontSize={10}
-            fontFamily="monospace"
+            stroke="#6B7280"
+            fontSize={11}
             tickLine={false}
             axisLine={false}
           />
+
           <YAxis
-            stroke={isDark ? 'rgba(255,255,255,0.45)' : 'rgba(15,23,42,0.5)'}
-            fontSize={10}
-            fontFamily="monospace"
+            stroke="#6B7280"
+            fontSize={11}
             tickLine={false}
             axisLine={false}
-            tickFormatter={(val) => `₹${val}`}
+            tickFormatter={(val) => `₹${val >= 1000 ? `${(val / 1000).toFixed(0)}k` : val}`}
           />
+
           <Tooltip content={<CustomTooltip />} />
-          <Area
-            type="monotone"
-            dataKey="atRisk"
-            name="Revenue at Risk"
-            stroke="#F43F5E"
-            strokeWidth={2}
-            strokeDasharray="4 4"
-            fill="url(#fintechRiskLine)"
-          />
+
+          {/* Primary Recovered Area Line: Clean Blue #3B82F6 */}
           <Area
             type="monotone"
             dataKey="recovered"
-            name="Recovered Revenue"
-            stroke="#10B981"
-            strokeWidth={2.5}
-            fillOpacity={1}
-            fill="url(#fintechEmeraldArea)"
-            activeDot={{ r: 5, fill: '#10B981', stroke: isDark ? '#090D16' : '#FFFFFF', strokeWidth: 2 }}
+            stroke="#3B82F6"
+            strokeWidth={2}
+            fill="url(#fintechRecoveredGrad)"
+          />
+
+          {/* Secondary Risk Line: Muted Coral #F0625A */}
+          <Line
+            type="monotone"
+            dataKey="atRisk"
+            stroke="#F0625A"
+            strokeWidth={1.5}
+            strokeDasharray="4 4"
+            dot={false}
           />
         </AreaChart>
       </ResponsiveContainer>

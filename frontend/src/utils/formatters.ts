@@ -4,25 +4,25 @@
 
 export const formatCurrency = (
   amount: string | number | undefined | null,
-  currency: string = 'USD'
+  currency: string = 'INR'
 ): string => {
-  if (amount === undefined || amount === null) return '$0.00';
+  if (amount === undefined || amount === null) return '₹0';
   const num = typeof amount === 'string' ? parseFloat(amount) : amount;
-  if (isNaN(num)) return '$0.00';
+  if (isNaN(num)) return '₹0';
 
   if (currency === 'INR') {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',
-      maximumFractionDigits: 2,
+      maximumFractionDigits: 0,
     }).format(num);
   }
 
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   }).format(num);
 };
 
@@ -45,34 +45,42 @@ export const formatIndianLakhs = (amount: number | string | undefined | null): s
 };
 
 export const formatPercent = (
-  percent: number | undefined | null,
+  val: string | number | undefined | null,
   decimals: number = 1
 ): string => {
-  if (percent === undefined || percent === null || isNaN(percent)) return '0%';
-  // If decimal between 0 and 1, multiply by 100
-  const normalized = percent <= 1.0 && percent >= 0 ? percent * 100 : percent;
-  return `${normalized.toFixed(decimals)}%`;
-};
-
-export const formatCompactNumber = (num: number | undefined | null): string => {
-  if (num === undefined || num === null || isNaN(num)) return '0';
-  return new Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    compactDisplay: 'short',
-    maximumFractionDigits: 1,
-  }).format(num);
+  if (val === undefined || val === null) return '0%';
+  const num = typeof val === 'string' ? parseFloat(val) : val;
+  if (isNaN(num)) return '0%';
+  return `${num.toFixed(decimals)}%`;
 };
 
 export const formatDate = (dateString: string | undefined | null): string => {
   if (!dateString) return '—';
   try {
     const d = new Date(dateString);
+    if (isNaN(d.getTime())) return dateString;
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    }).format(d);
+  } catch {
+    return dateString;
+  }
+};
+
+export const formatDateTime = (dateString: string | undefined | null): string => {
+  if (!dateString) return '—';
+  try {
+    const d = new Date(dateString);
+    if (isNaN(d.getTime())) return dateString;
     return new Intl.DateTimeFormat('en-US', {
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
+      hour12: false,
     }).format(d);
   } catch {
     return dateString;
@@ -106,69 +114,85 @@ export const getStatusBadgeClass = (status: string): string => {
     case 'approved':
     case 'allow':
     case 'active':
-      return 'bg-emerald-500/[0.08] text-emerald-700 dark:text-emerald-400 border-emerald-500/20';
+      return 'bg-[#10B981]/10 text-[#10B981] border-[#10B981]/20';
     case 'recovering':
     case 'executing':
-      return 'bg-blue-500/[0.08] text-blue-700 dark:text-blue-400 border-blue-500/20';
+      return 'bg-[#3B82F6]/10 text-[#3B82F6] border-[#3B82F6]/20';
     case 'diagnosing':
     case 'action_selected':
     case 'action selected':
     case 'policy_check':
     case 'pending':
     case 'pending_review':
-      return 'bg-slate-500/[0.08] text-slate-700 dark:text-slate-300 border-slate-500/20';
+      return 'bg-white/[0.05] text-[#9CA3B0] border-white/[0.08]';
     case 'detected':
     case 'medium':
     case 'warning':
-      return 'bg-amber-500/[0.08] text-amber-700 dark:text-amber-400 border-amber-500/20';
     case 'escalated':
     case 'human_approval_required':
-      return 'bg-amber-500/[0.08] text-amber-700 dark:text-amber-400 border-amber-500/20';
+      return 'bg-[#E8A33D]/10 text-[#E8A33D] border-[#E8A33D]/20';
     case 'stopped':
     case 'failed':
     case 'declined':
     case 'rejected':
     case 'block':
+    case 'critical':
     case 'high':
-      return 'bg-rose-500/[0.08] text-rose-700 dark:text-rose-400 border-rose-500/20';
+      return 'bg-[#F0625A]/10 text-[#F0625A] border-[#F0625A]/20';
     case 'low':
     case 'stale':
     default:
-      return 'bg-slate-500/[0.06] text-slate-600 dark:text-slate-400 border-slate-500/15';
+      return 'bg-white/[0.05] text-[#9CA3B0] border-white/[0.08]';
   }
 };
 
-export const getFailureTypeLabel = (type: string): string => {
-  switch (type) {
-    case 'temporary_decline':
-      return 'Temporary Bank Decline';
+export const getFailureTypeLabel = (type: string | undefined | null): string => {
+  if (!type) return 'Unknown Failure';
+  switch (type.toLowerCase()) {
     case 'insufficient_funds':
       return 'Insufficient Funds';
     case 'expired_card':
-      return 'Expired Card Credential';
+      return 'Expired Card';
+    case 'temporary_decline':
+      return 'Temporary Decline';
     case 'network_error':
-      return 'Issuer / Network Timeout';
-    case 'fraud_stoppage':
-      return 'Risk Rule Flag';
+      return 'Network Error';
+    case 'fraud_suspected':
+      return 'Fraud Suspected';
+    case 'invalid_card':
+      return 'Invalid Card Details';
+    case 'issuer_unavailable':
+      return 'Issuer Unavailable';
     default:
-      return type?.replace(/_/g, ' ') || 'Unknown Failure';
+      return type
+        .replace(/_/g, ' ')
+        .replace(/\b\w/g, (l) => l.toUpperCase());
   }
 };
 
 export const getActionLabel = (action: string | undefined | null): string => {
-  if (!action) return '—';
+  if (!action) return 'No Action';
   switch (action.toLowerCase()) {
     case 'retry_payment':
+    case 'retry':
+      return 'Retry Payment';
+    case 'send_payment_link':
+    case 'dunning_email':
+      return 'Send Payment Link';
+    case 'switch_gateway':
+      return 'Switch Gateway';
+    case 'request_new_method':
+      return 'Request New Card';
+    case 'smart_retry':
       return 'Smart Retry';
-    case 'payment_reminder':
-      return 'Payment Reminder';
-    case 'request_method_update':
-      return 'Request Method Update';
-    case 'human_escalation':
-      return 'Human Escalation';
-    case 'stop':
+    case 'escalate_human':
+    case 'escalate_to_human':
+      return 'Escalate to Support';
+    case 'stop_recovery':
       return 'Stop Interventions';
     default:
-      return action.replace(/_/g, ' ');
+      return action
+        .replace(/_/g, ' ')
+        .replace(/\b\w/g, (l) => l.toUpperCase());
   }
 };

@@ -25,7 +25,6 @@ import {
   Briefcase,
   ChevronDown,
   ChevronRight,
-  CircleDot,
   Globe2,
 } from 'lucide-react';
 import { Tooltip } from '../ui/Tooltip';
@@ -60,20 +59,19 @@ interface SidebarProps {
   currentTab: NavTab;
   onSelectTab: (tab: NavTab) => void;
   onOpenCopilot: () => void;
-  isCollapsed?: boolean;
-  onToggleCollapse?: () => void;
+  isCollapsed: boolean;
+  onToggleCollapse: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
   currentTab,
   onSelectTab,
   onOpenCopilot,
-  isCollapsed = false,
+  isCollapsed,
   onToggleCollapse,
 }) => {
   const [showAdvanced, setShowAdvanced] = useState(true);
 
-  // Core Primary Navigation
   const primaryNavItems = [
     { id: 'dashboard' as NavTab, label: 'Overview', icon: LayoutDashboard },
     { id: 'risks' as NavTab, label: 'Revenue at Risk', icon: AlertTriangle, badge: 'Live' },
@@ -82,10 +80,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'audit' as NavTab, label: 'Audit Trail', icon: ScrollText },
   ];
 
-  // Secondary Intelligence & Advanced Modules (preserving all existing routes and features)
   const secondarySections = [
     {
-      title: 'INTELLIGENCE & OPERATIONS',
+      title: 'Intelligence & Operations',
       items: [
         { id: 'global-intelligence' as NavTab, label: 'Global Payment Intelligence', icon: Globe2, badge: 'Global' },
         { id: 'control-center' as NavTab, label: 'Recovery Control Center', icon: Activity, badge: 'Ops' },
@@ -109,6 +106,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
   ];
 
+  const renderBadge = (badge: string) => {
+    const isLive = badge.toLowerCase() === 'live';
+    if (isLive) {
+      return (
+        <span className="h-5 px-1.5 rounded-full inline-flex items-center gap-1 text-[10px] font-medium bg-[#10B981]/10 text-[#10B981] border border-[#10B981]/20">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
+          <span>Live</span>
+        </span>
+      );
+    }
+
+    return (
+      <span className="h-5 px-1.5 rounded-full inline-flex items-center text-[10px] font-medium bg-white/[0.05] text-[#9CA3B0] border border-white/[0.08]">
+        {badge}
+      </span>
+    );
+  };
+
   const renderNavButton = (item: { id: NavTab; label: string; icon: any; badge?: string }) => {
     const Icon = item.icon;
     const isActive = currentTab === item.id;
@@ -117,39 +132,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <button
         key={item.id}
         onClick={() => onSelectTab(item.id)}
-        className={`relative group flex w-full items-center justify-between rounded-xl px-3 py-2 text-xs font-medium transition-all duration-150 cursor-pointer ${
+        className={`relative group flex w-full items-center justify-between rounded-[10px] px-3 py-2 text-xs transition-colors duration-150 cursor-pointer ${
           isActive
-            ? 'bg-slate-900/[0.06] dark:bg-white/[0.09] text-slate-900 dark:text-white font-semibold shadow-xs'
-            : 'text-slate-500 dark:text-slate-400 hover:bg-slate-900/[0.03] dark:hover:bg-white/[0.04] hover:text-slate-900 dark:hover:text-white'
+            ? 'bg-[#3B82F6]/10 text-[#F5F6FA] font-medium'
+            : 'text-[#9CA3B0] hover:bg-white/[0.04] hover:text-[#F5F6FA]'
         }`}
       >
-        {/* Subtle accent indicator for active state */}
+        {/* Active-state left accent bar in primary brand blue */}
         {isActive && (
-          <span className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-slate-900 dark:bg-white" />
+          <span className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r bg-[#3B82F6]" />
         )}
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2.5 min-w-0">
           <Icon
             className={`h-4 w-4 shrink-0 transition-colors ${
               isActive
-                ? 'text-slate-900 dark:text-white'
-                : 'text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200'
+                ? 'text-[#3B82F6]'
+                : 'text-[#6B7280] group-hover:text-[#9CA3B0]'
             }`}
           />
           {!isCollapsed && <span className="truncate">{item.label}</span>}
         </div>
 
-        {!isCollapsed && item.badge && (
-          <span
-            className={`rounded px-1.5 py-0.2 text-[9px] font-mono font-medium tracking-wider uppercase border ${
-              isActive
-                ? 'bg-slate-900/10 dark:bg-white/10 text-slate-800 dark:text-slate-200 border-slate-900/20 dark:border-white/20'
-                : 'bg-slate-500/[0.06] text-slate-500 dark:text-slate-400 border-slate-500/15'
-            }`}
-          >
-            {item.badge}
-          </span>
-        )}
+        {!isCollapsed && item.badge && renderBadge(item.badge)}
       </button>
     );
 
@@ -166,34 +171,34 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <aside
-      className={`fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-slate-200/80 dark:border-white/[0.08] bg-[#F7F8FA] dark:bg-[#090D16] transition-all duration-200 ${
+      className={`fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-white/[0.06] bg-[#0B0F17] transition-all duration-200 ${
         isCollapsed ? 'w-16' : 'w-64'
       }`}
     >
-      {/* Brand Header Motif */}
-      <div className="flex h-16 items-center justify-between border-b border-slate-200/80 dark:border-white/[0.08] px-4 shrink-0">
+      {/* Brand Header */}
+      <div className="flex h-16 items-center justify-between border-b border-white/[0.06] px-4 shrink-0">
         {!isCollapsed ? (
           <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs">
+            <div className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-[#3B82F6] text-white shadow-sm">
               <Zap className="h-4 w-4 fill-current" />
             </div>
             <div>
               <div className="flex items-center gap-1.5 leading-none">
-                <span className="text-sm font-bold tracking-tight text-slate-900 dark:text-white">
-                  RECOVER<span className="opacity-60">AI</span>
+                <span className="text-sm font-semibold tracking-tight text-[#F5F6FA]">
+                  RecoverAI
                 </span>
-                <span className="rounded px-1.5 py-0.5 text-[9px] font-mono font-semibold text-slate-600 dark:text-slate-300 bg-slate-500/10 border border-slate-500/20">
-                  OPS
+                <span className="h-4.5 px-1.5 rounded-full inline-flex items-center text-[9px] font-medium bg-white/[0.05] text-[#9CA3B0] border border-white/[0.08]">
+                  Ops
                 </span>
               </div>
-              <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400">Financial Operations</span>
+              <span className="text-[11px] text-[#6B7280] font-normal">Financial Operations</span>
             </div>
           </div>
         ) : (
           <button
             onClick={onToggleCollapse}
             title="Expand sidebar"
-            className="group relative mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs transition-all cursor-pointer hover:-translate-y-[1px]"
+            className="group relative mx-auto flex h-8 w-8 items-center justify-center rounded-[10px] bg-[#3B82F6] text-white shadow-sm transition-all cursor-pointer hover:bg-[#2563EB]"
           >
             <Zap className="h-4 w-4 fill-current group-hover:hidden" />
             <PanelLeftOpen className="h-4 w-4 hidden group-hover:block" />
@@ -204,32 +209,32 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <button
             onClick={onToggleCollapse}
             title="Collapse sidebar"
-            className="text-slate-400 hover:text-slate-900 dark:hover:text-white p-1.5 rounded-lg hover:bg-slate-900/[0.04] dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+            className="text-[#6B7280] hover:text-[#F5F6FA] p-1.5 rounded-lg hover:bg-white/[0.04] transition-colors cursor-pointer"
           >
             <PanelLeftClose className="h-4 w-4" />
           </button>
         )}
       </div>
 
-      {/* Navigation List */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-4">
+      {/* Navigation List with Increased Group Spacing */}
+      <nav className="flex-1 overflow-y-auto px-3 py-5 space-y-6">
         {/* Core Primary Navigation */}
         <div className="space-y-1">
           {!isCollapsed && (
-            <div className="px-2 pb-1.5 text-[10px] font-mono font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500">
-              CORE PLATFORM
+            <div className="px-2 pb-2 text-[11px] font-medium tracking-[0.04em] text-[#6B7280] uppercase">
+              Core Platform
             </div>
           )}
           {primaryNavItems.map(renderNavButton)}
         </div>
 
-        {/* Secondary Modules (All preserved) */}
+        {/* Secondary Modules */}
         {secondarySections.map((section, sIdx) => (
-          <div key={sIdx} className="space-y-1 pt-3 border-t border-slate-200/60 dark:border-white/[0.06]">
+          <div key={sIdx} className="space-y-1 pt-4 border-t border-white/[0.06]">
             {!isCollapsed && (
               <button
                 onClick={() => setShowAdvanced(!showAdvanced)}
-                className="flex items-center justify-between w-full px-2 py-1 text-[10px] font-mono font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors cursor-pointer"
+                className="flex items-center justify-between w-full px-2 py-1.5 text-[11px] font-medium tracking-[0.04em] text-[#6B7280] uppercase hover:text-[#9CA3B0] transition-colors cursor-pointer"
               >
                 <span>{section.title}</span>
                 {showAdvanced ? (
@@ -245,26 +250,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </nav>
 
       {/* Operator Copilot Quick Trigger */}
-      <div className="p-3 border-t border-slate-200/60 dark:border-white/[0.06] shrink-0 bg-slate-50/50 dark:bg-white/[0.02]">
+      <div className="p-3 border-t border-white/[0.06] shrink-0">
         <button
           onClick={onOpenCopilot}
-          className={`w-full flex items-center justify-between p-2.5 rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.04] hover:bg-white dark:hover:bg-white/[0.07] transition-all duration-200 group cursor-pointer shadow-xs ${
+          className={`w-full flex items-center justify-between p-2.5 rounded-[12px] border border-white/[0.06] bg-[#12161F] hover:bg-[#171C28] hover:border-white/[0.1] transition-all duration-150 group cursor-pointer ${
             isCollapsed ? 'justify-center' : ''
           }`}
         >
           <div className="flex items-center gap-2.5">
-            <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs">
+            <div className="flex h-6 w-6 items-center justify-center rounded-[8px] bg-[#8B7CF6]/15 text-[#8B7CF6]">
               <Bot className="h-3.5 w-3.5" />
             </div>
             {!isCollapsed && (
               <div className="text-left leading-tight">
-                <span className="text-xs font-semibold text-slate-900 dark:text-white block">Operator Copilot</span>
-                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">Analytics & Inquiries</span>
+                <span className="text-xs font-medium text-[#F5F6FA] block">Operator Copilot</span>
+                <span className="text-[11px] text-[#6B7280]">AI Diagnostics</span>
               </div>
             )}
           </div>
           {!isCollapsed && (
-            <span className="text-xs font-mono text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200 group-hover:translate-x-0.5 transition-transform">
+            <span className="text-xs text-[#6B7280] group-hover:text-[#F5F6FA] transition-colors">
               ➔
             </span>
           )}
@@ -272,21 +277,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* System Status Section */}
-      <div className="px-4 py-3 border-t border-slate-200/60 dark:border-white/[0.06] bg-transparent shrink-0">
+      <div className="px-4 py-3 border-t border-white/[0.06] shrink-0">
         {!isCollapsed ? (
           <div>
-            <div className="text-[10px] font-mono font-medium tracking-wider uppercase text-slate-400 dark:text-slate-500">
-              ENGINE STATUS
+            <div className="text-[11px] font-medium tracking-[0.04em] text-[#6B7280] uppercase">
+              System Status
             </div>
-            <div className="mt-1 flex items-center gap-2 text-xs font-medium text-emerald-600 dark:text-emerald-400">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" />
+            <div className="mt-1 flex items-center gap-2 text-xs font-medium text-[#10B981]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#10B981] shrink-0" />
               <span className="truncate text-[11px]">All systems operational</span>
             </div>
           </div>
         ) : (
           <Tooltip content="All systems operational" position="right">
             <div className="flex justify-center">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
+              <span className="h-2 w-2 rounded-full bg-[#10B981]" />
             </div>
           </Tooltip>
         )}

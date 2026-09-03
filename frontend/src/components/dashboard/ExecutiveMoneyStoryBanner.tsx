@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowRight, AlertTriangle, TrendingUp, ShieldCheck, Zap, Layers } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { getExecutiveMoneyStory } from '../../api/tier3';
 import { ExecutiveMoneyStoryResponse } from '../../types';
 import { formatCurrency } from '../../utils/formatters';
@@ -32,39 +32,32 @@ export const ExecutiveMoneyStoryBanner: React.FC<ExecutiveMoneyStoryBannerProps>
 
   if (loading || !data) {
     return (
-      <div className="rounded-[18px] border border-slate-200/80 dark:border-white/[0.08] bg-white/65 dark:bg-white/[0.045] backdrop-blur-glass p-6 animate-pulse">
-        <div className="h-5 w-60 bg-slate-200 dark:bg-white/10 rounded-lg mb-4"></div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-20 bg-slate-200 dark:bg-white/5 rounded-xl"></div>
+      <div className="rounded-[16px] border border-white/[0.06] bg-[#12161F] p-6 shadow-fintech-card animate-pulse">
+        <div className="h-5 w-48 bg-white/[0.06] rounded-lg mb-4"></div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="h-24 bg-white/[0.03] rounded-[12px]"></div>
           ))}
         </div>
       </div>
     );
   }
 
-  const lossGradients = [
-    'bg-gradient-to-r from-rose-500 to-rose-400',
-    'bg-gradient-to-r from-amber-500 to-amber-400',
-    'bg-gradient-to-r from-indigo-500 to-indigo-400',
-    'bg-gradient-to-r from-cyan-500 to-cyan-400',
-  ];
-
   return (
-    <div className="rounded-[18px] border border-slate-200/80 dark:border-white/[0.08] bg-white/65 dark:bg-white/[0.045] backdrop-blur-glass p-6 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-6">
+    <div className="rounded-[16px] border border-white/[0.06] bg-[#12161F] p-6 shadow-fintech-card space-y-6">
       {/* Top Title & Narrative */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/60 dark:border-white/[0.06] pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.06] pb-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="rounded-md bg-indigo-500/10 px-2.5 py-0.5 text-[11px] font-mono font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider border border-indigo-500/20">
-              EXECUTIVE BRIEFING
+            <span className="text-[11px] font-medium tracking-[0.04em] text-[#6B7280] uppercase">
+              Executive briefing
             </span>
-            <span className="text-xs text-slate-500 dark:text-slate-400">Continuous Revenue Protection</span>
+            <span className="text-xs text-[#9CA3B0]">· Portfolio health & yield capture</span>
           </div>
-          <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mt-1.5 tracking-tight">
+          <h2 className="text-[18px] sm:text-[20px] font-semibold text-[#F5F6FA] mt-1 tracking-tight">
             Macro Portfolio Exposure & Yield Capture
           </h2>
-          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 max-w-3xl leading-relaxed">
+          <p className="text-[14px] text-[#9CA3B0] mt-1 max-w-3xl leading-relaxed">
             {data.headline_narrative}
           </p>
         </div>
@@ -77,107 +70,84 @@ export const ExecutiveMoneyStoryBanner: React.FC<ExecutiveMoneyStoryBannerProps>
             iconPosition="right"
             onClick={onNavigateToRecommendations}
           >
-            Action Recommendations
+            Action recommendations
           </Button>
         )}
       </div>
 
-      {/* 5 Core Macro Financial Cards with Visual Accents */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-        {/* 1. Revenue At Risk */}
-        <div className="rounded-xl border border-rose-500/20 bg-rose-500/[0.04] p-4 space-y-1.5 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-mono font-medium uppercase tracking-wider text-rose-600 dark:text-rose-400 block">
-              MONEY AT RISK
-            </span>
-            <AlertTriangle className="w-3.5 h-3.5 text-rose-500" />
-          </div>
-          <span className="text-xl font-bold font-mono text-slate-900 dark:text-white block truncate">
-            {formatCurrency(data.revenue_at_risk)}
+      {/* 4 Cards with Clear Visual Hierarchy (Reduced from cramped 5) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* 1. Primary Highlight: Settled Funds */}
+        <div className="rounded-[12px] border border-[#10B981]/20 bg-[#10B981]/[0.04] p-4 space-y-1">
+          <span className="text-[11px] font-medium tracking-[0.04em] text-[#10B981] uppercase block">
+            Settled funds
           </span>
-          <span className="text-[11px] text-slate-500 font-mono">Total Declined Exposure</span>
-        </div>
-
-        {/* 2. Expected Recoverable */}
-        <div className="rounded-xl border border-indigo-500/20 bg-indigo-500/[0.04] p-4 space-y-1.5 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-mono font-medium uppercase tracking-wider text-indigo-600 dark:text-indigo-400 block">
-              EXPECTED RECOVERABLE
-            </span>
-            <TrendingUp className="w-3.5 h-3.5 text-indigo-500" />
-          </div>
-          <span className="text-xl font-bold font-mono text-slate-900 dark:text-white block truncate">
-            {formatCurrency(data.expected_recoverable)}
-          </span>
-          <span className="text-[11px] text-slate-500 font-mono">60% Model Addressable</span>
-        </div>
-
-        {/* 3. Recovered */}
-        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/[0.06] p-4 space-y-1.5 shadow-[0_0_15px_rgba(16,185,129,0.12)]">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 block">
-              SETTLED FUNDS
-            </span>
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-          </div>
-          <span className="text-xl font-bold font-mono text-emerald-600 dark:text-emerald-400 block truncate">
+          <span className="text-[24px] font-semibold text-[#10B981] block truncate tabular-nums">
             {formatCurrency(data.recovered_so_far)}
           </span>
-          <span className="text-[11px] text-emerald-700 dark:text-emerald-500 font-mono">Captured to Merchant</span>
+          <span className="text-[12px] text-[#9CA3B0]">Captured to merchant account</span>
         </div>
 
-        {/* 4. Protected Pre-Failure */}
-        <div className="rounded-xl border border-cyan-500/20 bg-cyan-500/[0.04] p-4 space-y-1.5 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-mono font-medium uppercase tracking-wider text-cyan-600 dark:text-cyan-400 block">
-              PRE-AUTH PROTECTED
-            </span>
-            <Zap className="w-3.5 h-3.5 text-cyan-500" />
-          </div>
-          <span className="text-xl font-bold font-mono text-slate-900 dark:text-white block truncate">
+        {/* 2. Money At Risk */}
+        <div className="rounded-[12px] border border-white/[0.06] bg-[#0E121A] p-4 space-y-1">
+          <span className="text-[11px] font-medium tracking-[0.04em] text-[#6B7280] uppercase block">
+            Money at risk
+          </span>
+          <span className="text-[24px] font-semibold text-[#F0625A] block truncate tabular-nums">
+            {formatCurrency(data.revenue_at_risk)}
+          </span>
+          <span className="text-[12px] text-[#6B7280]">Total declined exposure</span>
+        </div>
+
+        {/* 3. Expected Recoverable */}
+        <div className="rounded-[12px] border border-white/[0.06] bg-[#0E121A] p-4 space-y-1">
+          <span className="text-[11px] font-medium tracking-[0.04em] text-[#6B7280] uppercase block">
+            Expected recoverable
+          </span>
+          <span className="text-[24px] font-semibold text-[#F5F6FA] block truncate tabular-nums">
+            {formatCurrency(data.expected_recoverable)}
+          </span>
+          <span className="text-[12px] text-[#6B7280]">60% model addressable</span>
+        </div>
+
+        {/* 4. Pre-Auth Protected */}
+        <div className="rounded-[12px] border border-white/[0.06] bg-[#0E121A] p-4 space-y-1">
+          <span className="text-[11px] font-medium tracking-[0.04em] text-[#6B7280] uppercase block">
+            Pre-auth protected
+          </span>
+          <span className="text-[24px] font-semibold text-[#F5F6FA] block truncate tabular-nums">
             {formatCurrency(data.protected_before_failure)}
           </span>
-          <span className="text-[11px] text-slate-500 font-mono">Smart 3DS & Routing</span>
-        </div>
-
-        {/* 5. Remaining Opportunity */}
-        <div className="rounded-xl border border-amber-500/20 bg-amber-500/[0.04] p-4 space-y-1.5 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-mono font-medium uppercase tracking-wider text-amber-600 dark:text-amber-400 block">
-              PIPELINE QUEUE
-            </span>
-            <Layers className="w-3.5 h-3.5 text-amber-500" />
-          </div>
-          <span className="text-xl font-bold font-mono text-slate-900 dark:text-white block truncate">
-            {formatCurrency(data.remaining_opportunity)}
-          </span>
-          <span className="text-[11px] text-slate-500 font-mono">Unclaimed Pipeline</span>
+          <span className="text-[12px] text-[#6B7280]">Smart 3DS & routing</span>
         </div>
       </div>
 
-      {/* Why are we losing money? & What should we do next? */}
+      {/* Primary Loss Factors & Recommended Action */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 text-xs">
-        {/* Why are we losing money? */}
-        <div className="rounded-xl border border-slate-200/60 dark:border-white/[0.06] bg-white/40 dark:bg-white/[0.02] p-5 space-y-3">
-          <span className="text-slate-500 dark:text-slate-400 font-mono font-medium uppercase text-[10px] tracking-wider block">
-            PRIMARY LOSS FACTORS
+        {/* Primary Loss Factors */}
+        <div className="rounded-[12px] border border-white/[0.06] bg-[#0E121A] p-5 space-y-3">
+          <span className="text-[11px] font-medium tracking-[0.04em] text-[#6B7280] uppercase block">
+            Primary loss factors
           </span>
           <div className="space-y-3">
             {data.top_failure_causes.map((c, idx) => (
               <div key={idx} className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-semibold text-slate-900 dark:text-white">{c.failure_category}</span>
-                  <span className="font-mono text-slate-800 dark:text-slate-200 font-semibold">
+                  <span className="font-medium text-[#F5F6FA]">{c.failure_category}</span>
+                  <span className="text-[#9CA3B0] tabular-nums">
                     {formatCurrency(c.amount_lost)} ({c.percentage_share}%)
                   </span>
                 </div>
-                <div className="h-2 w-full bg-slate-200/60 dark:bg-white/[0.06] rounded-full overflow-hidden">
+                <div className="h-1.5 w-full bg-white/[0.06] rounded-full overflow-hidden">
                   <div
-                    className={`h-full rounded-full ${lossGradients[idx % lossGradients.length]} transition-all duration-500`}
-                    style={{ width: `${c.percentage_share}%` }}
+                    className="h-full rounded-full bg-[#3B82F6]"
+                    style={{
+                      width: `${c.percentage_share}%`,
+                      opacity: 1 - idx * 0.25,
+                    }}
                   />
                 </div>
-                <span className="text-[10px] text-slate-500 dark:text-slate-400 block font-mono">
+                <span className="text-[11px] text-[#6B7280] block">
                   Intervention: {c.primary_solution}
                 </span>
               </div>
@@ -185,33 +155,33 @@ export const ExecutiveMoneyStoryBanner: React.FC<ExecutiveMoneyStoryBannerProps>
           </div>
         </div>
 
-        {/* What should we do next? */}
-        <div className="rounded-xl border border-indigo-500/20 bg-indigo-500/[0.03] p-5 space-y-3 flex flex-col justify-between">
+        {/* Recommended Action */}
+        <div className="rounded-[12px] border border-white/[0.06] bg-[#0E121A] p-5 space-y-3 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between">
-              <span className="text-indigo-600 dark:text-indigo-400 font-mono font-semibold uppercase text-[10px] tracking-wider block">
-                RECOMMENDED ACTION
+              <span className="text-[11px] font-medium tracking-[0.04em] text-[#6B7280] uppercase block">
+                Recommended action
               </span>
-              <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-[9px] font-mono font-bold text-amber-600 dark:text-amber-400 uppercase border border-amber-500/20">
-                {data.action_urgency} URGENCY
+              <span className="h-5 px-2 rounded-full inline-flex items-center text-[10px] font-medium text-[#E8A33D] bg-[#E8A33D]/10 border border-[#E8A33D]/20">
+                {data.action_urgency} priority
               </span>
             </div>
 
-            <h4 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white mt-2">
+            <h4 className="text-[16px] font-semibold text-[#F5F6FA] mt-2">
               {data.primary_recommended_action}
             </h4>
-            <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
+            <p className="text-[13px] text-[#9CA3B0] mt-1 leading-relaxed">
               Addressing Gateway Alpha degradation via dynamic routing will protect an estimated{' '}
-              <strong className="text-emerald-600 dark:text-emerald-400 font-mono">
+              <strong className="text-[#F5F6FA] tabular-nums">
                 {formatCurrency(data.action_expected_yield)}/hour
               </strong>{' '}
               with zero merchant operational disruption.
             </p>
           </div>
 
-          <div className="pt-3 border-t border-slate-200/60 dark:border-white/[0.06] flex items-center justify-between">
-            <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
-              Expected Yield: <strong className="text-emerald-600 dark:text-emerald-400 font-mono">+{formatCurrency(data.action_expected_yield)}/hr</strong>
+          <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between">
+            <span className="text-xs text-[#6B7280]">
+              Expected yield: <strong className="text-[#10B981] tabular-nums">+{formatCurrency(data.action_expected_yield)}/hr</strong>
             </span>
             {onNavigateToRecommendations && (
               <Button
@@ -219,7 +189,7 @@ export const ExecutiveMoneyStoryBanner: React.FC<ExecutiveMoneyStoryBannerProps>
                 variant="primary"
                 onClick={onNavigateToRecommendations}
               >
-                Execute Intervention
+                Execute intervention
               </Button>
             )}
           </div>

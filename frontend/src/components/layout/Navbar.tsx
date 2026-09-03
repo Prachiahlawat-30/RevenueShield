@@ -60,14 +60,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   const currentMeta = pageMetaMap[currentTab] || { title: 'Payment Operations', subtitle: 'Autonomous revenue protection console' };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-200/80 dark:border-white/[0.08] bg-[#F7F8FA]/90 dark:bg-[#090D16]/95 px-5 md:px-6 backdrop-blur-2xl transition-colors">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-white/[0.06] bg-[#0B0F17] px-5 md:px-6 transition-colors">
       {/* Left: Title & Contextual Subtitle */}
       <div className="flex items-center gap-3 min-w-0">
         <div className="min-w-0">
-          <h1 className="text-sm font-bold text-slate-900 dark:text-white tracking-tight truncate">
+          <h1 className="text-sm font-semibold text-[#F5F6FA] tracking-tight truncate">
             {currentMeta.title}
           </h1>
-          <p className="hidden md:block text-[11px] text-slate-500 dark:text-slate-400 truncate max-w-lg">
+          <p className="hidden md:block text-[12px] text-[#9CA3B0] truncate max-w-lg">
             {currentMeta.subtitle}
           </p>
         </div>
@@ -77,11 +77,11 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="hidden lg:flex items-center justify-center flex-1 max-w-sm mx-4">
         <button
           onClick={onOpenSearch}
-          className="flex items-center gap-2.5 w-full rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.04] px-3.5 py-1.5 text-xs text-slate-500 dark:text-slate-400 hover:border-slate-300 dark:hover:border-white/20 transition-all duration-200 shadow-xs cursor-pointer"
+          className="flex items-center gap-2.5 w-full rounded-[10px] border border-white/[0.06] bg-[#12161F] hover:border-white/[0.12] px-3.5 py-1.5 text-xs text-[#9CA3B0] transition-colors duration-150 cursor-pointer"
         >
-          <Search className="h-3.5 w-3.5 shrink-0 text-slate-400" />
-          <span className="flex-1 text-left truncate text-[11px]">Search failures, customers, policies...</span>
-          <kbd className="inline-flex items-center rounded-md border border-slate-200 dark:border-white/10 bg-slate-100/80 dark:bg-white/10 px-1.5 py-0.2 text-[10px] font-mono text-slate-400 dark:text-slate-300">
+          <Search className="h-3.5 w-3.5 shrink-0 text-[#6B7280]" />
+          <span className="flex-1 text-left truncate text-[12px]">Search failures, customers, policies...</span>
+          <kbd className="inline-flex items-center rounded border border-white/[0.08] bg-white/[0.04] px-1.5 py-0.2 text-[10px] font-mono text-[#6B7280]">
             ⌘K
           </kbd>
         </button>
@@ -94,20 +94,20 @@ export const Navbar: React.FC<NavbarProps> = ({
           onClick={onSeedData}
           disabled={isSeeding}
           title="Reset and seed realistic test scenarios"
-          className="hidden sm:flex items-center gap-1.5 rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.04] px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-white/[0.08] hover:-translate-y-[1px] transition-all disabled:opacity-50 cursor-pointer shadow-xs"
+          className="hidden sm:flex items-center gap-1.5 rounded-[10px] border border-white/[0.08] bg-[#171C28] hover:bg-[#1C2333] px-3 py-1.5 text-xs font-medium text-[#F5F6FA] transition-colors disabled:opacity-50 cursor-pointer shadow-sm"
         >
           {isSeeding ? (
-            <RefreshCw className="h-3.5 w-3.5 animate-spin text-slate-700 dark:text-slate-300" />
+            <RefreshCw className="h-3.5 w-3.5 animate-spin text-[#9CA3B0]" />
           ) : (
-            <Database className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" />
+            <Database className="h-3.5 w-3.5 text-[#9CA3B0]" />
           )}
           <span>{isSeeding ? 'Seeding...' : 'Seed Data'}</span>
         </button>
 
-        {/* Primary Action Button */}
+        {/* Primary Action Button - Clean Brand Blue */}
         <button
           onClick={onOpenBatchRunner}
-          className="flex items-center gap-1.5 rounded-xl bg-[#111827] hover:bg-[#1f2937] dark:bg-white dark:text-[#111827] dark:hover:bg-slate-100 text-white px-3.5 py-1.5 text-xs font-semibold shadow-xs hover:-translate-y-[1px] transition-all cursor-pointer"
+          className="flex items-center gap-1.5 rounded-[10px] bg-[#3B82F6] hover:bg-[#2563EB] text-white px-3.5 py-1.5 text-xs font-medium shadow-sm transition-colors cursor-pointer"
         >
           <Play className="h-3.5 w-3.5 fill-current" />
           <span>Batch Recovery</span>

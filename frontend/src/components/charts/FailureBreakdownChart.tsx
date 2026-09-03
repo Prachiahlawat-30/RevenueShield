@@ -11,14 +11,35 @@ import {
 } from 'recharts';
 import { FailureTypeBreakdown } from '../../types';
 import { formatCurrency, getFailureTypeLabel } from '../../utils/formatters';
-import { useTheme } from '../../context/ThemeContext';
+import { BarChart2 } from 'lucide-react';
 
 interface FailureBreakdownChartProps {
   data: FailureTypeBreakdown[];
 }
 
 export const FailureBreakdownChart: React.FC<FailureBreakdownChartProps> = ({ data }) => {
-  const { isDark } = useTheme();
+  const hasData =
+    data &&
+    data.length > 0 &&
+    data.some(
+      (d) =>
+        (typeof d.amount_at_risk === 'number' && d.amount_at_risk > 0) ||
+        (typeof d.amount_recovered === 'number' && d.amount_recovered > 0)
+    );
+
+  if (!hasData) {
+    return (
+      <div className="h-64 w-full flex flex-col items-center justify-center text-center p-6 border border-dashed border-white/[0.08] rounded-[12px]">
+        <div className="w-10 h-10 rounded-full bg-white/[0.04] flex items-center justify-center text-[#6B7280] mb-3">
+          <BarChart2 className="w-5 h-5" />
+        </div>
+        <p className="text-xs font-medium text-[#F5F6FA]">No failure records yet</p>
+        <p className="text-[11px] text-[#6B7280] mt-1 max-w-xs">
+          Failure causes will populate as payment events are diagnosed.
+        </p>
+      </div>
+    );
+  }
 
   const chartData = data.map((item) => ({
     name: getFailureTypeLabel(item.failure_type).split(' ')[0], // short label
@@ -31,24 +52,24 @@ export const FailureBreakdownChart: React.FC<FailureBreakdownChartProps> = ({ da
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/95 dark:bg-[#0E131F]/95 backdrop-blur-xl p-3.5 shadow-glass-3 text-xs space-y-2">
-          <p className="font-semibold text-slate-900 dark:text-white font-mono">{label}</p>
-          <div className="space-y-1.5 font-mono text-[11px]">
-            <div className="flex items-center justify-between gap-5">
-              <span className="flex items-center gap-1.5 text-amber-500">
-                <span className="w-2 h-2 rounded-full bg-amber-500" />
-                <span>At Risk:</span>
+        <div className="rounded-[12px] border border-white/[0.08] bg-[#171C28] p-3 shadow-fintech-elevated text-xs space-y-1.5 min-w-[160px]">
+          <p className="font-medium text-[#F5F6FA] pb-1 border-b border-white/[0.06]">{label}</p>
+          <div className="space-y-1 text-xs">
+            <div className="flex items-center justify-between gap-4">
+              <span className="flex items-center gap-1.5 text-[#F0625A]">
+                <span className="w-2 h-2 rounded-full bg-[#F0625A]" />
+                <span>At risk:</span>
               </span>
-              <span className="font-bold text-slate-800 dark:text-slate-200">
+              <span className="font-semibold text-[#F5F6FA] tabular-nums">
                 {formatCurrency(payload[0]?.value)}
               </span>
             </div>
-            <div className="flex items-center justify-between gap-5">
-              <span className="flex items-center gap-1.5 text-emerald-500">
-                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+            <div className="flex items-center justify-between gap-4">
+              <span className="flex items-center gap-1.5 text-[#3B82F6]">
+                <span className="w-2 h-2 rounded-full bg-[#3B82F6]" />
                 <span>Recovered:</span>
               </span>
-              <strong className="font-bold text-emerald-600 dark:text-emerald-400">
+              <strong className="font-semibold text-[#3B82F6] tabular-nums">
                 {formatCurrency(payload[1]?.value)}
               </strong>
             </div>
@@ -62,48 +83,46 @@ export const FailureBreakdownChart: React.FC<FailureBreakdownChartProps> = ({ da
   return (
     <div className="h-64 w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
+        <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
           <CartesianGrid
             strokeDasharray="3 3"
-            stroke={isDark ? 'rgba(255,255,255,0.06)' : 'rgba(15,23,42,0.06)'}
+            stroke="rgba(255, 255, 255, 0.05)"
             vertical={false}
           />
           <XAxis
             dataKey="name"
-            stroke={isDark ? 'rgba(255,255,255,0.45)' : 'rgba(15,23,42,0.5)'}
-            fontSize={10}
-            fontFamily="monospace"
+            stroke="#6B7280"
+            fontSize={11}
             tickLine={false}
             axisLine={false}
           />
           <YAxis
-            stroke={isDark ? 'rgba(255,255,255,0.45)' : 'rgba(15,23,42,0.5)'}
-            fontSize={10}
-            fontFamily="monospace"
+            stroke="#6B7280"
+            fontSize={11}
             tickLine={false}
             axisLine={false}
-            tickFormatter={(val) => `₹${val}`}
+            tickFormatter={(val) => `₹${val >= 1000 ? `${(val / 1000).toFixed(0)}k` : val}`}
           />
           <Tooltip content={<CustomTooltip />} />
           <Legend
             wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }}
             formatter={(value) => (
-              <span className={isDark ? 'text-slate-300 font-mono' : 'text-slate-700 font-mono'}>
-                {value === 'atRisk' ? '● Amount at Risk (Amber)' : '● Amount Recovered (Emerald)'}
+              <span className="text-[#9CA3B0]">
+                {value === 'atRisk' ? 'At Risk' : 'Recovered'}
               </span>
             )}
           />
           <Bar
             dataKey="atRisk"
-            fill="#F59E0B"
-            radius={[5, 5, 0, 0]}
-            maxBarSize={28}
+            fill="#F0625A"
+            radius={[4, 4, 0, 0]}
+            maxBarSize={22}
           />
           <Bar
             dataKey="recovered"
-            fill="#10B981"
-            radius={[5, 5, 0, 0]}
-            maxBarSize={28}
+            fill="#3B82F6"
+            radius={[4, 4, 0, 0]}
+            maxBarSize={22}
           />
         </BarChart>
       </ResponsiveContainer>
