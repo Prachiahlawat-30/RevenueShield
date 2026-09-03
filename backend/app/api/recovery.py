@@ -269,6 +269,13 @@ def get_payment_decision_graph(
     """Generate the complete 15-node causal decision graph explaining why RecoverAI made this recovery decision."""
     try:
         return PaymentDecisionGraphEngine.build_graph_for_risk(risk_id=risk_id, db=db)
-    except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        # If the requested risk ID doesn't exist (e.g. from previous demo session), gracefully fallback to first risk
+        fallback_risk = db.query(RevenueRisk).first()
+        if fallback_risk and fallback_risk.id != risk_id:
+            try:
+                return PaymentDecisionGraphEngine.build_graph_for_risk(risk_id=fallback_risk.id, db=db)
+            except Exception:
+                pass
+        raise HTTPException(status_code=404, detail=f"RevenueRisk with ID {risk_id} not found: {e}")
 

@@ -146,10 +146,11 @@ class PaymentDecisionGraphEngine:
         # -------------------------------------------------------------
         latest_attempt = past_attempts[-1] if past_attempts else None
         if latest_attempt:
-            exec_status = latest_attempt.execution_status.upper()
-            exec_channel = latest_attempt.channel_used or "ISO_8583_GATEWAY"
-            exec_msg = latest_attempt.gateway_message or "Execution processed."
-            raw_code = latest_attempt.raw_gateway_code or "00"
+            exec_status = getattr(latest_attempt, "execution_status", "PENDING").upper()
+            exec_channel = getattr(latest_attempt, "execution_channel", None) or getattr(latest_attempt, "channel_used", None) or "ISO_8583_GATEWAY"
+            exec_details = getattr(latest_attempt, "outcome_details", None) or {}
+            exec_msg = exec_details.get("message") or getattr(latest_attempt, "gateway_message", None) or "Execution processed."
+            raw_code = str(exec_details.get("raw_code") or getattr(latest_attempt, "raw_gateway_code", None) or "00")
         elif policy_verdict == "ALLOW":
             exec_status = "PENDING_EXECUTION"
             exec_channel = "ISO_8583_GATEWAY"

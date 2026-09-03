@@ -50,15 +50,24 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
       try {
         setLoading(true);
         const [m, c, risksData, roi] = await Promise.all([
-          getDashboardMetrics(),
-          getDashboardCharts(),
-          getRevenueRisks({ page: 1, page_size: 5 }),
+          getDashboardMetrics().catch((err) => {
+            console.warn('Dashboard metrics fetch warning:', err);
+            return null;
+          }),
+          getDashboardCharts().catch((err) => {
+            console.warn('Dashboard charts fetch warning:', err);
+            return null;
+          }),
+          getRevenueRisks({ page: 1, page_size: 5 }).catch((err) => {
+            console.warn('Revenue risks fetch warning:', err);
+            return { items: [], total: 0, page: 1, page_size: 5, total_pages: 1 };
+          }),
           getRecoveryROI().catch(() => null),
         ]);
-        setMetrics(m);
-        setCharts(c);
-        setRecentRisks(risksData.items);
-        setRoiData(roi);
+        if (m) setMetrics(m);
+        if (c) setCharts(c);
+        if (risksData?.items) setRecentRisks(risksData.items);
+        if (roi) setRoiData(roi);
       } catch (err) {
         console.error('Failed to load dashboard data:', err);
       } finally {
@@ -175,7 +184,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               Live stream
             </span>
           </div>
-          {charts && <RecoveryTrendChart data={charts.daily_trends} />}
+          <RecoveryTrendChart data={charts?.daily_trends} />
         </div>
 
         <div className="lg:col-span-4 rounded-[16px] border border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#12161F] p-6 shadow-sm dark:shadow-fintech-card transition-colors">
@@ -185,7 +194,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               <span className="text-[12px] text-slate-500 dark:text-[#9CA3B0]">By root-cause diagnosis</span>
             </div>
           </div>
-          {charts && <FailureBreakdownChart data={charts.failure_breakdown} />}
+          <FailureBreakdownChart data={charts?.failure_breakdown} />
         </div>
       </div>
 
