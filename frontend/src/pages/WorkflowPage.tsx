@@ -218,25 +218,25 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
       {/* Top Header & Scenario Case Selector */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-[11px] font-medium tracking-[0.04em] text-[#6B7280] uppercase">
+          <div className="flex items-center gap-2 text-[11px] font-medium tracking-[0.04em] text-slate-400 dark:text-[#6B7280] uppercase">
             <ShieldCheck className="h-3.5 w-3.5 text-[#3B82F6]" />
             <span>Autonomous Intelligence & State Progression</span>
           </div>
-          <h1 className="mt-1 text-[24px] sm:text-[28px] font-semibold text-[#F5F6FA] tracking-tight">
+          <h1 className="mt-1 text-[24px] sm:text-[28px] font-semibold text-slate-900 dark:text-[#F5F6FA] tracking-tight">
             Recovery Workflow & Decisioning
           </h1>
-          <p className="mt-1 text-xs text-[#9CA3B0]">
+          <p className="mt-1 text-xs text-slate-600 dark:text-[#9CA3B0]">
             Recovery Engine: Executes only approved actions and records the result across payment gateways.
           </p>
         </div>
 
         {/* Case Switcher Dropdown */}
         <div className="flex items-center gap-2.5">
-          <span className="text-xs text-[#6B7280]">Case:</span>
+          <span className="text-xs text-slate-500 dark:text-[#6B7280]">Case:</span>
           <select
             value={selectedRiskId || ''}
             onChange={(e) => setSelectedRiskId(e.target.value)}
-            className="rounded-[10px] border border-white/[0.08] bg-[#12161F] px-3 py-1.5 text-xs font-medium text-[#F5F6FA] focus:border-[#3B82F6]/50 focus:outline-none max-w-xs shadow-sm cursor-pointer"
+            className="rounded-[10px] border border-slate-200 dark:border-white/[0.08] bg-slate-50 dark:bg-[#12161F] px-3 py-1.5 text-xs font-medium text-slate-900 dark:text-[#F5F6FA] focus:border-[#3B82F6]/50 focus:outline-none max-w-xs shadow-sm cursor-pointer"
           >
             {allRisks.map((r) => (
               <option key={r.id} value={r.id}>
@@ -248,18 +248,18 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
       </div>
 
       {/* View Mode Switcher */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-white/[0.06] pb-3">
+      <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 dark:border-white/[0.06] pb-3">
         <button
           onClick={() => setActiveView('graph')}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-[10px] text-xs font-medium transition-colors cursor-pointer ${
             activeView === 'graph'
               ? 'bg-[#3B82F6]/10 text-[#3B82F6] border border-[#3B82F6]/30'
-              : 'bg-[#12161F] text-[#9CA3B0] hover:text-[#F5F6FA] border border-white/[0.06]'
+              : 'bg-slate-50 dark:bg-[#12161F] text-slate-600 dark:text-[#9CA3B0] hover:text-slate-900 dark:hover:text-[#F5F6FA] border border-slate-200 dark:border-white/[0.06]'
           }`}
         >
           <Network className="w-3.5 h-3.5" />
           <span>Payment Decision Graph</span>
-          <span className="h-5 px-1.5 rounded-full inline-flex items-center text-[10px] font-medium bg-white/[0.05] text-[#9CA3B0] border border-white/[0.08]">
+          <span className="h-5 px-1.5 rounded-full inline-flex items-center text-[10px] font-medium bg-slate-100 dark:bg-white/[0.05] text-slate-600 dark:text-[#9CA3B0] border border-slate-200 dark:border-white/[0.08]">
             15 Nodes
           </span>
         </button>
@@ -269,12 +269,12 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-[10px] text-xs font-medium transition-colors cursor-pointer ${
             activeView === 'preauth'
               ? 'bg-[#3B82F6]/10 text-[#3B82F6] border border-[#3B82F6]/30'
-              : 'bg-[#12161F] text-[#9CA3B0] hover:text-[#F5F6FA] border border-white/[0.06]'
+              : 'bg-slate-50 dark:bg-[#12161F] text-slate-600 dark:text-[#9CA3B0] hover:text-slate-900 dark:hover:text-[#F5F6FA] border border-slate-200 dark:border-white/[0.06]'
           }`}
         >
           <Zap className="w-3.5 h-3.5" />
           <span>Adaptive Pre-Auth & Smart 3DS</span>
-          <span className="h-5 px-1.5 rounded-full inline-flex items-center text-[10px] font-medium bg-white/[0.05] text-[#9CA3B0] border border-white/[0.08]">
+          <span className="h-5 px-1.5 rounded-full inline-flex items-center text-[10px] font-medium bg-slate-100 dark:bg-white/[0.05] text-slate-600 dark:text-[#9CA3B0] border border-slate-200 dark:border-white/[0.08]">
             Pre-Payment
           </span>
         </button>
@@ -284,7 +284,7 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-[10px] text-xs font-medium transition-colors cursor-pointer ${
             activeView === 'stepper'
               ? 'bg-[#3B82F6]/10 text-[#3B82F6] border border-[#3B82F6]/30'
-              : 'bg-[#12161F] text-[#9CA3B0] hover:text-[#F5F6FA] border border-white/[0.06]'
+              : 'bg-slate-50 dark:bg-[#12161F] text-slate-600 dark:text-[#9CA3B0] hover:text-slate-900 dark:hover:text-[#F5F6FA] border border-slate-200 dark:border-white/[0.06]'
           }`}
         >
           <Play className="w-3.5 h-3.5" />
@@ -296,7 +296,7 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-[10px] text-xs font-medium transition-colors cursor-pointer ${
             activeView === 'timeline'
               ? 'bg-[#3B82F6]/10 text-[#3B82F6] border border-[#3B82F6]/30'
-              : 'bg-[#12161F] text-[#9CA3B0] hover:text-[#F5F6FA] border border-white/[0.06]'
+              : 'bg-slate-50 dark:bg-[#12161F] text-slate-600 dark:text-[#9CA3B0] hover:text-slate-900 dark:hover:text-[#F5F6FA] border border-slate-200 dark:border-white/[0.06]'
           }`}
         >
           <Layers className="w-3.5 h-3.5" />
@@ -329,7 +329,7 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
       {activeView === 'preauth' && (
         <div className="space-y-6">
           {loadingPreauth || !preauthDecision ? (
-            <div className="rounded-[16px] border border-white/[0.06] bg-[#12161F] p-12 text-center text-[#6B7280] animate-pulse">
+            <div className="rounded-[16px] border border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#12161F] p-12 text-center text-slate-400 dark:text-[#6B7280] animate-pulse">
               Computing optimal pre-authorization pathway & Smart 3DS tradeoff matrix...
             </div>
           ) : (
@@ -357,24 +357,24 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
           />
 
           {/* Stepper Action Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 rounded-[16px] border border-white/[0.06] bg-[#12161F] p-5 shadow-fintech-card">
+          <div className="flex flex-wrap items-center justify-between gap-4 rounded-[16px] border border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#12161F] p-5 shadow-sm dark:shadow-fintech-card transition-colors">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-white/[0.04] text-[#9CA3B0] border border-white/[0.06]">
+              <div className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-slate-100 dark:bg-white/[0.04] text-slate-600 dark:text-[#9CA3B0] border border-slate-200 dark:border-white/[0.06]">
                 <User className="h-4 w-4" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-[#F5F6FA]">{currentRisk.customer?.name}</span>
+                  <span className="text-sm font-semibold text-slate-900 dark:text-[#F5F6FA]">{currentRisk.customer?.name}</span>
                   <CustomerValueBadge customerId={currentRisk.customer_id} amount={currentRisk.amount_at_risk} />
                   <StatusBadge status={currentRisk.status} size="sm" />
                 </div>
-                <p className="text-xs text-[#9CA3B0] mt-0.5">
+                <p className="text-xs text-slate-600 dark:text-[#9CA3B0] mt-0.5">
                   {getFailureTypeLabel(currentRisk.detected_failure_type)} • At Risk:{' '}
-                  <strong className="text-[#F0625A] tabular-nums font-semibold">{formatCurrency(currentRisk.amount_at_risk)}</strong> •
+                  <strong className="text-[#E11D48] dark:text-[#F0625A] tabular-nums font-semibold">{formatCurrency(currentRisk.amount_at_risk)}</strong> •
                   Recovered:{' '}
-                  <strong className="text-[#10B981] tabular-nums font-semibold">{formatCurrency(currentRisk.amount_recovered)}</strong> •
+                  <strong className="text-[#059669] dark:text-[#10B981] tabular-nums font-semibold">{formatCurrency(currentRisk.amount_recovered)}</strong> •
                   Attempts:{' '}
-                  <span className="font-semibold text-[#F5F6FA] tabular-nums">{currentRisk.attempt_count} / 3</span>
+                  <span className="font-semibold text-slate-900 dark:text-[#F5F6FA] tabular-nums">{currentRisk.attempt_count} / 3</span>
                 </p>
               </div>
             </div>

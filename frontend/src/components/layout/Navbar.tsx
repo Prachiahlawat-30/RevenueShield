@@ -60,14 +60,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   const currentMeta = pageMetaMap[currentTab] || { title: 'Payment Operations', subtitle: 'Autonomous revenue protection console' };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-white/[0.06] bg-[#0B0F17] px-5 md:px-6 transition-colors">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#0B0F17] px-5 md:px-6 transition-colors">
       {/* Left: Title & Contextual Subtitle */}
       <div className="flex items-center gap-3 min-w-0">
         <div className="min-w-0">
-          <h1 className="text-sm font-semibold text-[#F5F6FA] tracking-tight truncate">
+          <h1 className="text-sm font-semibold text-slate-900 dark:text-[#F5F6FA] tracking-tight truncate">
             {currentMeta.title}
           </h1>
-          <p className="hidden md:block text-[12px] text-[#9CA3B0] truncate max-w-lg">
+          <p className="hidden md:block text-[12px] text-slate-500 dark:text-[#9CA3B0] truncate max-w-lg">
             {currentMeta.subtitle}
           </p>
         </div>
@@ -77,11 +77,11 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="hidden lg:flex items-center justify-center flex-1 max-w-sm mx-4">
         <button
           onClick={onOpenSearch}
-          className="flex items-center gap-2.5 w-full rounded-[10px] border border-white/[0.06] bg-[#12161F] hover:border-white/[0.12] px-3.5 py-1.5 text-xs text-[#9CA3B0] transition-colors duration-150 cursor-pointer"
+          className="flex items-center gap-2.5 w-full rounded-[10px] border border-slate-200 dark:border-white/[0.06] bg-slate-50 dark:bg-[#12161F] hover:border-slate-300 dark:hover:border-white/[0.12] px-3.5 py-1.5 text-xs text-slate-500 dark:text-[#9CA3B0] transition-colors duration-150 cursor-pointer"
         >
-          <Search className="h-3.5 w-3.5 shrink-0 text-[#6B7280]" />
+          <Search className="h-3.5 w-3.5 shrink-0 text-slate-400 dark:text-[#6B7280]" />
           <span className="flex-1 text-left truncate text-[12px]">Search failures, customers, policies...</span>
-          <kbd className="inline-flex items-center rounded border border-white/[0.08] bg-white/[0.04] px-1.5 py-0.2 text-[10px] font-mono text-[#6B7280]">
+          <kbd className="inline-flex items-center rounded border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-white/[0.04] px-1.5 py-0.2 text-[10px] font-mono text-slate-500 dark:text-[#6B7280]">
             ⌘K
           </kbd>
         </button>
@@ -94,12 +94,12 @@ export const Navbar: React.FC<NavbarProps> = ({
           onClick={onSeedData}
           disabled={isSeeding}
           title="Reset and seed realistic test scenarios"
-          className="hidden sm:flex items-center gap-1.5 rounded-[10px] border border-white/[0.08] bg-[#171C28] hover:bg-[#1C2333] px-3 py-1.5 text-xs font-medium text-[#F5F6FA] transition-colors disabled:opacity-50 cursor-pointer shadow-sm"
+          className="hidden sm:flex items-center gap-1.5 rounded-[10px] border border-slate-200 dark:border-white/[0.08] bg-slate-100 hover:bg-slate-200 dark:bg-[#171C28] dark:hover:bg-[#1C2333] px-3 py-1.5 text-xs font-medium text-slate-800 dark:text-[#F5F6FA] transition-colors disabled:opacity-50 cursor-pointer shadow-sm"
         >
           {isSeeding ? (
-            <RefreshCw className="h-3.5 w-3.5 animate-spin text-[#9CA3B0]" />
+            <RefreshCw className="h-3.5 w-3.5 animate-spin text-slate-500 dark:text-[#9CA3B0]" />
           ) : (
-            <Database className="h-3.5 w-3.5 text-[#9CA3B0]" />
+            <Database className="h-3.5 w-3.5 text-slate-500 dark:text-[#9CA3B0]" />
           )}
           <span>{isSeeding ? 'Seeding...' : 'Seed Data'}</span>
         </button>
@@ -117,12 +117,12 @@ export const Navbar: React.FC<NavbarProps> = ({
         <button
           onClick={() => setTheme(isDark ? 'light' : 'dark')}
           title={`Switch to ${isDark ? 'Light' : 'Dark'} mode`}
-          className="flex h-8 w-8 items-center justify-center rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.04] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-white/[0.08] transition-all cursor-pointer shadow-xs"
+          className="flex h-8 w-8 items-center justify-center rounded-[10px] border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/[0.04] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/[0.08] transition-colors cursor-pointer shadow-sm"
         >
           {isDark ? (
             <Sun className="h-4 w-4 text-amber-400" />
           ) : (
-            <Moon className="h-4 w-4 text-slate-600" />
+            <Moon className="h-4 w-4 text-slate-700" />
           )}
         </button>
 
@@ -131,29 +131,29 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={() => setShowNotifications(!showNotifications)}
             title="System notifications"
-            className="relative flex h-8 w-8 items-center justify-center rounded-xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.04] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-white/[0.08] transition-all cursor-pointer shadow-xs"
+            className="relative flex h-8 w-8 items-center justify-center rounded-[10px] border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/[0.04] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/[0.08] transition-colors cursor-pointer shadow-sm"
           >
             <Bell className="h-4 w-4" />
-            <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-slate-900 dark:bg-white" />
+            <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-[#3B82F6]" />
           </button>
 
           {showNotifications && (
             <div
-              className="absolute right-0 mt-2 w-72 rounded-2xl border border-slate-200 dark:border-white/10 bg-white/95 dark:bg-[oklch(0.24_0.008_223.9)]/95 backdrop-blur-xl p-4 shadow-glass-2 z-50 text-xs animate-fintech-fade space-y-2.5"
+              className="absolute right-0 mt-2 w-72 rounded-[14px] border border-slate-200 dark:border-white/10 bg-white dark:bg-[#171C28] p-4 shadow-lg z-50 text-xs space-y-2.5"
               onClick={() => setShowNotifications(false)}
             >
               <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/[0.08] pb-2">
-                <span className="font-semibold text-slate-900 dark:text-white">Audit Notifications</span>
-                <span className="text-[10px] text-slate-500 font-mono">2 New</span>
+                <span className="font-semibold text-slate-900 dark:text-[#F5F6FA]">Audit Notifications</span>
+                <span className="text-[10px] text-slate-500 dark:text-[#6B7280]">2 New</span>
               </div>
               <div className="space-y-2">
-                <div className="rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-100 dark:border-white/[0.05] p-2.5 text-[11px] text-slate-600 dark:text-slate-300">
-                  <strong className="text-slate-900 dark:text-white block font-medium">Policy v2 Evaluated</strong>
-                  <span className="text-slate-500 dark:text-slate-400">Policy Optimizer discovered 2 candidate improvements.</span>
+                <div className="rounded-[10px] bg-slate-50 dark:bg-white/[0.03] border border-slate-100 dark:border-white/[0.05] p-2.5 text-[11px] text-slate-600 dark:text-[#9CA3B0]">
+                  <strong className="text-slate-900 dark:text-[#F5F6FA] block font-medium">Policy v2 Evaluated</strong>
+                  <span className="text-slate-500 dark:text-[#6B7280]">Policy Optimizer discovered 2 candidate improvements.</span>
                 </div>
-                <div className="rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-100 dark:border-white/[0.05] p-2.5 text-[11px] text-slate-600 dark:text-slate-300">
-                  <strong className="text-slate-900 dark:text-white block font-medium">Gateway Health Rebalanced</strong>
-                  <span className="text-slate-500 dark:text-slate-400">Gateway B success rate stabilized at 96.2%.</span>
+                <div className="rounded-[10px] bg-slate-50 dark:bg-white/[0.03] border border-slate-100 dark:border-white/[0.05] p-2.5 text-[11px] text-slate-600 dark:text-[#9CA3B0]">
+                  <strong className="text-slate-900 dark:text-[#F5F6FA] block font-medium">Gateway Health Rebalanced</strong>
+                  <span className="text-slate-500 dark:text-[#6B7280]">Gateway B success rate stabilized at 96.2%.</span>
                 </div>
               </div>
             </div>
@@ -161,10 +161,10 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* User Profile Avatar */}
-        <div className="flex items-center pl-1 sm:pl-2 border-l border-slate-200/80 dark:border-white/[0.08]">
+        <div className="flex items-center pl-1 sm:pl-2 border-l border-slate-200 dark:border-white/[0.08]">
           <div
             title="Payment Operations Lead"
-            className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-900/[0.05] dark:bg-white/10 text-slate-800 dark:text-slate-200 font-semibold border border-slate-200/80 dark:border-white/10 font-mono text-xs cursor-default"
+            className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-slate-200 font-semibold border border-slate-200 dark:border-white/10 text-xs cursor-default"
           >
             OP
           </div>

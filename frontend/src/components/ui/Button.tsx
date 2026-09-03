@@ -33,15 +33,15 @@ export const Button: React.FC<ButtonProps> = ({
     primary:
       'bg-[#3B82F6] hover:bg-[#2563EB] text-white border border-transparent shadow-sm',
     secondary:
-      'bg-[#171C28] hover:bg-[#1C2333] text-[#F5F6FA] border border-white/[0.08] shadow-sm',
+      'bg-slate-100 hover:bg-slate-200 text-slate-900 border border-slate-200 dark:bg-[#171C28] dark:hover:bg-[#1C2333] dark:text-[#F5F6FA] dark:border-white/[0.08] shadow-sm',
     outline:
-      'bg-transparent hover:bg-white/[0.04] text-[#F5F6FA] border border-white/[0.08]',
+      'bg-transparent hover:bg-slate-100 text-slate-800 border border-slate-200 dark:hover:bg-white/[0.04] dark:text-[#F5F6FA] dark:border-white/[0.08]',
     ghost:
-      'bg-transparent hover:bg-white/[0.04] text-[#9CA3B0] hover:text-[#F5F6FA] border border-transparent',
+      'bg-transparent hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-transparent dark:hover:bg-white/[0.04] dark:text-[#9CA3B0] dark:hover:text-[#F5F6FA]',
     danger:
-      'bg-[#F0625A] hover:bg-[#E0534B] text-white border border-transparent shadow-sm',
+      'bg-[#E11D48] hover:bg-[#BE123C] text-white border border-transparent shadow-sm',
     success:
-      'bg-[#10B981] hover:bg-[#059669] text-white border border-transparent shadow-sm',
+      'bg-[#059669] hover:bg-[#047857] text-white border border-transparent shadow-sm',
   };
 
   return (

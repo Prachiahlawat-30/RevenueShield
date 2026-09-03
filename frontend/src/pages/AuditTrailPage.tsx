@@ -8,7 +8,6 @@ import {
   ChevronRight,
   List,
   Clock,
-  ArrowRight,
   ShieldCheck,
   CheckCircle2,
   AlertTriangle,
@@ -111,27 +110,27 @@ export const AuditTrailPage: React.FC = () => {
       {/* Top Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-[11px] font-medium tracking-[0.04em] text-[#6B7280] uppercase">
+          <div className="flex items-center gap-2 text-[11px] font-medium tracking-[0.04em] text-slate-400 dark:text-[#6B7280] uppercase">
             <ScrollText className="h-3.5 w-3.5 text-[#3B82F6]" />
             <span>Cryptographic verification ledger</span>
           </div>
-          <h1 className="mt-1 text-[24px] sm:text-[28px] font-semibold text-[#F5F6FA] tracking-tight">
+          <h1 className="mt-1 text-[24px] sm:text-[28px] font-semibold text-slate-900 dark:text-[#F5F6FA] tracking-tight">
             Immutable Audit Trail & Replay
           </h1>
-          <p className="mt-1 text-xs text-[#9CA3B0]">
+          <p className="mt-1 text-xs text-slate-600 dark:text-[#9CA3B0]">
             Deterministic chain of custody logging every AI diagnosis, policy check, and gateway execution ({total} events recorded).
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           {/* View Mode Toggle */}
-          <div className="flex items-center rounded-[10px] border border-white/[0.06] bg-[#12161F] p-1">
+          <div className="flex items-center rounded-[10px] border border-slate-200 dark:border-white/[0.06] bg-slate-100 dark:bg-[#12161F] p-1">
             <button
               onClick={() => setViewMode('timeline')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] text-xs font-medium transition-colors cursor-pointer ${
                 viewMode === 'timeline'
                   ? 'bg-[#3B82F6] text-white'
-                  : 'text-[#9CA3B0] hover:text-[#F5F6FA]'
+                  : 'text-slate-600 dark:text-[#9CA3B0] hover:text-slate-900 dark:hover:text-[#F5F6FA]'
               }`}
             >
               <Clock className="w-3.5 h-3.5" />
@@ -142,7 +141,7 @@ export const AuditTrailPage: React.FC = () => {
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] text-xs font-medium transition-colors cursor-pointer ${
                 viewMode === 'table'
                   ? 'bg-[#3B82F6] text-white'
-                  : 'text-[#9CA3B0] hover:text-[#F5F6FA]'
+                  : 'text-slate-600 dark:text-[#9CA3B0] hover:text-slate-900 dark:hover:text-[#F5F6FA]'
               }`}
             >
               <List className="w-3.5 h-3.5" />
@@ -163,15 +162,15 @@ export const AuditTrailPage: React.FC = () => {
       </div>
 
       {/* Filters Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-[14px] border border-white/[0.06] bg-[#12161F] p-4 shadow-fintech-card">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-[14px] border border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#12161F] p-4 shadow-sm dark:shadow-fintech-card transition-colors">
         <form onSubmit={handleSearchSubmit} className="relative flex-1 max-w-md">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B7280]" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-[#6B7280]" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search diagnosis summary or policy decision..."
-            className="w-full rounded-[10px] border border-white/[0.08] bg-[#0E121A] pl-10 pr-4 py-2 text-xs text-[#F5F6FA] placeholder-[#6B7280] focus:outline-none focus:border-[#3B82F6]/50 transition-colors"
+            className="w-full rounded-[10px] border border-slate-200 dark:border-white/[0.08] bg-slate-50 dark:bg-[#0E121A] pl-10 pr-4 py-2 text-xs text-slate-900 dark:text-[#F5F6FA] placeholder-slate-400 dark:placeholder-[#6B7280] focus:outline-none focus:border-[#3B82F6]/50 transition-colors"
           />
         </form>
 
@@ -183,7 +182,7 @@ export const AuditTrailPage: React.FC = () => {
               setActorFilter(e.target.value);
               setPage(1);
             }}
-            className="rounded-[10px] border border-white/[0.08] bg-[#0E121A] px-3 py-2 text-xs text-[#F5F6FA] focus:outline-none cursor-pointer"
+            className="rounded-[10px] border border-slate-200 dark:border-white/[0.08] bg-slate-50 dark:bg-[#0E121A] px-3 py-2 text-xs text-slate-800 dark:text-[#F5F6FA] focus:outline-none cursor-pointer"
           >
             <option value="all">All Actors</option>
             <option value="diagnosis_engine">Diagnosis Engine</option>
@@ -200,7 +199,7 @@ export const AuditTrailPage: React.FC = () => {
               setStepFilter(e.target.value);
               setPage(1);
             }}
-            className="rounded-[10px] border border-white/[0.08] bg-[#0E121A] px-3 py-2 text-xs text-[#F5F6FA] focus:outline-none cursor-pointer"
+            className="rounded-[10px] border border-slate-200 dark:border-white/[0.08] bg-slate-50 dark:bg-[#0E121A] px-3 py-2 text-xs text-slate-800 dark:text-[#F5F6FA] focus:outline-none cursor-pointer"
           >
             <option value="all">All Pipeline Stages</option>
             <option value="DETECTED">DETECTED</option>
@@ -215,7 +214,7 @@ export const AuditTrailPage: React.FC = () => {
 
       {/* VIEW 1: Financial Event Timeline View */}
       {viewMode === 'timeline' && (
-        <div className="rounded-[16px] border border-white/[0.06] bg-[#12161F] p-6 sm:p-8 shadow-fintech-card">
+        <div className="rounded-[16px] border border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#12161F] p-6 sm:p-8 shadow-sm dark:shadow-fintech-card transition-colors">
           {isLoading ? (
             <div className="p-8">
               <TableSkeleton rows={6} cols={4} />
@@ -226,7 +225,7 @@ export const AuditTrailPage: React.FC = () => {
               description="No events matched the selected filter criteria."
             />
           ) : (
-            <div className="relative pl-6 sm:pl-8 border-l border-white/[0.08] space-y-6">
+            <div className="relative pl-6 sm:pl-8 border-l border-slate-200 dark:border-white/[0.08] space-y-6">
               {logs.map((log) => {
                 return (
                   <div
@@ -235,20 +234,20 @@ export const AuditTrailPage: React.FC = () => {
                     className="relative group cursor-pointer"
                   >
                     {/* Subtle dot on timeline in brand blue */}
-                    <span className="absolute -left-[31px] sm:-left-[39px] top-4 w-3.5 h-3.5 rounded-full border-2 border-[#12161F] bg-[#3B82F6] transition-transform" />
+                    <span className="absolute -left-[31px] sm:-left-[39px] top-4 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-[#12161F] bg-[#3B82F6] transition-transform" />
 
                     {/* Event Card */}
-                    <div className="rounded-[12px] border border-white/[0.06] bg-[#0E121A] p-4 sm:p-5 transition-colors hover:border-white/[0.12]">
-                      <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-white/[0.04]">
+                    <div className="rounded-[12px] border border-slate-200 dark:border-white/[0.06] bg-slate-50 dark:bg-[#0E121A] p-4 sm:p-5 transition-colors hover:border-slate-300 dark:hover:border-white/[0.12]">
+                      <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-200/60 dark:border-white/[0.04]">
                         <div className="flex items-center gap-2.5">
-                          <span className="text-xs font-semibold text-[#F5F6FA] tabular-nums">
+                          <span className="text-xs font-semibold text-slate-900 dark:text-[#F5F6FA] tabular-nums">
                             {formatTimeOnly(log.created_at)}
                           </span>
-                          <span className="text-[#6B7280]">•</span>
-                          <span className="text-xs font-medium text-[#9CA3B0]">
+                          <span className="text-slate-400 dark:text-[#6B7280]">•</span>
+                          <span className="text-xs font-medium text-slate-700 dark:text-[#9CA3B0]">
                             {formatActorLabel(log.actor)}
                           </span>
-                          <span className="h-4.5 px-1.5 rounded-full text-[10px] font-medium bg-white/[0.05] text-[#9CA3B0] border border-white/[0.08]">
+                          <span className="h-4.5 px-1.5 rounded-full text-[10px] font-medium bg-slate-100 dark:bg-white/[0.05] text-slate-600 dark:text-[#9CA3B0] border border-slate-200 dark:border-white/[0.08]">
                             {log.step_name}
                           </span>
                         </div>
@@ -258,25 +257,25 @@ export const AuditTrailPage: React.FC = () => {
                             <span
                               className={`h-5 px-2 rounded-full text-[10px] font-medium border inline-flex items-center ${
                                 log.policy_decision.includes('APPROVED') || log.policy_decision === 'ALLOW'
-                                  ? 'border-[#10B981]/20 bg-[#10B981]/10 text-[#10B981]'
-                                  : 'border-[#F0625A]/20 bg-[#F0625A]/10 text-[#F0625A]'
+                                  ? 'border-[#10B981]/20 bg-[#10B981]/10 text-[#059669] dark:text-[#10B981]'
+                                  : 'border-[#F0625A]/20 bg-[#F0625A]/10 text-[#E11D48] dark:text-[#F0625A]'
                               }`}
                             >
                               {log.policy_decision}
                             </span>
                           )}
-                          <span className="text-[11px] text-[#6B7280] group-hover:text-[#F5F6FA] transition-colors">
+                          <span className="text-[11px] text-slate-400 dark:text-[#6B7280] group-hover:text-slate-900 dark:group-hover:text-[#F5F6FA] transition-colors">
                             Inspect ➔
                           </span>
                         </div>
                       </div>
 
                       <div className="pt-2.5 flex items-baseline justify-between gap-4">
-                        <p className="text-xs text-[#9CA3B0] leading-relaxed">
+                        <p className="text-xs text-slate-600 dark:text-[#9CA3B0] leading-relaxed">
                           {log.diagnosis_summary || log.recommended_action || log.executed_action || 'System event recorded in ledger'}
                         </p>
                         {log.result && (
-                          <span className="text-xs font-medium text-[#10B981] shrink-0">
+                          <span className="text-xs font-medium text-[#059669] dark:text-[#10B981] shrink-0">
                             {log.result}
                           </span>
                         )}
@@ -291,12 +290,12 @@ export const AuditTrailPage: React.FC = () => {
       )}
 
       {/* VIEW 2: Tabular Ledger View */}
-      {viewMode === 'table' && (
-        <div className="overflow-hidden rounded-[16px] border border-white/[0.06] bg-[#12161F] shadow-fintech-card">
+      <div className={viewMode === 'table' ? 'block' : 'hidden'}>
+        <div className="overflow-hidden rounded-[16px] border border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#12161F] shadow-sm dark:shadow-fintech-card transition-colors">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs fintech-table-sticky-header">
               <thead>
-                <tr className="border-b border-white/[0.06] text-[#6B7280] uppercase text-[11px] font-medium tracking-[0.04em]">
+                <tr className="border-b border-slate-200 dark:border-white/[0.06] text-slate-400 dark:text-[#6B7280] uppercase text-[11px] font-medium tracking-[0.04em]">
                   <th className="px-5 py-3.5 font-medium">Timestamp</th>
                   <th className="px-5 py-3.5 font-medium">Actor</th>
                   <th className="px-5 py-3.5 font-medium">Step</th>
@@ -306,7 +305,7 @@ export const AuditTrailPage: React.FC = () => {
                   <th className="px-5 py-3.5 text-right font-medium">Payload</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/[0.04]">
+              <tbody className="divide-y divide-slate-100 dark:divide-white/[0.04]">
                 {isLoading ? (
                   <tr>
                     <td colSpan={7} className="p-4">
@@ -324,19 +323,19 @@ export const AuditTrailPage: React.FC = () => {
                   </tr>
                 ) : (
                   logs.map((log) => (
-                    <tr key={log.id} className="hover:bg-white/[0.02] transition-colors">
-                      <td className="px-5 py-3.5 text-[#6B7280] text-xs whitespace-nowrap">
+                    <tr key={log.id} className="hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors">
+                      <td className="px-5 py-3.5 text-slate-500 dark:text-[#6B7280] text-xs whitespace-nowrap">
                         {formatDate(log.created_at)}
                       </td>
-                      <td className="px-5 py-3.5 font-medium text-[#F5F6FA] whitespace-nowrap">
+                      <td className="px-5 py-3.5 font-medium text-slate-900 dark:text-[#F5F6FA] whitespace-nowrap">
                         {formatActorLabel(log.actor)}
                       </td>
                       <td className="px-5 py-3.5">
-                        <span className="text-xs font-medium text-[#F5F6FA]">
+                        <span className="text-xs font-medium text-slate-900 dark:text-[#F5F6FA]">
                           {log.step_name}
                         </span>
                       </td>
-                      <td className="px-5 py-3.5 text-[#9CA3B0] max-w-xs truncate text-xs">
+                      <td className="px-5 py-3.5 text-slate-600 dark:text-[#9CA3B0] max-w-xs truncate text-xs">
                         {log.diagnosis_summary || log.recommended_action || '—'}
                       </td>
                       <td className="px-5 py-3.5 whitespace-nowrap">
@@ -344,25 +343,25 @@ export const AuditTrailPage: React.FC = () => {
                           <span
                             className={`h-5 px-2 rounded-full text-[10px] font-medium border inline-flex items-center ${
                               log.policy_decision.includes('APPROVED') || log.policy_decision === 'ALLOW'
-                                ? 'border-[#10B981]/20 bg-[#10B981]/10 text-[#10B981]'
-                                : 'border-[#F0625A]/20 bg-[#F0625A]/10 text-[#F0625A]'
+                                ? 'border-[#10B981]/20 bg-[#10B981]/10 text-[#059669] dark:text-[#10B981]'
+                                : 'border-[#F0625A]/20 bg-[#F0625A]/10 text-[#E11D48] dark:text-[#F0625A]'
                             }`}
                           >
                             {log.policy_decision}
                           </span>
                         ) : (
-                          <span className="text-[#6B7280]">—</span>
+                          <span className="text-slate-400 dark:text-[#6B7280]">—</span>
                         )}
                       </td>
-                      <td className="px-5 py-3.5 text-xs text-[#9CA3B0] whitespace-nowrap">
+                      <td className="px-5 py-3.5 text-xs text-slate-600 dark:text-[#9CA3B0] whitespace-nowrap">
                         {log.result || 'Logged'}
                       </td>
                       <td className="px-5 py-3.5 text-right whitespace-nowrap">
                         <button
                           onClick={() => setSelectedLog(log)}
-                          className="inline-flex items-center gap-1.5 rounded-[10px] border border-white/[0.08] bg-[#171C28] hover:bg-[#1C2333] px-3 py-1.5 text-xs font-medium text-[#F5F6FA] transition-colors cursor-pointer shadow-sm"
+                          className="inline-flex items-center gap-1.5 rounded-[10px] border border-slate-200 dark:border-white/[0.08] bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-[#171C28] dark:hover:bg-[#1C2333] dark:text-[#F5F6FA] px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer shadow-sm"
                         >
-                          <Eye className="w-3.5 h-3.5 text-[#9CA3B0]" />
+                          <Eye className="w-3.5 h-3.5 text-slate-500 dark:text-[#9CA3B0]" />
                           <span>View JSON</span>
                         </button>
                       </td>
@@ -375,10 +374,10 @@ export const AuditTrailPage: React.FC = () => {
 
           {/* Pagination Footer */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between border-t border-white/[0.06] px-6 py-3.5 text-xs text-[#6B7280]">
+            <div className="flex items-center justify-between border-t border-slate-200 dark:border-white/[0.06] px-6 py-3.5 text-xs text-slate-500 dark:text-[#6B7280]">
               <div>
-                Page <span className="font-medium text-[#F5F6FA]">{page}</span> of{' '}
-                <span className="font-medium text-[#F5F6FA]">{totalPages}</span> ({total} total ledger entries)
+                Page <span className="font-medium text-slate-900 dark:text-[#F5F6FA]">{page}</span> of{' '}
+                <span className="font-medium text-slate-900 dark:text-[#F5F6FA]">{totalPages}</span> ({total} total ledger entries)
               </div>
               <div className="flex items-center gap-2">
                 <Button
@@ -404,7 +403,7 @@ export const AuditTrailPage: React.FC = () => {
             </div>
           )}
         </div>
-      )}
+      </div>
 
       {/* JSON Payload Drawer for Audit Inspection */}
       {selectedLog && (

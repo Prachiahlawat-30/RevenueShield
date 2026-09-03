@@ -187,26 +187,26 @@ export const TransactionStateTimeline: React.FC<TransactionStateTimelineProps> =
 
   return (
     <div
-      className={`w-full rounded-[16px] border border-white/[0.06] bg-[#12161F] p-6 shadow-fintech-card space-y-5 ${className}`}
+      className={`w-full rounded-[16px] border border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#12161F] p-6 shadow-sm dark:shadow-fintech-card space-y-5 transition-colors ${className}`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-white/[0.06] pb-3.5">
+      <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/[0.06] pb-3.5">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-[10px] bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-[#9CA3B0]">
+          <div className="w-8 h-8 rounded-[10px] bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.06] flex items-center justify-center text-slate-600 dark:text-[#9CA3B0]">
             <Layers className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-xs font-medium tracking-[0.04em] text-[#6B7280] uppercase">
+            <h3 className="text-xs font-medium tracking-[0.04em] text-slate-400 dark:text-[#6B7280] uppercase">
               State timeline
             </h3>
-            <p className="text-xs text-[#F5F6FA] font-medium truncate max-w-xs">
+            <p className="text-xs text-slate-900 dark:text-[#F5F6FA] font-medium truncate max-w-xs">
               TXN {risk?.transaction_id || risk?.id || 'Active Case'}
             </p>
           </div>
         </div>
 
         {risk?.customer?.name && (
-          <span className="h-5 px-2 rounded-full inline-flex items-center text-[10px] font-medium bg-white/[0.05] text-[#9CA3B0] border border-white/[0.08]">
+          <span className="h-5 px-2 rounded-full inline-flex items-center text-[10px] font-medium bg-slate-100 dark:bg-white/[0.05] text-slate-600 dark:text-[#9CA3B0] border border-slate-200 dark:border-white/[0.08]">
             {risk.customer.name}
           </span>
         )}
@@ -228,36 +228,36 @@ export const TransactionStateTimeline: React.FC<TransactionStateTimelineProps> =
               <div
                 className={`w-full text-center p-3.5 rounded-[12px] border transition-colors ${
                   isSuccess
-                    ? 'border-[#10B981]/20 bg-[#10B981]/[0.05]'
+                    ? 'border-[#10B981]/30 bg-[#10B981]/[0.05]'
                     : isEscalatedStatus
-                    ? 'border-[#E8A33D]/20 bg-[#E8A33D]/[0.05]'
+                    ? 'border-[#E8A33D]/30 bg-[#E8A33D]/[0.05]'
                     : isBlocked
-                    ? 'border-[#F0625A]/20 bg-[#F0625A]/[0.05]'
+                    ? 'border-[#F0625A]/30 bg-[#F0625A]/[0.05]'
                     : isActive
-                    ? 'border-[#3B82F6]/30 bg-[#3B82F6]/[0.05]'
+                    ? 'border-[#3B82F6]/40 bg-[#3B82F6]/[0.05]'
                     : isCompleted
-                    ? 'border-white/[0.06] bg-[#0E121A]'
-                    : 'border-dashed border-white/[0.04] bg-[#0E121A]/40 opacity-50'
+                    ? 'border-slate-200 dark:border-white/[0.06] bg-slate-50 dark:bg-[#0E121A]'
+                    : 'border-dashed border-slate-200 dark:border-white/[0.04] bg-slate-50/50 dark:bg-[#0E121A]/40 opacity-50'
                 }`}
               >
                 {/* Status Header */}
                 <div className="flex items-center justify-center gap-1.5 text-xs font-medium tracking-[0.02em]">
                   {isActive && <Loader2 className="w-3.5 h-3.5 animate-spin text-[#3B82F6]" />}
-                  {isCompleted && <Check className="w-3.5 h-3.5 text-[#9CA3B0]" />}
-                  {isSuccess && <span className="text-[#10B981] font-bold">✓</span>}
+                  {isCompleted && <Check className="w-3.5 h-3.5 text-slate-600 dark:text-[#9CA3B0]" />}
+                  {isSuccess && <span className="text-[#059669] dark:text-[#10B981] font-bold">✓</span>}
                   <span
                     className={
                       isSuccess
-                        ? 'text-[#10B981] font-semibold text-xs'
+                        ? 'text-[#059669] dark:text-[#10B981] font-semibold text-xs'
                         : isBlocked
-                        ? 'text-[#F0625A] font-semibold text-xs'
+                        ? 'text-[#E11D48] dark:text-[#F0625A] font-semibold text-xs'
                         : isEscalatedStatus
-                        ? 'text-[#E8A33D] font-semibold text-xs'
+                        ? 'text-[#D97706] dark:text-[#E8A33D] font-semibold text-xs'
                         : isActive
                         ? 'text-[#3B82F6] font-semibold text-xs'
                         : isCompleted
-                        ? 'text-[#F5F6FA] font-medium text-xs'
-                        : 'text-[#6B7280] text-xs'
+                        ? 'text-slate-800 dark:text-[#F5F6FA] font-medium text-xs'
+                        : 'text-slate-400 dark:text-[#6B7280] text-xs'
                     }
                   >
                     {step.title}
@@ -268,21 +268,21 @@ export const TransactionStateTimeline: React.FC<TransactionStateTimelineProps> =
                 <div
                   className={`mt-1 tabular-nums ${
                     isSuccess
-                      ? 'text-2xl text-[#10B981] font-semibold'
+                      ? 'text-2xl text-[#059669] dark:text-[#10B981] font-semibold'
                       : isBlocked
-                      ? 'text-sm text-[#F0625A] font-medium'
+                      ? 'text-sm text-[#E11D48] dark:text-[#F0625A] font-medium'
                       : isEscalatedStatus
-                      ? 'text-sm text-[#E8A33D] font-medium'
+                      ? 'text-sm text-[#D97706] dark:text-[#E8A33D] font-medium'
                       : isCompleted
-                      ? 'text-sm text-[#F5F6FA] font-medium'
-                      : 'text-xs text-[#6B7280]'
+                      ? 'text-sm text-slate-900 dark:text-[#F5F6FA] font-medium'
+                      : 'text-xs text-slate-400 dark:text-[#6B7280]'
                   }`}
                 >
                   {step.subtitle}
                 </div>
 
                 {/* Micro Detail */}
-                <div className="text-[11px] text-[#6B7280] mt-0.5 truncate">
+                <div className="text-[11px] text-slate-500 dark:text-[#6B7280] mt-0.5 truncate">
                   {step.detail}
                 </div>
               </div>
@@ -291,7 +291,7 @@ export const TransactionStateTimeline: React.FC<TransactionStateTimelineProps> =
               {!isLast && (
                 <div
                   className={`flex justify-center py-0.5 transition-colors ${
-                    isCompleted ? 'text-[#6B7280]' : 'text-[#6B7280]/40'
+                    isCompleted ? 'text-slate-400 dark:text-[#6B7280]' : 'text-slate-300 dark:text-[#6B7280]/40'
                   }`}
                 >
                   <ArrowDown className="w-3.5 h-3.5" />
@@ -304,7 +304,7 @@ export const TransactionStateTimeline: React.FC<TransactionStateTimelineProps> =
 
       {/* Interactive Action Trigger */}
       {onExecuteStep && !isRecovered && isApproved && (
-        <div className="pt-3 border-t border-white/[0.06]">
+        <div className="pt-3 border-t border-slate-200 dark:border-white/[0.06]">
           <button
             type="button"
             onClick={onExecuteStep}

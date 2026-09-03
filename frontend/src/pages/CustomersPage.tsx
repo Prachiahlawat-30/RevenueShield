@@ -65,14 +65,14 @@ export const CustomersPage: React.FC = () => {
       {/* Top Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-[11px] font-medium tracking-[0.04em] text-[#6B7280] uppercase">
+          <div className="flex items-center gap-2 text-[11px] font-medium tracking-[0.04em] text-slate-400 dark:text-[#6B7280] uppercase">
             <Users className="h-3.5 w-3.5 text-[#3B82F6]" />
             <span>Account operations</span>
           </div>
-          <h1 className="mt-1 text-[24px] sm:text-[28px] font-semibold text-[#F5F6FA] tracking-tight">
+          <h1 className="mt-1 text-[24px] sm:text-[28px] font-semibold text-slate-900 dark:text-[#F5F6FA] tracking-tight">
             Customers 360 & Opt-Out Policies
           </h1>
-          <p className="mt-1 text-xs text-[#9CA3B0]">
+          <p className="mt-1 text-xs text-slate-600 dark:text-[#9CA3B0]">
             Manage customer payment credentials, risk profiles, and deterministic contact policies.
           </p>
         </div>
@@ -89,15 +89,15 @@ export const CustomersPage: React.FC = () => {
       </div>
 
       {/* Search Bar */}
-      <div className="rounded-[14px] border border-white/[0.06] bg-[#12161F] p-4 shadow-fintech-card">
+      <div className="rounded-[14px] border border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#12161F] p-4 shadow-sm dark:shadow-fintech-card transition-colors">
         <form onSubmit={handleSearch} className="relative max-w-md">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B7280]" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-[#6B7280]" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by customer name, email, or external ID..."
-            className="w-full rounded-[10px] border border-white/[0.08] bg-[#0E121A] pl-10 pr-4 py-2 text-xs text-[#F5F6FA] placeholder-[#6B7280] focus:outline-none focus:border-[#3B82F6]/50 transition-colors"
+            className="w-full rounded-[10px] border border-slate-200 dark:border-white/[0.08] bg-slate-50 dark:bg-[#0E121A] pl-10 pr-4 py-2 text-xs text-slate-900 dark:text-[#F5F6FA] placeholder-slate-400 dark:placeholder-[#6B7280] focus:outline-none focus:border-[#3B82F6]/50 transition-colors"
           />
         </form>
       </div>
@@ -105,11 +105,11 @@ export const CustomersPage: React.FC = () => {
       {/* Main Grid: Customer Table + Customer 360 Panel */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         {/* Customer Table */}
-        <div className="lg:col-span-7 rounded-[16px] border border-white/[0.06] bg-[#12161F] shadow-fintech-card overflow-hidden">
+        <div className="lg:col-span-7 rounded-[16px] border border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#12161F] shadow-sm dark:shadow-fintech-card overflow-hidden transition-colors">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs fintech-table-sticky-header">
               <thead>
-                <tr className="border-b border-white/[0.06] text-[#6B7280] uppercase text-[11px] font-medium tracking-[0.04em]">
+                <tr className="border-b border-slate-200 dark:border-white/[0.06] text-slate-400 dark:text-[#6B7280] uppercase text-[11px] font-medium tracking-[0.04em]">
                   <th className="px-5 py-3.5 font-medium">Customer</th>
                   <th className="px-5 py-3.5 font-medium">Payment method</th>
                   <th className="px-5 py-3.5 font-medium">Card expiry</th>
@@ -117,7 +117,7 @@ export const CustomersPage: React.FC = () => {
                   <th className="px-5 py-3.5 text-right font-medium">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/[0.04]">
+              <tbody className="divide-y divide-slate-100 dark:divide-white/[0.04]">
                 {isLoading ? (
                   <tr>
                     <td colSpan={5} className="p-4">
@@ -131,21 +131,21 @@ export const CustomersPage: React.FC = () => {
                       onClick={() => handleSelectCustomer(c.id)}
                       className={`cursor-pointer transition-colors ${
                         selectedCustomer?.id === c.id
-                          ? 'bg-[#3B82F6]/10'
-                          : 'hover:bg-white/[0.02]'
+                          ? 'bg-blue-50/70 dark:bg-[#3B82F6]/10'
+                          : 'hover:bg-slate-50 dark:hover:bg-white/[0.02]'
                       }`}
                     >
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-2">
-                          <span className="font-medium text-[#F5F6FA]">{c.name}</span>
+                          <span className="font-medium text-slate-900 dark:text-[#F5F6FA]">{c.name}</span>
                           <CustomerValueBadge customerId={c.id} />
                         </div>
-                        <div className="text-[11px] text-[#6B7280] mt-0.5">{c.email}</div>
+                        <div className="text-[11px] text-slate-500 dark:text-[#6B7280] mt-0.5">{c.email}</div>
                       </td>
-                      <td className="px-5 py-3.5 text-[#9CA3B0]">
+                      <td className="px-5 py-3.5 text-slate-600 dark:text-[#9CA3B0]">
                         •••• {c.card_last4 || '4242'}
                       </td>
-                      <td className="px-5 py-3.5 text-[#9CA3B0] tabular-nums">
+                      <td className="px-5 py-3.5 text-slate-600 dark:text-[#9CA3B0] tabular-nums">
                         {c.card_expiry || '12/28'}
                       </td>
                       <td className="px-5 py-3.5">
@@ -153,8 +153,8 @@ export const CustomersPage: React.FC = () => {
                           onClick={(e) => handleToggleOptOut(c, e)}
                           className={`h-5 px-2 rounded-full inline-flex items-center gap-1 text-[10px] font-medium border cursor-pointer ${
                             c.is_opted_out
-                              ? 'border-[#F0625A]/20 bg-[#F0625A]/10 text-[#F0625A]'
-                              : 'border-[#10B981]/20 bg-[#10B981]/10 text-[#10B981]'
+                              ? 'border-[#F0625A]/20 bg-[#F0625A]/10 text-[#E11D48] dark:text-[#F0625A]'
+                              : 'border-[#10B981]/20 bg-[#10B981]/10 text-[#059669] dark:text-[#10B981]'
                           }`}
                         >
                           {c.is_opted_out ? (
@@ -171,7 +171,7 @@ export const CustomersPage: React.FC = () => {
                         </button>
                       </td>
                       <td className="px-5 py-3.5 text-right">
-                        <span className="inline-flex items-center text-xs font-medium text-[#3B82F6] hover:text-[#2563EB]">
+                        <span className="inline-flex items-center text-xs font-medium text-[#2563EB] dark:text-[#3B82F6] hover:underline">
                           Inspect
                           <ChevronRight className="h-3.5 w-3.5 ml-0.5" />
                         </span>
@@ -185,15 +185,15 @@ export const CustomersPage: React.FC = () => {
         </div>
 
         {/* Customer 360 Side Dossier */}
-        <div className="lg:col-span-5 rounded-[16px] border border-white/[0.06] bg-[#12161F] p-5 shadow-fintech-card space-y-4">
+        <div className="lg:col-span-5 rounded-[16px] border border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#12161F] p-5 shadow-sm dark:shadow-fintech-card space-y-4 transition-colors">
           {selectedCustomer ? (
             <div className="space-y-4">
-              <div className="border-b border-white/[0.06] pb-3">
-                <span className="text-[11px] font-medium tracking-[0.04em] text-[#6B7280] uppercase">
+              <div className="border-b border-slate-200 dark:border-white/[0.06] pb-3">
+                <span className="text-[11px] font-medium tracking-[0.04em] text-slate-400 dark:text-[#6B7280] uppercase">
                   Account profile
                 </span>
-                <h3 className="text-[18px] font-semibold text-[#F5F6FA] mt-0.5">{selectedCustomer.name}</h3>
-                <span className="text-xs text-[#6B7280]">{selectedCustomer.external_id}</span>
+                <h3 className="text-[18px] font-semibold text-slate-900 dark:text-[#F5F6FA] mt-0.5">{selectedCustomer.name}</h3>
+                <span className="text-xs text-slate-500 dark:text-[#6B7280]">{selectedCustomer.external_id}</span>
               </div>
 
               {/* 360 Recovery Intelligence Profile */}
@@ -201,19 +201,19 @@ export const CustomersPage: React.FC = () => {
 
               {/* Credential Status */}
               <div className="space-y-1.5">
-                <span className="text-[11px] font-medium tracking-[0.04em] text-[#6B7280] uppercase">Payment method</span>
-                <div className="rounded-[10px] border border-white/[0.04] bg-[#0E121A] p-3.5 space-y-1.5 text-xs">
+                <span className="text-[11px] font-medium tracking-[0.04em] text-slate-400 dark:text-[#6B7280] uppercase">Payment method</span>
+                <div className="rounded-[10px] border border-slate-200 dark:border-white/[0.04] bg-slate-50 dark:bg-[#0E121A] p-3.5 space-y-1.5 text-xs">
                   <div className="flex justify-between">
-                    <span className="text-[#9CA3B0]">Card token</span>
-                    <span className="font-semibold text-[#F5F6FA]">•••• {selectedCustomer.card_last4 || '4242'}</span>
+                    <span className="text-slate-500 dark:text-[#9CA3B0]">Card token</span>
+                    <span className="font-semibold text-slate-900 dark:text-[#F5F6FA]">•••• {selectedCustomer.card_last4 || '4242'}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#9CA3B0]">Expiry date</span>
-                    <span className="text-[#F5F6FA] tabular-nums">{selectedCustomer.card_expiry || '12/28'}</span>
+                    <span className="text-slate-500 dark:text-[#9CA3B0]">Expiry date</span>
+                    <span className="text-slate-900 dark:text-[#F5F6FA] tabular-nums">{selectedCustomer.card_expiry || '12/28'}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#9CA3B0]">Method</span>
-                    <span className="font-medium text-[#F5F6FA]">{selectedCustomer.payment_method_type || 'Credit / Debit Card'}</span>
+                    <span className="text-slate-500 dark:text-[#9CA3B0]">Method</span>
+                    <span className="font-medium text-slate-900 dark:text-[#F5F6FA]">{selectedCustomer.payment_method_type || 'Credit / Debit Card'}</span>
                   </div>
                 </div>
               </div>
@@ -221,41 +221,41 @@ export const CustomersPage: React.FC = () => {
               {/* Transactions Timeline */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-medium tracking-[0.04em] text-[#6B7280] uppercase">Payment history timeline</span>
-                  <span className="text-[11px] text-[#6B7280]">{selectedCustomer.transactions.length} entries</span>
+                  <span className="text-[11px] font-medium tracking-[0.04em] text-slate-400 dark:text-[#6B7280] uppercase">Payment history timeline</span>
+                  <span className="text-[11px] text-slate-500 dark:text-[#6B7280]">{selectedCustomer.transactions.length} entries</span>
                 </div>
 
                 <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
                   {selectedCustomer.transactions.length === 0 ? (
-                    <p className="text-xs text-[#6B7280] py-3 text-center">No transaction records found.</p>
+                    <p className="text-xs text-slate-400 dark:text-[#6B7280] py-3 text-center">No transaction records found.</p>
                   ) : (
                     selectedCustomer.transactions.map((tx) => (
                       <div
                         key={tx.id}
-                        className="rounded-[10px] border border-white/[0.04] bg-[#0E121A] p-3 text-xs flex items-center justify-between"
+                        className="rounded-[10px] border border-slate-200 dark:border-white/[0.04] bg-slate-50 dark:bg-[#0E121A] p-3 text-xs flex items-center justify-between"
                       >
                         <div className="space-y-0.5">
                           <div className="flex items-center gap-2">
-                            <span className="font-semibold text-[#F5F6FA] tabular-nums">
+                            <span className="font-semibold text-slate-900 dark:text-[#F5F6FA] tabular-nums">
                               {formatCurrency(tx.amount)}
                             </span>
                             <span
                               className={`h-4.5 px-1.5 rounded-full inline-flex items-center text-[9px] font-medium uppercase border ${
                                 tx.status === 'succeeded'
-                                  ? 'bg-[#10B981]/10 text-[#10B981] border-[#10B981]/20'
-                                  : 'bg-[#F0625A]/10 text-[#F0625A] border-[#F0625A]/20'
+                                  ? 'bg-[#10B981]/10 text-[#059669] dark:text-[#10B981] border-[#10B981]/20'
+                                  : 'bg-[#F0625A]/10 text-[#E11D48] dark:text-[#F0625A] border-[#F0625A]/20'
                               }`}
                             >
                               {tx.status}
                             </span>
                           </div>
-                          <span className="text-[11px] text-[#6B7280] block">
+                          <span className="text-[11px] text-slate-400 dark:text-[#6B7280] block">
                             {formatDate(tx.created_at)}
                           </span>
                         </div>
 
                         {tx.failure_reason && (
-                          <span className="text-[11px] text-[#9CA3B0] max-w-[140px] truncate text-right">
+                          <span className="text-[11px] text-slate-600 dark:text-[#9CA3B0] max-w-[140px] truncate text-right">
                             {getFailureTypeLabel(tx.failure_reason)}
                           </span>
                         )}
@@ -266,7 +266,7 @@ export const CustomersPage: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="flex h-64 items-center justify-center text-center text-[#6B7280] text-xs">
+            <div className="flex h-64 items-center justify-center text-center text-slate-400 dark:text-[#6B7280] text-xs">
               Select an account from the table to view the 360 payment profile.
             </div>
           )}
