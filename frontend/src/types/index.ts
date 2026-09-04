@@ -55,6 +55,8 @@ export interface Transaction {
   status: string;
   failure_code?: string;
   failure_reason?: string;
+  razorpay_payment_id?: string;
+  razorpay_order_id?: string;
   gateway_payload?: Record<string, any>;
   created_at: string;
 }
@@ -92,11 +94,36 @@ export interface RevenueRisk {
   last_attempt_at?: string;
   resolved_at?: string;
   stop_reason?: string;
+  payment_link_id?: string;
+  payment_link_url?: string;
+  source?: string;
   created_at: string;
   updated_at: string;
   customer?: Customer;
   transaction?: Transaction;
   recovery_attempts?: RecoveryAttempt[];
+}
+
+export interface RazorpayStatus {
+  is_configured: boolean;
+  key_id: string;
+  webhook_configured: boolean;
+  last_webhook_at?: string | null;
+  mode: string;
+}
+
+export interface RazorpayConnectionTestResult {
+  status: 'connected' | 'unconfigured' | 'error';
+  connected: boolean;
+  message: string;
+  key_id?: string;
+  error?: string;
+}
+
+export interface RecoveryStreamEvent {
+  event: 'REVENUE_RISK_DETECTED' | 'REVENUE_RECOVERED' | 'PAYMENT_LINK_CREATED' | 'SYSTEM_ALERT';
+  data: Record<string, any>;
+  timestamp: string;
 }
 
 export interface AuditLog {

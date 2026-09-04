@@ -400,7 +400,7 @@ class GlobalPaymentIntelligenceService:
             GlobalPaymentFunnelStep(step_key="successful", step_label="Successful / Cleared", count=int(kpis.total_transactions * succ_rate * 0.985), percentage=round(succ_rate * 98.5, 1), volume=total_vol * Decimal(str(succ_rate * 0.985))),
             GlobalPaymentFunnelStep(step_key="failed", step_label="Failed / Declined", count=int(kpis.total_transactions * fail_rate), percentage=round(fail_rate * 100, 1), volume=total_at_risk),
             GlobalPaymentFunnelStep(step_key="eligible", step_label="Recovery Eligible", count=int(kpis.total_transactions * fail_rate * 0.88), percentage=round(fail_rate * 88.0, 1), volume=total_at_risk * Decimal("0.88")),
-            GlobalPaymentFunnelStep(step_key="recovered", step_label="Recovered by RecoverAI", count=int(kpis.total_transactions * fail_rate * 0.88 * rec_rate), percentage=round(rec_rate * 100, 1), volume=total_recovered),
+            GlobalPaymentFunnelStep(step_key="recovered", step_label="Recovered by RevenueShield", count=int(kpis.total_transactions * fail_rate * 0.88 * rec_rate), percentage=round(rec_rate * 100, 1), volume=total_recovered),
         ]
 
         # -------------------------------------------------------------

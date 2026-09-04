@@ -62,6 +62,16 @@ class Transaction(Base):
         index=True,
         nullable=False,
     )
+    razorpay_payment_id: Mapped[Optional[str]] = mapped_column(
+        String(100),
+        index=True,
+        nullable=True,
+    )
+    razorpay_order_id: Mapped[Optional[str]] = mapped_column(
+        String(100),
+        index=True,
+        nullable=True,
+    )
     gateway_payload: Mapped[Optional[Dict[str, Any]]] = mapped_column(
         JSONB().with_variant(JSON(), "sqlite"),
         nullable=True,

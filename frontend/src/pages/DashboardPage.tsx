@@ -23,6 +23,9 @@ import { getRecoveryROI } from '../api/tier2';
 import { DashboardMetrics, DashboardChartsData, RevenueRisk, RecoveryROIResponse } from '../types';
 import { formatCurrency, getFailureTypeLabel } from '../utils/formatters';
 import { NavTab } from '../components/layout/Sidebar';
+import { RazorpayConnectionCard } from '../components/razorpay/RazorpayConnectionCard';
+import { RazorpayWebhookModal } from '../components/transactions/RazorpayWebhookModal';
+import { useRecoveryEventStream } from '../hooks/useRecoveryEventStream';
 
 interface DashboardPageProps {
   onNavigateToRisk?: (riskId: string) => void;
@@ -44,38 +47,69 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   const [recentRisks, setRecentRisks] = useState<RevenueRisk[]>([]);
   const [roiData, setRoiData] = useState<RecoveryROIResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isRzpModalOpen, setIsRzpModalOpen] = useState(false);
+  const [liveNotification, setLiveNotification] = useState<{ message: string; type: 'failed' | 'recovered' | 'link' } | null>(null);
+
+  const fetchData = async () => {
+    try {
+      const [m, c, risksData, roi] = await Promise.all([
+        getDashboardMetrics().catch((err) => {
+          console.warn('Dashboard metrics fetch warning:', err);
+          return null;
+        }),
+        getDashboardCharts().catch((err) => {
+          console.warn('Dashboard charts fetch warning:', err);
+          return null;
+        }),
+        getRevenueRisks({ page: 1, page_size: 5 }).catch((err) => {
+          console.warn('Revenue risks fetch warning:', err);
+          return { items: [], total: 0, page: 1, page_size: 5, total_pages: 1 };
+        }),
+        getRecoveryROI().catch(() => null),
+      ]);
+      if (m) setMetrics(m);
+      if (c) setCharts(c);
+      if (risksData?.items) setRecentRisks(risksData.items);
+      if (roi) setRoiData(roi);
+    } catch (err) {
+      console.error('Failed to load dashboard data:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const [m, c, risksData, roi] = await Promise.all([
-          getDashboardMetrics().catch((err) => {
-            console.warn('Dashboard metrics fetch warning:', err);
-            return null;
-          }),
-          getDashboardCharts().catch((err) => {
-            console.warn('Dashboard charts fetch warning:', err);
-            return null;
-          }),
-          getRevenueRisks({ page: 1, page_size: 5 }).catch((err) => {
-            console.warn('Revenue risks fetch warning:', err);
-            return { items: [], total: 0, page: 1, page_size: 5, total_pages: 1 };
-          }),
-          getRecoveryROI().catch(() => null),
-        ]);
-        if (m) setMetrics(m);
-        if (c) setCharts(c);
-        if (risksData?.items) setRecentRisks(risksData.items);
-        if (roi) setRoiData(roi);
-      } catch (err) {
-        console.error('Failed to load dashboard data:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+    setLoading(true);
     fetchData();
   }, []);
+
+  // Real-time SSE stream for live Razorpay events
+  useRecoveryEventStream({
+    onRiskDetected: (data) => {
+      setLiveNotification({
+        message: `⚡ Live Razorpay Failure: ${data.customer_name || 'Customer'} — ${data.detected_failure_type || 'insufficient_funds'} (${formatCurrency(data.amount_at_risk || 0)})`,
+        type: 'failed',
+      });
+      fetchData();
+      setTimeout(() => setLiveNotification(null), 8000);
+    },
+    onRevenueRecovered: (data) => {
+      setLiveNotification({
+        message: `🎉 Live Razorpay Recovery: ${data.customer_name || 'Customer'} paid ${formatCurrency(data.amount_recovered || 0)}! Loop closed.`,
+        type: 'recovered',
+      });
+      fetchData();
+      setTimeout(() => setLiveNotification(null), 8000);
+    },
+    onPaymentLinkCreated: (data) => {
+      setLiveNotification({
+        message: `🔗 Razorpay Payment Link Generated: ${data.payment_link_id || 'plink'} for ${formatCurrency(data.amount || 0)}`,
+        type: 'link',
+      });
+      fetchData();
+      setTimeout(() => setLiveNotification(null), 8000);
+    },
+  });
 
   const handleNav = (riskId: string) => {
     if (onNavigateToWorkflow) {
@@ -100,6 +134,36 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 
   return (
     <div className="space-y-6">
+      {/* Real-time SSE Live Event Notification Banner */}
+      {liveNotification && (
+        <div
+          className={`flex items-center justify-between rounded-xl px-4 py-3 text-xs font-semibold shadow-md transition-all animate-fintech-fade ${
+            liveNotification.type === 'recovered'
+              ? 'bg-emerald-500/15 border border-emerald-500/40 text-emerald-300'
+              : liveNotification.type === 'failed'
+              ? 'bg-rose-500/15 border border-rose-500/40 text-rose-300'
+              : 'bg-blue-500/15 border border-blue-500/40 text-blue-300'
+          }`}
+        >
+          <div className="flex items-center gap-2.5">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-current opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-current"></span>
+            </span>
+            <span>{liveNotification.message}</span>
+          </div>
+          <button
+            onClick={() => setLiveNotification(null)}
+            className="text-[11px] opacity-70 hover:opacity-100 underline"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
+
+      {/* Razorpay Infrastructure Status & ngrok Tunneling Card */}
+      <RazorpayConnectionCard onSimulateClick={() => setIsRzpModalOpen(true)} />
+
       {/* 1. Hero Money Recovered Card */}
       <HeroMoneyRecoveredCard
         recoveredAmount={metrics?.total_revenue_recovered || 57200}
@@ -273,6 +337,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             <thead>
               <tr className="border-b border-slate-200 dark:border-white/[0.06] text-slate-400 dark:text-[#6B7280] uppercase text-[11px] font-medium tracking-[0.04em]">
                 <th className="pb-3 font-medium">Customer</th>
+                <th className="pb-3 font-medium">Source</th>
                 <th className="pb-3 font-medium">Failure reason</th>
                 <th className="pb-3 font-medium">Amount at risk</th>
                 <th className="pb-3 font-medium">Attempts</th>
@@ -285,6 +350,18 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                 <tr key={risk.id} className="hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors">
                   <td className="py-3.5 font-medium text-slate-900 dark:text-[#F5F6FA]">
                     {risk.customer?.name || 'Customer'}
+                  </td>
+                  <td className="py-3.5">
+                    {risk.source === 'razorpay' || risk.source === 'razorpay_webhook' ? (
+                      <span className="inline-flex items-center gap-1 rounded bg-blue-500/10 text-blue-400 border border-blue-500/30 px-1.5 py-0.5 text-[9px] font-mono font-bold">
+                        <span className="h-1.5 w-1.5 rounded-full bg-blue-400 animate-pulse" />
+                        RZP LIVE
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 rounded bg-slate-500/10 text-slate-400 border border-slate-500/20 px-1.5 py-0.5 text-[9px] font-mono">
+                        SIMULATION
+                      </span>
+                    )}
                   </td>
                   <td className="py-3.5 text-slate-600 dark:text-[#9CA3B0]">
                     {getFailureTypeLabel(risk.detected_failure_type)}
@@ -313,6 +390,16 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           </table>
         </div>
       </div>
+
+      {/* Razorpay Webhook Simulation & Testing Modal */}
+      <RazorpayWebhookModal
+        isOpen={isRzpModalOpen}
+        onClose={() => setIsRzpModalOpen(false)}
+        onSuccess={() => {
+          setIsRzpModalOpen(false);
+          fetchData();
+        }}
+      />
     </div>
   );
 };

@@ -2,7 +2,7 @@
 
 > **Autonomous, policy-bounded revenue recovery intelligence that detects payment degradations, diagnoses root causes, determines optimal interventions, and recovers lost revenue across checkouts, recurring mandates, and B2B receivables.**
 
-[![CI / Test Suite](https://img.shields.io/badge/pytest-109%20passed-emerald.svg)](backend/tests/)
+[![CI / Test Suite](https://img.shields.io/badge/pytest-113%20passed-emerald.svg)](backend/tests/)
 [![Frontend Build](https://img.shields.io/badge/vite-passing-blue.svg)](frontend/)
 [![TypeScript](https://img.shields.io/badge/typescript-strict%205.0-blue.svg)](frontend/tsconfig.json)
 [![Python Version](https://img.shields.io/badge/python-3.10%20%7C%203.11-yellow.svg)](backend/requirements.txt)
@@ -204,6 +204,107 @@ graph TD
 
 ---
 
+## ⚡ Live Razorpay TEST MODE Integration & Setup
+
+RevenueShield supports end-to-end integration with **Razorpay TEST MODE** payment infrastructure. The system moves from simulated data to live Razorpay webhooks while preserving deterministic safety and auditability:
+
+```
+                  ┌────────────────────────────────────────┐
+                  │    Razorpay Test Mode Infrastructure   │
+                  └──────────────────┬─────────────────────┘
+                                     │
+                 [ payment.failed Webhook Ingestion ]
+                                     │
+                                     ▼
+                  ┌────────────────────────────────────────┐
+                  │   Webhook Signature Verification       │
+                  │   & Event Idempotency Deduplication    │
+                  └──────────────────┬─────────────────────┘
+                                     │
+                                     ▼
+                  ┌────────────────────────────────────────┐
+                  │   AI Diagnosis Engine (Advisory Only)  │
+                  └──────────────────┬─────────────────────┘
+                                     │
+                                     ▼
+                  ┌────────────────────────────────────────┐
+                  │   Deterministic Policy Engine          │
+                  │   (Validates Limits, Rules & Cooldown) │
+                  └──────────────────┬─────────────────────┘
+                                     │
+                         [ Policy Approved ]
+                                     │
+                                     ▼
+                  ┌────────────────────────────────────────┐
+                  │   Razorpay Payment Link API (TEST)     │
+                  │   Creates: https://rzp.io/i/...        │
+                  └──────────────────┬─────────────────────┘
+                                     │
+                        [ Customer Completes Pay ]
+                                     │
+                                     ▼
+                  ┌────────────────────────────────────────┐
+                  │   payment.captured / order.paid Hook   │
+                  └──────────────────┬─────────────────────┘
+                                     │
+                                     ▼
+                  ┌────────────────────────────────────────┐
+                  │   Revenue Marked RECOVERED             │
+                  │   • Real-Time SSE Stream Update        │
+                  │   • Immutable Cryptographic Audit Log  │
+                  └────────────────────────────────────────┘
+```
+
+### 1. Environment Configuration (`.env`)
+Create a `.env` file at the repository root with your Razorpay Test Mode credentials:
+
+```bash
+# Razorpay TEST MODE API Credentials (from https://dashboard.razorpay.com)
+RAZORPAY_KEY_ID=rzp_test_YourTestKeyIdHere
+RAZORPAY_KEY_SECRET=YourTestKeySecretHere
+RAZORPAY_WEBHOOK_SECRET=YourWebhookSecretHere
+
+# Environment Mode
+ENVIRONMENT=development
+LOG_LEVEL=INFO
+
+# Database
+DATABASE_URL=sqlite:///./revenueshield.db
+```
+
+> **Note:** If `RAZORPAY_KEY_ID` is omitted or unconfigured, RevenueShield automatically runs in **Mock Sandbox Mode**, generating simulated payment links (`https://rzp.io/i/...`) so all features remain testable without active API credentials.
+
+### 2. Local Webhook Tunneling (ngrok)
+To receive live webhooks from Razorpay during local development:
+
+```bash
+# 1. Start the FastAPI backend
+uvicorn app.main:app --port 8000
+
+# 2. Expose your backend via ngrok in another terminal
+ngrok http 8000
+```
+
+1. Copy the generated HTTPS ngrok URL (e.g. `https://xyz.ngrok-free.app`).
+2. Log into the [Razorpay Merchant Dashboard](https://dashboard.razorpay.com) in **TEST MODE**.
+3. Navigate to **Settings** &gt; **Webhooks** &gt; **Add New Webhook**.
+4. Set **Webhook URL**: `https://xyz.ngrok-free.app/api/webhooks/razorpay`
+5. Set **Secret**: your `RAZORPAY_WEBHOOK_SECRET`
+6. Subscribe to the following events:
+   * `payment.failed`
+   * `payment.captured`
+   * `payment_link.paid`
+   * `order.paid`
+
+### 3. Verification Endpoints
+* **Connection Status**: `GET /api/razorpay/status`
+* **Test Connection**: `POST /api/razorpay/test-connection`
+* **Generate Payment Link**: `POST /api/recovery/{risk_id}/create-payment-link`
+* **Simulate Webhook**: `POST /api/webhooks/razorpay/simulate`
+* **Real-time SSE Stream**: `GET /api/recovery/stream`
+
+---
+
 ## 💻 Tech Stack
 
 ### **Backend**
@@ -281,10 +382,11 @@ The platform includes **109 automated unit and integration tests** covering:
 * Global payment intelligence aggregations and cross-gateway metrics.
 * Payment degradation incident detection and operator copilot queries.
 * Batch recovery execution and ledger settlement math.
+* Razorpay Test Mode integration, HMAC webhook signature verification, idempotency deduplication, and payment link lifecycle.
 
 ```bash
 pytest backend/tests/ -q
-# ======================== 109 passed in 6.80s ========================
+# ======================== 113 passed in 5.25s ========================
 ```
 
 ---

@@ -49,7 +49,7 @@ class DecisionReplayService:
 
     @classmethod
     def reconstruct_replay(cls, db: Session, risk_id: uuid.UUID) -> DecisionReplayResponse:
-        """Reconstruct what RecoverAI knew, predicted, recommended, policy-evaluated, and executed."""
+        """Reconstruct what RevenueShield knew, predicted, recommended, policy-evaluated, and executed."""
         now = datetime.now(timezone.utc)
         risk = db.query(RevenueRisk).filter(RevenueRisk.id == risk_id).first()
         if not risk:
@@ -61,7 +61,7 @@ class DecisionReplayService:
         amount = risk.amount_at_risk or Decimal("0.00")
         recovered_amt = risk.amount_recovered or Decimal("0.00")
 
-        # 1. What RecoverAI Knew
+        # 1. What RevenueShield Knew
         what_knew = {
             "transaction_id": str(risk.transaction_id) if risk.transaction_id else "txn_auto_001",
             "failure_code": risk.detected_failure_type,
@@ -76,7 +76,7 @@ class DecisionReplayService:
             "historical_reliability_score": 94,
         }
 
-        # 2. What RecoverAI Predicted
+        # 2. What RevenueShield Predicted
         what_predicted = {
             "recovery_probability": 0.78,
             "probability_percentage": "78%",
@@ -91,7 +91,7 @@ class DecisionReplayService:
             "prediction_model": "PredictiveRevenueRiskEngine-v3",
         }
 
-        # 3. What RecoverAI Recommended
+        # 3. What RevenueShield Recommended
         rec_action = "retry_payment" if risk.detected_failure_type in ["temporary_decline", "network_error"] else "request_payment_method_update"
         what_recommended = {
             "recommended_action": rec_action,

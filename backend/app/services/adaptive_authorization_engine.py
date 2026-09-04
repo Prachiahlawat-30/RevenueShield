@@ -367,7 +367,7 @@ class AdaptiveAuthorizationEngine:
 
         summary = (
             f"Configured pathway yields expected net revenue of ${sim_net:.2f} "
-            f"({('+' if delta >= 0 else '')}${delta:.2f} vs RecoverAI optimal)."
+            f"({('+' if delta >= 0 else '')}${delta:.2f} vs RevenueShield optimal)."
         )
 
         return WhatIfSimulationResponse(
@@ -386,7 +386,7 @@ class AdaptiveAuthorizationEngine:
 
     @classmethod
     def get_authorization_funnel(cls) -> AuthorizationFunnelResponse:
-        """Return multi-stage Pre-Auth conversion funnel statistics (Baseline vs RecoverAI Optimized)."""
+        """Return multi-stage Pre-Auth conversion funnel statistics (Baseline vs RevenueShield Optimized)."""
         stages = [
             AuthorizationFunnelStage(
                 stage_name="1. Checkout Intent",

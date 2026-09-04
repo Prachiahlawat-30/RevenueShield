@@ -33,8 +33,24 @@ class Settings(BaseSettings):
     METHOD_UPDATE_COST: Decimal = Decimal("0.20")
     HUMAN_ESCALATION_COST: Decimal = Decimal("15.00")
 
-    # Payment Gateway Configuration
+    # Payment Gateway Configuration (Razorpay TEST MODE)
+    RAZORPAY_KEY_ID: str = ""
+    RAZORPAY_KEY_SECRET: str = ""
     RAZORPAY_WEBHOOK_SECRET: str = ""
+
+    @property
+    def is_razorpay_configured(self) -> bool:
+        """Check if Razorpay API keys are configured."""
+        return bool(self.RAZORPAY_KEY_ID and self.RAZORPAY_KEY_SECRET)
+
+    @property
+    def masked_razorpay_key(self) -> str:
+        """Return masked key ID for safe UI status display without revealing credentials."""
+        if not self.RAZORPAY_KEY_ID:
+            return ""
+        if len(self.RAZORPAY_KEY_ID) > 8:
+            return f"{self.RAZORPAY_KEY_ID[:8]}********"
+        return "********"
 
     # CORS Settings
     CORS_ORIGINS: List[str] = [

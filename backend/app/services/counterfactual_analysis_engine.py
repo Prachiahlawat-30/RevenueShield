@@ -35,7 +35,7 @@ class CounterfactualAnalysisEngine:
 
         # Strategy comparison simulation:
         # Strategy A: Un-optimized immediate retry (50% empirical rate)
-        # Strategy B: RecoverAI Smart Channel + Optimal Timing (81% empirical rate)
+        # Strategy B: RevenueShield Smart Channel + Optimal Timing (81% empirical rate)
         strat_a_expected = (amount * Decimal("0.50")).quantize(Decimal("0.01"))
         strat_b_expected = (amount * Decimal("0.81")).quantize(Decimal("0.01"))
         diff = strat_b_expected - strat_a_expected
@@ -48,7 +48,7 @@ class CounterfactualAnalysisEngine:
             net_revenue_protected=net_protected,
             strategy_comparison_a_name="Strategy A (Static Immediate Retry)",
             strategy_comparison_a_expected_recovery=strat_a_expected,
-            strategy_comparison_b_name="Strategy B (RecoverAI Smart Channel + Timing)",
+            strategy_comparison_b_name="Strategy B (RevenueShield Smart Channel + Timing)",
             strategy_comparison_b_expected_recovery=strat_b_expected,
             strategy_recovery_difference=diff,
             counterfactual_disclaimer="Model estimate / simulation. Counterfactual projections are statistical simulations and not factual historical occurrences.",

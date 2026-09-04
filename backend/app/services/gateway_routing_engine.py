@@ -70,7 +70,7 @@ class GatewayRoutingEngine:
             rejection_reason = "Transaction amount exceeds multi-gateway automated re-routing limit ($2,000 threshold)."
 
         reason = (
-            f"RecoverAI recommends routing through '{best_gateway.gateway_name}' due to superior 97.1% success rate "
+            f"RevenueShield recommends routing through '{best_gateway.gateway_name}' due to superior 97.1% success rate "
             f"and lower 410ms latency compared to degraded primary gateway (Gateway A at 78.1%)."
         )
 

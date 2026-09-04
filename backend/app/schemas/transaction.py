@@ -13,6 +13,10 @@ class TransactionBase(BaseModel):
     status: str
     failure_code: Optional[str] = None
     failure_reason: Optional[str] = None
+    gateway_name: Optional[str] = None
+    payment_method: Optional[str] = None
+    razorpay_payment_id: Optional[str] = None
+    razorpay_order_id: Optional[str] = None
     gateway_payload: Optional[Dict[str, Any]] = None
 
 

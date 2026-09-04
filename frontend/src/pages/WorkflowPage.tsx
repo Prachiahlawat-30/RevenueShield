@@ -12,6 +12,9 @@ import {
   Network,
   Zap,
   Layers,
+  ExternalLink,
+  Copy,
+  Check,
 } from 'lucide-react';
 import { getRevenueRisks, getRevenueRiskDetail } from '../api/risks';
 import {
@@ -20,6 +23,8 @@ import {
   runFullRecoveryWorkflow,
   manualResolveRisk,
 } from '../api/recovery';
+import { createRecoveryPaymentLink } from '../api/razorpay';
+import { useRecoveryEventStream } from '../hooks/useRecoveryEventStream';
 import { RevenueRisk, AIDiagnosisResult, RecoveryStepResponse } from '../types';
 import { WorkflowStepper, WorkflowStage } from '../components/workflow/WorkflowStepper';
 import { AIDiagnosisCard } from '../components/workflow/AIDiagnosisCard';
@@ -71,9 +76,45 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
   const [isDiagnosing, setIsDiagnosing] = useState(false);
   const [isExecutingStep, setIsExecutingStep] = useState(false);
   const [isExecutingFull, setIsExecutingFull] = useState(false);
+  const [isCreatingLink, setIsCreatingLink] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
 
   const [inspectorPayload, setInspectorPayload] = useState<any>(null);
   const [inspectorTitle, setInspectorTitle] = useState('');
+
+  // Live real-time updates for payment link creation or recovery settlement
+  useRecoveryEventStream({
+    onRevenueRecovered: (data) => {
+      if (selectedRiskId && (!data.risk_id || data.risk_id === selectedRiskId)) {
+        loadRiskDetail(selectedRiskId);
+      }
+    },
+    onPaymentLinkCreated: (data) => {
+      if (selectedRiskId && (!data.risk_id || data.risk_id === selectedRiskId)) {
+        loadRiskDetail(selectedRiskId);
+      }
+    },
+  });
+
+  const handleCreatePaymentLink = async () => {
+    if (!currentRisk) return;
+    setIsCreatingLink(true);
+    try {
+      await createRecoveryPaymentLink(currentRisk.id);
+      await loadRiskDetail(currentRisk.id);
+    } catch (err) {
+      console.error('Failed to create Razorpay payment link:', err);
+    } finally {
+      setIsCreatingLink(false);
+    }
+  };
+
+  const handleCopyLink = () => {
+    if (!currentRisk?.payment_link_url) return;
+    navigator.clipboard.writeText(currentRisk.payment_link_url);
+    setLinkCopied(true);
+    setTimeout(() => setLinkCopied(false), 2000);
+  };
 
   // Load available risks
   const loadRisks = async () => {
@@ -436,6 +477,78 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
                   </Button>
                 </>
               )}
+            </div>
+          </div>
+
+          {/* Razorpay Test Mode Recovery Link Card */}
+          <div className="rounded-[16px] border border-blue-500/20 bg-gradient-to-r from-blue-950/25 via-[#131824] to-indigo-950/25 p-4 shadow-sm backdrop-blur-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-400">
+                  <Zap className="h-4.5 w-4.5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h4 className="text-xs font-bold text-slate-900 dark:text-white">
+                      Razorpay Test Mode Recovery Link
+                    </h4>
+                    <span className="rounded-md bg-blue-500/10 border border-blue-500/20 px-1.5 py-0.5 text-[10px] font-mono text-blue-400">
+                      {currentRisk.payment_link_id || 'RZP Link'}
+                    </span>
+                    {currentRisk.status === 'recovered' ? (
+                      <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 text-[10px] font-mono font-semibold text-emerald-400">
+                        <CheckCircle2 className="h-3 w-3 text-emerald-400" /> Settled & Closed
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 rounded-md bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 text-[10px] font-mono text-amber-300">
+                        Awaiting Customer Checkout
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                    {currentRisk.payment_link_url ? (
+                      <span className="font-mono text-blue-400 break-all">{currentRisk.payment_link_url}</span>
+                    ) : (
+                      'Generate a 1-click Razorpay test payment link to initiate checkout recovery.'
+                    )}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+                {currentRisk.payment_link_url ? (
+                  <>
+                    <button
+                      onClick={handleCopyLink}
+                      className="flex items-center gap-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+                    >
+                      {linkCopied ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
+                      <span>{linkCopied ? 'Copied' : 'Copy Link'}</span>
+                    </button>
+                    <a
+                      href={currentRisk.payment_link_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center gap-1.5 rounded-lg bg-[#2B6FFF] hover:bg-[#2055CC] px-3 py-1 text-xs font-semibold text-white shadow-sm transition"
+                    >
+                      <span>Open Test Checkout</span>
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                  </>
+                ) : (
+                  <Button
+                    size="sm"
+                    variant="primary"
+                    icon={Zap}
+                    isLoading={isCreatingLink}
+                    disabled={currentRisk.status === 'recovered' || currentRisk.status === 'stopped'}
+                    onClick={handleCreatePaymentLink}
+                    className="text-xs"
+                  >
+                    Generate Razorpay Link
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
 

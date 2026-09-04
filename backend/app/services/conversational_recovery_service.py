@@ -63,8 +63,8 @@ class ConversationalRecoveryService:
 
         if req.preferred_language == "HINGLISH":
             openings = [
-                f"Namaste {first_name} ji! Main RecoverAI se bol raha hoon aapke subscription billing ke regard mein.",
-                f"Namaste {first_name} ji, RecoverAI automated payment assistant se ek important update hai aapke payment ke liye.",
+                f"Namaste {first_name} ji! Main RevenueShield se bol raha hoon aapke subscription billing ke regard mein.",
+                f"Namaste {first_name} ji, RevenueShield automated payment assistant se ek important update hai aapke payment ke liye.",
                 f"Namaste {first_name} ji! Main aapki payment assist kar raha hoon taaki aapki SaaS services uninterrupted rahein.",
             ]
             opening = random.choice(openings)
@@ -102,7 +102,7 @@ class ConversationalRecoveryService:
 
         elif req.preferred_language == "HINDI":
             openings = [
-                f"नमस्ते {first_name} जी, यह RecoverAI बिलिंग सहायता केंद्र से एक स्वचालित कॉल है।",
+                f"नमस्ते {first_name} जी, यह RevenueShield बिलिंग सहायता केंद्र से एक स्वचालित कॉल है।",
                 f"नमस्ते {first_name} जी, आपकी बकाया सदस्यता राशि के संबंध में यह त्वरित सूचना है।",
             ]
             opening = random.choice(openings)
@@ -140,8 +140,8 @@ class ConversationalRecoveryService:
 
         else:  # ENGLISH
             openings = [
-                f"Hello {first_name}, this is RecoverAI payment assistance regarding your recent subscription charge.",
-                f"Hi {first_name}, this is an automated courtesy notice from RecoverAI regarding your pending invoice.",
+                f"Hello {first_name}, this is RevenueShield payment assistance regarding your recent subscription charge.",
+                f"Hi {first_name}, this is an automated courtesy notice from RevenueShield regarding your pending invoice.",
             ]
             opening = random.choice(openings)
 
@@ -197,7 +197,7 @@ class ConversationalRecoveryService:
             customer_name=cname,
             customer_phone=phone,
             language=req.preferred_language,
-            header_text="Payment Notice • RecoverAI" if req.preferred_language == "ENGLISH" else "भुगतान सूचना • RecoverAI",
+            header_text="Payment Notice • RevenueShield" if req.preferred_language == "ENGLISH" else "भुगतान सूचना • RevenueShield",
             body_text=whatsapp_body,
             quick_reply_buttons=["Pay via UPI", "Pay via Card", "Call Support"],
             payment_cta_url=payment_link,

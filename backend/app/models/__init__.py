@@ -11,6 +11,7 @@ from app.models.audit_log import AuditLog
 from app.models.merchant import Merchant
 from app.models.payment_incident import PaymentIncident
 from app.models.recovery_experiment import RecoveryExperiment, RecoveryExperimentAssignment
+from app.models.webhook_event import WebhookEvent
 
 __all__ = [
     "Base",
@@ -25,4 +26,5 @@ __all__ = [
     "PaymentIncident",
     "RecoveryExperiment",
     "RecoveryExperimentAssignment",
+    "WebhookEvent",
 ]

@@ -62,7 +62,7 @@ class RevenueProtectionScoreEngine:
         )
 
         summary = (
-            f"RecoverAI is operating at {composite}/100 Revenue Protection efficiency (↑ {trend_delta}% vs prior cycle). "
+            f"RevenueShield is operating at {composite}/100 Revenue Protection efficiency (↑ {trend_delta}% vs prior cycle). "
             f"100% PolicyEngine deterministic compliance and 94/100 reactive recovery efficacy are shielding recurring revenue."
         )
 

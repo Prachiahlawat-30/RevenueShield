@@ -38,7 +38,7 @@ class DemoLabService:
         DemoScenarioInfo(
             id="gateway_degradation",
             title="2. Gateway Alpha Degradation & Failover",
-            description="Simulates Gateway Alpha latency spike (+180ms) and 504 timeouts. RecoverAI detects incident and triggers zero-mutation simulation to shift traffic to Gateway Beta.",
+            description="Simulates Gateway Alpha latency spike (+180ms) and 504 timeouts. RevenueShield detects incident and triggers zero-mutation simulation to shift traffic to Gateway Beta.",
             key_concept="Automated Payment Incident Containment",
             expected_outcome="Success rate restored 78% -> 96.4%, protecting $9,600/hr",
             icon_name="Activity",
@@ -97,7 +97,7 @@ class DemoLabService:
         GuidedDemoSceneItem(
             scene_number=1,
             title="SCENE 1 — SHOW THE MONEY",
-            narrative_hook="Open Control Center: 'RecoverAI is currently monitoring ₹61.4L of revenue exposure across all processors.'",
+            narrative_hook="Open Control Center: 'RevenueShield is currently monitoring ₹61.4L of revenue exposure across all processors.'",
             action_button_label="Inspect Control Center KPIs",
             target_tab="control-center",
             highlight_metrics=["₹61.4L Revenue At Risk", "₹24.8L Recovered", "₹8.6L Prevented", "91/100 Protection Score"],
@@ -105,7 +105,7 @@ class DemoLabService:
         GuidedDemoSceneItem(
             scene_number=2,
             title="SCENE 2 — PREDICT THE FUTURE",
-            narrative_hook="Open Predictive Risk: 'Instead of waiting for an ₹84,000 payment to fail, RecoverAI detects a 73% probability failure 18 hours ahead.'",
+            narrative_hook="Open Predictive Risk: 'Instead of waiting for an ₹84,000 payment to fail, RevenueShield detects a 73% probability failure 18 hours ahead.'",
             action_button_label="View Predictive Risk Engine",
             target_tab="predictive",
             highlight_metrics=["73% Failure Probability", "₹61,320 Predicted Exposure", "18-Hour Risk Horizon"],

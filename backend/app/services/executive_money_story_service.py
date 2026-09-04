@@ -65,7 +65,7 @@ class ExecutiveMoneyStoryService:
         primary_action = "Deploy Gateway Beta Traffic Rerouting Playbook"
         action_yield = Decimal("57000.00")  # ₹5.7L/hr
         headline = (
-            f"RecoverAI has protected ${protected_pre_failure:,.2f} before failure and recovered ${rec_so_far:,.2f}. "
+            f"RevenueShield has protected ${protected_pre_failure:,.2f} before failure and recovered ${rec_so_far:,.2f}. "
             f"Addressing Gateway Alpha degradation will capture an estimated ${action_yield:,.2f}/hour of remaining opportunity."
         )
 

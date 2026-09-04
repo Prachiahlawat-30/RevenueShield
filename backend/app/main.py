@@ -38,6 +38,7 @@ from app.api.webhooks import router as webhooks_router
 from app.api.transactions import router as transactions_router
 from app.api.smart_scheduler import router as smart_scheduler_router
 from app.api.global_intelligence import router as global_intelligence_router
+from app.api.razorpay import router as razorpay_router
 
 
 def create_application() -> FastAPI:
@@ -107,13 +108,39 @@ def create_application() -> FastAPI:
     app.include_router(transactions_router, prefix=settings.API_V1_STR)
     app.include_router(smart_scheduler_router, prefix=settings.API_V1_STR)
     app.include_router(global_intelligence_router, prefix=settings.API_V1_STR)
+    app.include_router(razorpay_router, prefix=settings.API_V1_STR)
 
     @app.on_event("startup")
     def on_startup():
         try:
             from app.core.database import Base, engine, SessionLocal
             from app.data.seed_data import seed_database
+            from sqlalchemy import text
             Base.metadata.create_all(bind=engine)
+
+            # Defensive column addition for existing SQLite or Postgres instances
+            with engine.connect() as conn:
+                for col, typ in [
+                    ("razorpay_payment_id", "VARCHAR(100)"),
+                    ("razorpay_order_id", "VARCHAR(100)"),
+                ]:
+                    try:
+                        conn.execute(text(f"ALTER TABLE transactions ADD COLUMN {col} {typ}"))
+                        conn.commit()
+                    except Exception:
+                        pass
+
+                for col, typ in [
+                    ("payment_link_id", "VARCHAR(100)"),
+                    ("payment_link_url", "VARCHAR(500)"),
+                    ("source", "VARCHAR(50) DEFAULT 'simulation'"),
+                ]:
+                    try:
+                        conn.execute(text(f"ALTER TABLE revenue_risks ADD COLUMN {col} {typ}"))
+                        conn.commit()
+                    except Exception:
+                        pass
+
             with SessionLocal() as db:
                 seed_database(db=db, reset=False)
         except Exception as e:

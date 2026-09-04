@@ -4,6 +4,7 @@ import uuid
 from decimal import Decimal
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Body, Query
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session, joinedload
 
@@ -23,6 +24,8 @@ from app.services.audit_service import AuditService
 from app.services.recovery_probability_engine import RecoveryProbabilityEngine
 from app.services.recovery_priority_engine import RecoveryPriorityEngine
 from app.services.payment_decision_graph_engine import PaymentDecisionGraphEngine
+from app.services.razorpay_service import RazorpayService
+from app.services.event_broadcaster import EventBroadcaster
 
 router = APIRouter(prefix="/recovery", tags=["recovery"])
 
@@ -278,4 +281,112 @@ def get_payment_decision_graph(
             except Exception:
                 pass
         raise HTTPException(status_code=404, detail=f"RevenueRisk with ID {risk_id} not found: {e}")
+
+
+@router.get("/stream", summary="Live Server-Sent Events stream for recovery lifecycle events")
+async def recovery_event_stream():
+    """Stream real-time recovery lifecycle events (webhooks, diagnoses, approvals, settlements)."""
+    return StreamingResponse(
+        EventBroadcaster.subscribe(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
+
+
+@router.post("/{risk_id}/create-payment-link", summary="Generate Razorpay TEST MODE Payment Link for a risk")
+def create_risk_payment_link(
+    risk_id: uuid.UUID,
+    db: Session = Depends(get_db),
+):
+    """Generate or retrieve a real Razorpay TEST MODE Payment Link for an active risk."""
+    risk = db.query(RevenueRisk).filter_by(id=risk_id).first()
+    if not risk:
+        raise HTTPException(status_code=404, detail=f"RevenueRisk {risk_id} not found.")
+
+    customer = db.query(Customer).filter_by(id=risk.customer_id).first()
+
+    # If active link already exists, return existing link
+    if risk.payment_link_url and risk.status in ("recovering", "detected"):
+        return {
+            "success": True,
+            "payment_link_id": risk.payment_link_id,
+            "payment_link_url": risk.payment_link_url,
+            "amount": float(risk.amount_at_risk),
+            "currency": risk.currency,
+            "status": "active",
+        }
+
+    link_res = RazorpayService.create_payment_link(
+        amount=risk.amount_at_risk,
+        currency=risk.currency,
+        customer_name=customer.name if customer else "Customer",
+        customer_email=customer.email if customer else "customer@example.com",
+        customer_phone=customer.phone if customer else None,
+        description=f"RevenueShield Recovery for {customer.name if customer else 'Customer'}",
+        notes={
+            "revenue_risk_id": str(risk.id),
+            "customer_id": str(risk.customer_id),
+            "transaction_id": str(risk.transaction_id),
+        },
+    )
+
+    risk.payment_link_id = link_res.get("payment_link_id")
+    risk.payment_link_url = link_res.get("payment_link_url")
+    if risk.status == "detected":
+        risk.status = "recovering"
+        risk.current_step = "PAYMENT_LINK_CREATED"
+
+    AuditService.log_event(
+        db=db,
+        actor="human_operator",
+        step_name="PAYMENT_LINK_CREATED",
+        revenue_risk_id=risk.id,
+        customer_id=risk.customer_id,
+        executed_action="send_payment_link",
+        result=f"Generated Payment Link: {risk.payment_link_url}",
+        decision_payload={"payment_link_id": risk.payment_link_id, "url": risk.payment_link_url},
+    )
+    db.commit()
+
+    EventBroadcaster.broadcast(
+        "PAYMENT_LINK_CREATED",
+        {
+            "risk_id": str(risk.id),
+            "payment_link_url": risk.payment_link_url,
+            "amount": float(risk.amount_at_risk),
+            "currency": risk.currency,
+        },
+    )
+
+    return link_res
+
+
+@router.get("/{risk_id}/status", summary="Get lightweight recovery status for a risk")
+def get_risk_recovery_status(
+    risk_id: uuid.UUID,
+    db: Session = Depends(get_db),
+):
+    """Retrieve current recovery lifecycle status, amounts, and payment link info."""
+    risk = db.query(RevenueRisk).filter_by(id=risk_id).first()
+    if not risk:
+        raise HTTPException(status_code=404, detail=f"RevenueRisk {risk_id} not found.")
+
+    return {
+        "id": str(risk.id),
+        "status": risk.status,
+        "current_step": risk.current_step,
+        "amount_at_risk": float(risk.amount_at_risk),
+        "amount_recovered": float(risk.amount_recovered),
+        "currency": risk.currency,
+        "payment_link_id": risk.payment_link_id,
+        "payment_link_url": risk.payment_link_url,
+        "source": getattr(risk, "source", "simulation"),
+        "attempt_count": risk.attempt_count,
+        "resolved_at": risk.resolved_at.isoformat() if risk.resolved_at else None,
+        "stop_reason": risk.stop_reason,
+    }
 

@@ -46,7 +46,7 @@ class OperatorCopilotService:
             return CopilotQueryResponse(
                 query=req.query,
                 answer=(
-                    "⚠️ Direct execution blocked: RecoverAI Operator Copilot is a read-only analytics advisor. "
+                    "⚠️ Direct execution blocked: RevenueShield Operator Copilot is a read-only analytics advisor. "
                     "I cannot directly execute recovery actions. In accordance with fintech compliance and safety guardrails, "
                     "mass-charging or unverified retries are strictly blocked. All recovery interventions must be individually evaluated by the "
                     "deterministic PolicyEngine (verifying customer opt-outs, 24-hour cooldowns, and retry limits) "
@@ -180,7 +180,7 @@ class OperatorCopilotService:
                     "Show top recovery opportunities",
                 ],
                 is_executable=False,
-                policy_notice="Simulated via RecoverAI Monte Carlo Strategy Simulator.",
+                policy_notice="Simulated via RevenueShield Monte Carlo Strategy Simulator.",
             )
 
         # 1. Gateway Degradation / Performance

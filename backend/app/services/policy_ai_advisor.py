@@ -27,7 +27,7 @@ class PolicyAIAdvisor:
                 f"optimal 24–36 hour settlement window (+3.2% recovery lift) while significantly decreasing customer contact fatigue."
             )
             rationale = (
-                f"RecoverAI evaluated {observations_count:,} historical recovery interactions. Transactions retried within 12–24h "
+                f"RevenueShield evaluated {observations_count:,} historical recovery interactions. Transactions retried within 12–24h "
                 f"experienced higher soft-decline repeat rates. Extending cooldown to {proposed_value}h allows customer funds to settle, "
                 f"producing an estimated +${projected_net_revenue_delta:.2f} monthly net revenue improvement."
             )

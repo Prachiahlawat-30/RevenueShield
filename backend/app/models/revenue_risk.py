@@ -80,6 +80,20 @@ class RevenueRisk(Base):
         String(100),
         nullable=True,
     )
+    payment_link_id: Mapped[Optional[str]] = mapped_column(
+        String(100),
+        index=True,
+        nullable=True,
+    )
+    payment_link_url: Mapped[Optional[str]] = mapped_column(
+        String(500),
+        nullable=True,
+    )
+    source: Mapped[str] = mapped_column(
+        String(50),
+        default="simulation",
+        nullable=False,
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),

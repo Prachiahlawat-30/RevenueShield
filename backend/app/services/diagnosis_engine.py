@@ -63,7 +63,7 @@ class DiagnosisEngine:
         ]
 
         system_prompt = (
-            "You are the AI Diagnosis Engine for RecoverAI, an enterprise revenue recovery platform.\n"
+            "You are the AI Diagnosis Engine for RevenueShield, an enterprise revenue recovery platform.\n"
             "Analyze the payment failure metadata and recommend a safe, bounded recovery action.\n"
             "CRITICAL CONSTRAINTS:\n"
             "- You only propose actions; you CANNOT execute them.\n"

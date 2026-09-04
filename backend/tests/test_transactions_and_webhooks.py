@@ -7,10 +7,16 @@ from fastapi.testclient import TestClient
 from app.main import create_application
 
 
+from app.core.database import get_db
+
+
 @pytest.fixture
-def client():
+def client(db):
     app = create_application()
-    return TestClient(app)
+    app.dependency_overrides[get_db] = lambda: db
+    with TestClient(app) as test_client:
+        yield test_client
+    app.dependency_overrides.clear()
 
 
 def test_download_sample_csv(client):

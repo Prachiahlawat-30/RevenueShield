@@ -20,6 +20,9 @@ class RevenueRiskBase(BaseModel):
     last_attempt_at: Optional[datetime] = None
     resolved_at: Optional[datetime] = None
     stop_reason: Optional[str] = None
+    payment_link_id: Optional[str] = None
+    payment_link_url: Optional[str] = None
+    source: str = "simulation"
 
 
 class RevenueRiskCreate(RevenueRiskBase):

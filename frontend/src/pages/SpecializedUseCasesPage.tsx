@@ -93,6 +93,7 @@ export const SpecializedUseCasesPage: React.FC = () => {
   const [currentSpokenTurn, setCurrentSpokenTurn] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isPayloadCopied, setIsPayloadCopied] = useState(false);
+  const [recoverySourceMode, setRecoverySourceMode] = useState<'SIMULATION' | 'RAZORPAY_TEST'>('RAZORPAY_TEST');
 
   // 4. Interactive WhatsApp Checkout Modals State
   const [checkoutModalType, setCheckoutModalType] = useState<'UPI' | 'CARD' | 'SUPPORT' | null>(null);
@@ -506,47 +507,74 @@ export const SpecializedUseCasesPage: React.FC = () => {
                 </p>
               </div>
 
-              {/* Language Selector */}
-              <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">
-                <button
-                  onClick={() => {
-                    setLanguageMode('HINGLISH');
-                    handleGenerateConversationalFlow('HINGLISH', channelMode, conversationalAmount, failureType);
-                  }}
-                  className={`px-3 py-1.5 rounded-lg font-semibold transition-colors cursor-pointer ${
-                    languageMode === 'HINGLISH'
-                      ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
-                      : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
-                  }`}
-                >
-                  🇮🇳 Hinglish (Conversational)
-                </button>
-                <button
-                  onClick={() => {
-                    setLanguageMode('HINDI');
-                    handleGenerateConversationalFlow('HINDI', channelMode, conversationalAmount, failureType);
-                  }}
-                  className={`px-3 py-1.5 rounded-lg font-semibold transition-colors cursor-pointer ${
-                    languageMode === 'HINDI'
-                      ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
-                      : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
-                  }`}
-                >
-                  हिंदी Hindi (Formal)
-                </button>
-                <button
-                  onClick={() => {
-                    setLanguageMode('ENGLISH');
-                    handleGenerateConversationalFlow('ENGLISH', channelMode, conversationalAmount, failureType);
-                  }}
-                  className={`px-3 py-1.5 rounded-lg font-semibold transition-colors cursor-pointer ${
-                    languageMode === 'ENGLISH'
-                      ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
-                      : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
-                  }`}
-                >
-                  🌐 English
-                </button>
+              <div className="flex flex-wrap items-center gap-3">
+                {/* Engine Mode Switcher */}
+                <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">
+                  <button
+                    onClick={() => setRecoverySourceMode('SIMULATION')}
+                    className={`px-3 py-1.5 rounded-lg font-semibold transition cursor-pointer ${
+                      recoverySourceMode === 'SIMULATION'
+                        ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
+                        : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                    }`}
+                  >
+                    Simulation Mode
+                  </button>
+                  <button
+                    onClick={() => setRecoverySourceMode('RAZORPAY_TEST')}
+                    className={`px-3 py-1.5 rounded-lg font-semibold transition cursor-pointer flex items-center gap-1.5 ${
+                      recoverySourceMode === 'RAZORPAY_TEST'
+                        ? 'bg-blue-600 text-white shadow-xs'
+                        : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                    }`}
+                  >
+                    <Zap className="h-3.5 w-3.5" />
+                    Razorpay Test Mode
+                  </button>
+                </div>
+
+                {/* Language Selector */}
+                <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">
+                  <button
+                    onClick={() => {
+                      setLanguageMode('HINGLISH');
+                      handleGenerateConversationalFlow('HINGLISH', channelMode, conversationalAmount, failureType);
+                    }}
+                    className={`px-3 py-1.5 rounded-lg font-semibold transition-colors cursor-pointer ${
+                      languageMode === 'HINGLISH'
+                        ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
+                        : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                    }`}
+                  >
+                    🇮🇳 Hinglish (Conversational)
+                  </button>
+                  <button
+                    onClick={() => {
+                      setLanguageMode('HINDI');
+                      handleGenerateConversationalFlow('HINDI', channelMode, conversationalAmount, failureType);
+                    }}
+                    className={`px-3 py-1.5 rounded-lg font-semibold transition-colors cursor-pointer ${
+                      languageMode === 'HINDI'
+                        ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
+                        : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                    }`}
+                  >
+                    हिंदी Hindi (Formal)
+                  </button>
+                  <button
+                    onClick={() => {
+                      setLanguageMode('ENGLISH');
+                      handleGenerateConversationalFlow('ENGLISH', channelMode, conversationalAmount, failureType);
+                    }}
+                    className={`px-3 py-1.5 rounded-lg font-semibold transition-colors cursor-pointer ${
+                      languageMode === 'ENGLISH'
+                        ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
+                        : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                    }`}
+                  >
+                    🌐 English
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -767,8 +795,10 @@ export const SpecializedUseCasesPage: React.FC = () => {
                     <div className="p-2.5 rounded-lg bg-white dark:bg-slate-900 border border-emerald-200 dark:border-emerald-900/40 text-xs flex items-center justify-between shadow-xs">
                       <div className="flex items-center gap-2">
                         <Zap className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                        <span className="font-mono font-bold text-slate-900 dark:text-white">
-                          pay.revenueshield.io/quick/settle
+                        <span className="font-mono font-bold text-slate-900 dark:text-white text-[11px] truncate max-w-[210px]">
+                          {recoverySourceMode === 'RAZORPAY_TEST'
+                            ? `https://rzp.io/i/RS_${conversationalAmount}`
+                            : 'pay.revenueshield.io/quick/settle'}
                         </span>
                       </div>
                       <button
@@ -778,7 +808,7 @@ export const SpecializedUseCasesPage: React.FC = () => {
                         }}
                         className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 cursor-pointer"
                       >
-                        Open Portal <ExternalLink className="w-3 h-3" />
+                        {recoverySourceMode === 'RAZORPAY_TEST' ? 'Open Test Checkout' : 'Open Portal'} <ExternalLink className="w-3 h-3" />
                       </button>
                     </div>
 
@@ -792,7 +822,7 @@ export const SpecializedUseCasesPage: React.FC = () => {
                         className="w-full py-2.5 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-sm cursor-pointer"
                       >
                         <Zap className="w-4 h-4 fill-current" />
-                        <span>Pay via UPI (Instant QR & App)</span>
+                        <span>{recoverySourceMode === 'RAZORPAY_TEST' ? 'Pay via Razorpay Test Checkout (UPI / QR)' : 'Pay via UPI (Instant QR & App)'}</span>
                       </button>
 
                       <button
