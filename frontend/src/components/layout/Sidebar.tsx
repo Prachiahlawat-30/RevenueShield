@@ -179,30 +179,61 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Brand Header */}
       <div className="flex h-16 items-center justify-between border-b border-slate-200 dark:border-white/[0.06] px-4 shrink-0">
         {!isCollapsed ? (
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-[#3B82F6] text-white shadow-sm">
-              <Shield className="h-4 w-4 fill-current" />
+          <div className="flex items-center gap-2.5 min-w-0">
+            {/* Stylized Angular Geometric Brand Mark */}
+            <div className="flex items-center justify-center shrink-0">
+              <svg
+                viewBox="0 0 19 22"
+                className="h-7 w-auto"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                {/* Left dark navy polygon */}
+                <polygon
+                  points="11.19,9.03 7.94,21.47 0,21.47 1.61,15.35 11.19,9.03"
+                  className="fill-[#072654] dark:fill-white transition-colors"
+                />
+                {/* Right electric blue blade */}
+                <polygon
+                  points="18.4,0 12.76,21.47 8.89,21.47 12.7,6.93 6.86,10.78 7.9,6.95 18.4,0"
+                  fill="#3395FF"
+                />
+              </svg>
             </div>
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center gap-1.5 leading-none">
-                <span className="text-sm font-semibold tracking-tight text-slate-900 dark:text-[#F5F6FA]">
+                <span className="text-[17px] font-black italic tracking-tight text-[#072654] dark:text-[#F8FAFC]">
                   RevenueShield
                 </span>
-                <span className="h-4.5 px-1.5 rounded-full inline-flex items-center text-[9px] font-medium bg-slate-100 dark:bg-white/[0.05] text-slate-600 dark:text-[#9CA3B0] border border-slate-200 dark:border-white/[0.08]">
+                <span className="h-4 px-1.5 rounded-full inline-flex items-center text-[9px] font-medium bg-slate-100 dark:bg-white/[0.05] text-slate-600 dark:text-[#9CA3B0] border border-slate-200 dark:border-white/[0.08]">
                   Ops
                 </span>
               </div>
-              <span className="text-[11px] text-slate-500 dark:text-[#6B7280] font-normal">Financial Operations</span>
+              <span className="text-[10px] text-slate-500 dark:text-[#6B7280] font-normal block mt-0.5">Financial Operations</span>
             </div>
           </div>
         ) : (
           <button
             onClick={onToggleCollapse}
             title="Expand sidebar"
-            className="group relative mx-auto flex h-8 w-8 items-center justify-center rounded-[10px] bg-[#3B82F6] text-white shadow-sm transition-all cursor-pointer hover:bg-[#2563EB]"
+            className="group relative mx-auto flex h-9 w-9 items-center justify-center rounded-[10px] p-1.5 hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-all cursor-pointer"
           >
-            <Shield className="h-4 w-4 fill-current group-hover:hidden" />
-            <PanelLeftOpen className="h-4 w-4 hidden group-hover:block" />
+            <svg
+              viewBox="0 0 19 22"
+              className="h-6 w-auto shrink-0 group-hover:hidden"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polygon
+                points="11.19,9.03 7.94,21.47 0,21.47 1.61,15.35 11.19,9.03"
+                className="fill-[#072654] dark:fill-white transition-colors"
+              />
+              <polygon
+                points="18.4,0 12.76,21.47 8.89,21.47 12.7,6.93 6.86,10.78 7.9,6.95 18.4,0"
+                fill="#3395FF"
+              />
+            </svg>
+            <PanelLeftOpen className="h-4 w-4 hidden group-hover:block text-slate-600 dark:text-slate-300" />
           </button>
         )}
 
