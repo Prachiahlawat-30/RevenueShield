@@ -88,12 +88,21 @@ class RazorpayService:
                 "webhook_configured": bool(settings.RAZORPAY_WEBHOOK_SECRET),
             }
 
+        if not razorpay:
+            return {
+                "connected": False,
+                "status": "error",
+                "message": "The 'razorpay' Python library is not installed in the server environment. Please clear build cache and redeploy on Render.",
+                "key_id": settings.masked_razorpay_key,
+                "webhook_configured": bool(settings.RAZORPAY_WEBHOOK_SECRET),
+            }
+
         client = cls.get_client()
         if not client:
             return {
                 "connected": False,
                 "status": "error",
-                "message": "Razorpay client failed to initialize.",
+                "message": "Razorpay client failed to initialize. Please verify RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET.",
                 "key_id": settings.masked_razorpay_key,
                 "webhook_configured": bool(settings.RAZORPAY_WEBHOOK_SECRET),
             }
@@ -110,11 +119,16 @@ class RazorpayService:
                 "webhook_configured": bool(settings.RAZORPAY_WEBHOOK_SECRET),
             }
         except Exception as e:
-            logger.warning(f"Razorpay test connection failed: {e}")
+            err_msg = str(e)
+            logger.warning(f"Razorpay test connection failed: {err_msg}")
+            if "Authentication failed" in err_msg:
+                friendly_msg = "Razorpay Authentication Failed: The API Key or Secret in the server environment is invalid or not yet updated."
+            else:
+                friendly_msg = f"Connection error: {err_msg}"
             return {
                 "connected": False,
                 "status": "failed",
-                "message": f"Connection error: {str(e)}",
+                "message": friendly_msg,
                 "key_id": settings.masked_razorpay_key,
                 "webhook_configured": bool(settings.RAZORPAY_WEBHOOK_SECRET),
             }

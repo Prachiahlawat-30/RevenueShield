@@ -48,9 +48,10 @@ class Settings(BaseSettings):
         """Return masked key ID for safe UI status display without revealing credentials."""
         if not self.RAZORPAY_KEY_ID:
             return ""
-        if len(self.RAZORPAY_KEY_ID) > 8:
-            return f"{self.RAZORPAY_KEY_ID[:8]}********"
-        return "********"
+        key = self.RAZORPAY_KEY_ID.strip()
+        if len(key) > 12:
+            return f"{key[:12]}...{key[-4:]}"
+        return f"{key[:4]}****"
 
     # CORS Settings
     CORS_ORIGINS: List[str] = [
