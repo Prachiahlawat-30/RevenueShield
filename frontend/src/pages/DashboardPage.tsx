@@ -137,12 +137,12 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
       {/* Real-time SSE Live Event Notification Banner */}
       {liveNotification && (
         <div
-          className={`flex items-center justify-between rounded-xl px-4 py-3 text-xs font-semibold shadow-md transition-all animate-fintech-fade ${
+          className={`flex items-center justify-between rounded-xl px-4 py-3 text-xs font-semibold shadow-sm transition-all border ${
             liveNotification.type === 'recovered'
-              ? 'bg-emerald-500/15 border border-emerald-500/40 text-emerald-300'
+              ? 'bg-emerald-50 text-emerald-900 border-emerald-300 dark:bg-emerald-950/40 dark:border-emerald-500/40 dark:text-emerald-200'
               : liveNotification.type === 'failed'
-              ? 'bg-rose-500/15 border border-rose-500/40 text-rose-300'
-              : 'bg-blue-500/15 border border-blue-500/40 text-blue-300'
+              ? 'bg-rose-50 text-rose-900 border-rose-300 dark:bg-rose-950/40 dark:border-rose-500/40 dark:text-rose-200'
+              : 'bg-blue-50 text-blue-900 border-blue-300 dark:bg-blue-950/40 dark:border-blue-500/40 dark:text-blue-200'
           }`}
         >
           <div className="flex items-center gap-2.5">

@@ -481,33 +481,33 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
           </div>
 
           {/* Razorpay Test Mode Recovery Link Card */}
-          <div className="rounded-[16px] border border-blue-500/20 bg-gradient-to-r from-blue-950/25 via-[#131824] to-indigo-950/25 p-4 shadow-sm backdrop-blur-sm">
+          <div className="rounded-[16px] border border-blue-200 dark:border-blue-500/30 bg-gradient-to-r from-blue-50/80 via-white to-indigo-50/80 dark:from-blue-950/25 dark:via-[#131824] dark:to-indigo-950/25 p-4 shadow-sm">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-400">
-                  <Zap className="h-4.5 w-4.5" />
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-600/10 dark:bg-blue-500/20 border border-blue-300 dark:border-blue-500/30 text-blue-600 dark:text-blue-400 shadow-xs">
+                  <Zap className="h-4.5 w-4.5 fill-current" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">
                     <h4 className="text-xs font-bold text-slate-900 dark:text-white">
                       Razorpay Test Mode Recovery Link
                     </h4>
-                    <span className="rounded-md bg-blue-500/10 border border-blue-500/20 px-1.5 py-0.5 text-[10px] font-mono text-blue-400">
+                    <span className="rounded-md bg-blue-100 dark:bg-blue-900/40 border border-blue-300 dark:border-blue-500/30 px-1.5 py-0.5 text-[10px] font-mono font-semibold text-blue-800 dark:text-blue-200">
                       {currentRisk.payment_link_id || 'RZP Link'}
                     </span>
                     {currentRisk.status === 'recovered' ? (
-                      <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 text-[10px] font-mono font-semibold text-emerald-400">
-                        <CheckCircle2 className="h-3 w-3 text-emerald-400" /> Settled & Closed
+                      <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-500/30 px-1.5 py-0.5 text-[10px] font-mono font-semibold text-emerald-800 dark:text-emerald-300">
+                        <CheckCircle2 className="h-3 w-3 text-emerald-600 dark:text-emerald-400" /> Settled & Closed
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 rounded-md bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 text-[10px] font-mono text-amber-300">
+                      <span className="inline-flex items-center gap-1 rounded-md bg-amber-100 dark:bg-amber-950/50 border border-amber-300 dark:border-amber-500/30 px-1.5 py-0.5 text-[10px] font-mono font-semibold text-amber-800 dark:text-amber-200">
                         Awaiting Customer Checkout
                       </span>
                     )}
                   </div>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                  <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5">
                     {currentRisk.payment_link_url ? (
-                      <span className="font-mono text-blue-400 break-all">{currentRisk.payment_link_url}</span>
+                      <span className="font-mono text-blue-700 dark:text-blue-300 font-semibold break-all">{currentRisk.payment_link_url}</span>
                     ) : (
                       'Generate a 1-click Razorpay test payment link to initiate checkout recovery.'
                     )}
@@ -520,16 +520,16 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
                   <>
                     <button
                       onClick={handleCopyLink}
-                      className="flex items-center gap-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+                      className="flex items-center gap-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1 text-xs font-semibold text-slate-800 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-700 transition cursor-pointer shadow-xs"
                     >
-                      {linkCopied ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
+                      {linkCopied ? <Check className="h-3 w-3 text-emerald-600 dark:text-emerald-400" /> : <Copy className="h-3 w-3" />}
                       <span>{linkCopied ? 'Copied' : 'Copy Link'}</span>
                     </button>
                     <a
                       href={currentRisk.payment_link_url}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex items-center gap-1.5 rounded-lg bg-[#2B6FFF] hover:bg-[#2055CC] px-3 py-1 text-xs font-semibold text-white shadow-sm transition"
+                      className="flex items-center gap-1.5 rounded-lg bg-[#2B6FFF] hover:bg-[#2055CC] px-3 py-1 text-xs font-bold text-white shadow-sm transition active:scale-[0.99]"
                     >
                       <span>Open Test Checkout</span>
                       <ExternalLink className="h-3 w-3" />
