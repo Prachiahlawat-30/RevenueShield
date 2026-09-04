@@ -255,24 +255,33 @@ RevenueShield supports end-to-end integration with **Razorpay TEST MODE** paymen
                   └────────────────────────────────────────┘
 ```
 
-### 1. Environment Configuration (`.env`)
-Create a `.env` file at the repository root with your Razorpay Test Mode credentials:
+### 1. Environment Configuration
+
+#### A. Local Development (`backend/.env` or root `.env`)
+Create a `.env` file in `backend/.env` (or copy from `.env.example`):
 
 ```bash
 # Razorpay TEST MODE API Credentials (from https://dashboard.razorpay.com)
 RAZORPAY_KEY_ID=rzp_test_YourTestKeyIdHere
 RAZORPAY_KEY_SECRET=YourTestKeySecretHere
-RAZORPAY_WEBHOOK_SECRET=YourWebhookSecretHere
+RAZORPAY_WEBHOOK_SECRET=RevenueShieldWebhook_2026_YourSecret
 
-# Environment Mode
-ENVIRONMENT=development
-LOG_LEVEL=INFO
+# AI Engine Configuration
+OPENAI_API_KEY=your_openai_key_here
+OPENAI_MODEL=gpt-4o-mini
+DEMO_MODE=true
 
-# Database
-DATABASE_URL=sqlite:///./revenueshield.db
+# Database (PostgreSQL / SQLite)
+DATABASE_URL=postgresql+psycopg://postgres:postgres@localhost:5433/revenueshield
 ```
 
-> **Note:** If `RAZORPAY_KEY_ID` is omitted or unconfigured, RevenueShield automatically runs in **Mock Sandbox Mode**, generating simulated payment links (`https://rzp.io/i/...`) so all features remain testable without active API credentials.
+#### B. Cloud Production Deployment (Render Dashboard)
+When deploying the backend on **Render**, add these environment variables under **Service Settings** > **Environment**:
+* `RAZORPAY_KEY_ID`: `rzp_test_...`
+* `RAZORPAY_KEY_SECRET`: `...`
+* `RAZORPAY_WEBHOOK_SECRET`: `...`
+
+> **Note:** If `RAZORPAY_KEY_ID` is not configured, RevenueShield automatically switches to **Mock / Demo Sandbox Mode**, allowing reviewers to test the entire recovery lifecycle with 1-click simulations without needing real API keys.
 
 ### 2. Local Webhook Tunneling (ngrok)
 To receive live webhooks from Razorpay during local development:
@@ -288,20 +297,19 @@ ngrok http 8000
 1. Copy the generated HTTPS ngrok URL (e.g. `https://xyz.ngrok-free.app`).
 2. Log into the [Razorpay Merchant Dashboard](https://dashboard.razorpay.com) in **TEST MODE**.
 3. Navigate to **Settings** &gt; **Webhooks** &gt; **Add New Webhook**.
-4. Set **Webhook URL**: `https://xyz.ngrok-free.app/api/webhooks/razorpay`
-5. Set **Secret**: your `RAZORPAY_WEBHOOK_SECRET`
+4. Set **Webhook URL**: `https://xyz.ngrok-free.app/api/webhooks/razorpay` (or your Render URL for production).
+5. Set **Secret**: your `RAZORPAY_WEBHOOK_SECRET`.
 6. Subscribe to the following events:
-   * `payment.failed`
-   * `payment.captured`
-   * `payment_link.paid`
-   * `order.paid`
+   * `payment.failed` (Triggers AI diagnosis and recovery link creation)
+   * `payment.captured` (Closes recovery loop and settles revenue)
+   * `payment_link.paid` / `order.paid`
 
-### 3. Verification Endpoints
-* **Connection Status**: `GET /api/razorpay/status`
-* **Test Connection**: `POST /api/razorpay/test-connection`
-* **Generate Payment Link**: `POST /api/recovery/{risk_id}/create-payment-link`
-* **Simulate Webhook**: `POST /api/webhooks/razorpay/simulate`
-* **Real-time SSE Stream**: `GET /api/recovery/stream`
+### 3. Verification & Diagnostic Endpoints
+* **Connection Status**: `GET /api/razorpay/status` (Returns masked key, webhook config, and mode)
+* **Test Connection**: `POST /api/razorpay/test-connection` (Validates live connectivity with Razorpay Test API)
+* **Generate Payment Link**: `POST /api/recovery/{risk_id}/create-payment-link` (Creates live `https://rzp.io/rzp/...` checkout link)
+* **Simulate Webhook**: `POST /api/webhooks/razorpay/simulate` (Simulates full failure-to-settlement lifecycle)
+* **Real-time SSE Stream**: `GET /api/recovery/stream` (Streams live recovery events to dashboard)
 
 ---
 
@@ -310,14 +318,16 @@ ngrok http 8000
 ### **Backend**
 * **Runtime**: Python 3.10+
 * **Framework**: FastAPI (Async REST APIs)
+* **Payment Gateway**: Razorpay Python SDK (`razorpay>=1.4.1`)
 * **Database**: SQLite / PostgreSQL 15+ with SQLAlchemy 2.0 ORM & Alembic migrations
 * **Validation**: Pydantic v2 & Pydantic-Settings
-* **Testing**: Pytest (109 unit & integration tests, 100% passing)
+* **Testing**: Pytest (113 unit & integration tests, 100% passing)
 
 ### **Frontend**
 * **Framework**: React 18 with TypeScript (Strict Mode)
-* **Build Tool**: Vite 5.x / 8.x
-* **Styling**: Tailwind CSS with custom Tier-1 FinTech design system
+* **Build Tool**: Vite 8.x
+* **Styling**: Tailwind CSS with adaptive Tier-1 FinTech high-contrast light & dark design system
+* **Real-Time Stream**: Server-Sent Events (`EventSource`) with auto-reconnect backoff
 * **Icons & Visuals**: Lucide React & Recharts
 * **Speech Engine**: Web Speech API (`window.speechSynthesis`)
 
@@ -327,8 +337,8 @@ ngrok http 8000
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/Prachiahlawat-30/Recover-AI.git
-cd Recover-AI
+git clone https://github.com/Prachiahlawat-30/RevenueShield.git
+cd RevenueShield
 ```
 
 ### 2. Backend Setup
@@ -344,10 +354,10 @@ python -m venv .venv
 # On Linux / macOS:
 source .venv/bin/activate
 
-# Install dependencies
+# Install dependencies (including razorpay SDK)
 pip install -r requirements.txt
 
-# Run the complete test suite (109 tests)
+# Run the complete test suite (113 tests)
 pytest tests/ -q
 
 # Start the FastAPI server
@@ -375,7 +385,7 @@ The web dashboard will be available at: [**http://localhost:5173**](http://local
 
 ## 🧪 Verification & Test Suite
 
-The platform includes **109 automated unit and integration tests** covering:
+The platform includes **113 automated unit and integration tests** covering:
 * Core risk ingestion and failure classification.
 * Deterministic policy boundary verification (cooldown, max attempts, opt-out).
 * Adaptive authorization and pre-auth 3DS exemption scoring.
@@ -386,7 +396,7 @@ The platform includes **109 automated unit and integration tests** covering:
 
 ```bash
 pytest backend/tests/ -q
-# ======================== 113 passed in 5.25s ========================
+# ======================== 113 passed in 5.35s ========================
 ```
 
 ---
