@@ -49,6 +49,7 @@ class RiskEngine:
         cls,
         db: Session,
         transaction_id: uuid.UUID,
+        risk_id: Optional[uuid.UUID] = None,
     ) -> RevenueRisk:
         """Evaluate a failed transaction, calculate revenue at risk, and instantiate a RevenueRisk record."""
         transaction = db.query(Transaction).filter_by(id=transaction_id).first()
@@ -66,7 +67,7 @@ class RiskEngine:
         )
 
         revenue_risk = RevenueRisk(
-            id=uuid.uuid4(),
+            id=risk_id or uuid.uuid4(),
             transaction_id=transaction.id,
             customer_id=transaction.customer_id,
             amount_at_risk=transaction.amount,

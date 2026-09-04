@@ -30,6 +30,13 @@ def clean_db():
     Base.metadata.drop_all(bind=engine)
 
 
+@pytest.fixture(autouse=True)
+def clean_test_settings(monkeypatch):
+    """Ensure consistent test environment settings across all tests."""
+    from app.core.config import settings
+    monkeypatch.setattr(settings, "RAZORPAY_WEBHOOK_SECRET", "")
+
+
 @pytest.fixture
 def db():
     """Provide a clean database session populated with default policy."""

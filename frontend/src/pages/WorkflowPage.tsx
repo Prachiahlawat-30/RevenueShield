@@ -121,12 +121,15 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
   };
 
   // Load available risks
-  const loadRisks = async () => {
+  const loadRisks = async (preferredId?: string) => {
     try {
       const data = await getRevenueRisks({ page: 1, page_size: 20 });
       setAllRisks(data.items);
-      const riskExists = data.items.some((r) => r.id === selectedRiskId);
-      if ((!selectedRiskId || !riskExists) && data.items.length > 0) {
+      const targetId = typeof preferredId === 'string' ? preferredId : selectedRiskId;
+      const riskExists = data.items.some((r) => r.id === targetId);
+      if (riskExists && targetId) {
+        if (targetId !== selectedRiskId) setSelectedRiskId(targetId);
+      } else if (data.items.length > 0) {
         setSelectedRiskId(data.items[0].id);
       }
     } catch (err) {
@@ -162,10 +165,11 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
         });
       }
     } catch (err: any) {
-      console.error('Failed to fetch risk detail', err);
       if (err?.response?.status === 404) {
-        // Case was purged or server restarted with fresh seeds - auto-sync
+        // Case was purged or server restarted - auto sync to active risk
         await loadRisks();
+      } else {
+        console.error('Failed to fetch risk detail', err);
       }
     }
   };
@@ -176,8 +180,10 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
       setLoadingPreauth(true);
       const data = await getAuthorizationByRisk(id);
       setPreauthDecision(data);
-    } catch (err) {
-      console.error('Failed to load pre-auth decision', err);
+    } catch (err: any) {
+      if (err?.response?.status !== 404) {
+        console.error('Failed to load pre-auth decision', err);
+      }
     } finally {
       setLoadingPreauth(false);
     }
@@ -186,6 +192,12 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
   useEffect(() => {
     loadRisks();
   }, []);
+
+  useEffect(() => {
+    if (riskId && riskId !== selectedRiskId) {
+      setSelectedRiskId(riskId);
+    }
+  }, [riskId]);
 
   useEffect(() => {
     if (selectedRiskId) {
@@ -204,9 +216,10 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
       setLatestDiagnosis(diag);
       setCurrentStage('ACTION_SELECTED');
     } catch (err: any) {
-      console.error('Diagnosis failed', err);
       if (err?.response?.status === 404) {
         await loadRisks();
+      } else {
+        console.error('Diagnosis failed', err);
       }
     } finally {
       setIsDiagnosing(false);
@@ -230,9 +243,10 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
 
       await loadRiskDetail(selectedRiskId);
     } catch (err: any) {
-      console.error('Execute step failed', err);
       if (err?.response?.status === 404) {
         await loadRisks();
+      } else {
+        console.error('Execute step failed', err);
       }
     } finally {
       setIsExecutingStep(false);
@@ -252,9 +266,10 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
       setCurrentStage('OUTCOME');
       await loadRiskDetail(selectedRiskId);
     } catch (err: any) {
-      console.error('Full workflow failed', err);
       if (err?.response?.status === 404) {
         await loadRisks();
+      } else {
+        console.error('Full workflow failed', err);
       }
     } finally {
       setIsExecutingFull(false);
@@ -269,10 +284,11 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
       setCurrentStage('OUTCOME');
       await loadRisks();
     } catch (err: any) {
-      console.error('Manual resolve failed', err);
       if (err?.response?.status === 404) {
         // Case was purged or server reseeded - auto re-sync risks
         await loadRisks();
+      } else {
+        console.error('Manual resolve failed', err);
       }
     }
   };
@@ -309,7 +325,7 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
             ))}
           </select>
           <button
-            onClick={loadRisks}
+            onClick={() => loadRisks()}
             title="Refresh Active Cases from Server"
             className="flex items-center justify-center p-1.5 rounded-lg border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-[#12161F] text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer shadow-xs"
           >

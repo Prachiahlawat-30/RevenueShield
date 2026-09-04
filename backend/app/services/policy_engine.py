@@ -190,6 +190,7 @@ class PolicyEngine:
         # -------------------------------------------------------------
         # FINAL APPROVAL
         # -------------------------------------------------------------
+        is_escalation = (proposed_action == RecoveryAction.ESCALATE_TO_HUMAN)
         applied_rules.append(f"RULE_FINAL_APPROVAL: APPROVED {proposed_action.value}")
         return PolicyEvaluationResult(
             is_approved=True,
@@ -197,4 +198,7 @@ class PolicyEngine:
             effective_action=proposed_action,
             applied_rules=applied_rules,
             rejection_reason=None,
+            requires_escalation=is_escalation,
+            is_terminal_stop=is_escalation,
+            stop_reason="OPERATOR_ESCALATED" if is_escalation else None,
         )

@@ -18,6 +18,18 @@ from app.models.recovery_experiment import RecoveryExperiment, RecoveryExperimen
 from app.services.risk_engine import RiskEngine
 
 
+DETERMINISTIC_NAMESPACE = uuid.UUID("a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d")
+
+MERCHANT_IDS = {
+    "techcorp": uuid.uuid5(DETERMINISTIC_NAMESPACE, "merchant.techcorp"),
+    "fashionkart": uuid.uuid5(DETERMINISTIC_NAMESPACE, "merchant.fashionkart"),
+    "cloudstream": uuid.uuid5(DETERMINISTIC_NAMESPACE, "merchant.cloudstream"),
+}
+POLICY_ID = uuid.uuid5(DETERMINISTIC_NAMESPACE, "policy.default")
+INCIDENT_ID = uuid.uuid5(DETERMINISTIC_NAMESPACE, "incident.0")
+EXPERIMENT_ID = uuid.uuid5(DETERMINISTIC_NAMESPACE, "experiment.0")
+
+
 def seed_database(db: Session, reset: bool = False) -> Dict[str, int]:
     """Populate database with default policies, merchants, customers, incidents, experiments, and payment failure scenarios."""
     if reset:
@@ -37,7 +49,7 @@ def seed_database(db: Session, reset: bool = False) -> Dict[str, int]:
     default_policy = db.query(Policy).filter_by(rule_code="DEFAULT_PAYMENT_FAILURE_POLICY").first()
     if not default_policy:
         default_policy = Policy(
-            id=uuid.uuid4(),
+            id=POLICY_ID,
             name="Default SaaS Payment Failure Policy",
             rule_code="DEFAULT_PAYMENT_FAILURE_POLICY",
             max_attempts=3,
@@ -49,35 +61,43 @@ def seed_database(db: Session, reset: bool = False) -> Dict[str, int]:
         db.flush()
 
     # 2. Seed Merchants
-    merchants = {
-        "techcorp": Merchant(
-            id=uuid.uuid4(),
-            external_id="MERCH_TECHCORP",
-            name="TechCorp Cloud Solutions",
-            code="TECHCORP",
-            tier="enterprise",
-            industry="B2B SaaS",
-        ),
-        "fashionkart": Merchant(
-            id=uuid.uuid4(),
-            external_id="MERCH_FASHIONKART",
-            name="FashionKart Retail",
-            code="FASHIONKART",
-            tier="growth",
-            industry="E-Commerce",
-        ),
-        "cloudstream": Merchant(
-            id=uuid.uuid4(),
-            external_id="MERCH_CLOUDSTREAM",
-            name="CloudStream Media",
-            code="CLOUDSTREAM",
-            tier="enterprise",
-            industry="Digital Media",
-        ),
+    merchant_defs = {
+        "techcorp": {
+            "id": MERCHANT_IDS["techcorp"],
+            "external_id": "MERCH_TECHCORP",
+            "name": "TechCorp Cloud Solutions",
+            "code": "TECHCORP",
+            "tier": "enterprise",
+            "industry": "B2B SaaS",
+        },
+        "fashionkart": {
+            "id": MERCHANT_IDS["fashionkart"],
+            "external_id": "MERCH_FASHIONKART",
+            "name": "FashionKart Retail",
+            "code": "FASHIONKART",
+            "tier": "growth",
+            "industry": "E-Commerce",
+        },
+        "cloudstream": {
+            "id": MERCHANT_IDS["cloudstream"],
+            "external_id": "MERCH_CLOUDSTREAM",
+            "name": "CloudStream Media",
+            "code": "CLOUDSTREAM",
+            "tier": "enterprise",
+            "industry": "Digital Media",
+        },
     }
-    for m in merchants.values():
-        db.add(m)
-    db.flush()
+
+    merchants = {}
+    for key, cfg in merchant_defs.items():
+        existing = db.query(Merchant).filter(
+            (Merchant.id == cfg["id"]) | (Merchant.code == cfg["code"]) | (Merchant.external_id == cfg["external_id"])
+        ).first()
+        if not existing:
+            existing = Merchant(**cfg)
+            db.add(existing)
+            db.flush()
+        merchants[key] = existing
 
     # 3. Seed 7 Distinct Customer & Failure Scenarios
     scenarios = [
@@ -247,90 +267,111 @@ def seed_database(db: Session, reset: bool = False) -> Dict[str, int]:
     created_risks = []
     for idx, sc in enumerate(scenarios):
         cust_data = sc["customer"]
-        cust = Customer(
-            id=uuid.uuid4(),
-            merchant_id=sc["merchant_id"],
-            external_id=f"CUST_EXT_{idx+1:03d}",
-            name=cust_data["name"],
-            email=cust_data["email"],
-            phone=cust_data["phone"],
-            payment_method_type=cust_data["payment_method_type"],
-            card_last4=cust_data["card_last4"],
-            card_expiry=cust_data["card_expiry"],
-            is_opted_out=cust_data["is_opted_out"],
-            risk_score=cust_data["risk_score"],
-        )
-        db.add(cust)
-        db.flush()
+        cust_id = uuid.uuid5(DETERMINISTIC_NAMESPACE, f"customer.{idx}")
+        tx_id = uuid.uuid5(DETERMINISTIC_NAMESPACE, f"transaction.{idx}")
+        risk_id = uuid.uuid5(DETERMINISTIC_NAMESPACE, f"risk.{idx}")
+
+        cust = db.query(Customer).filter_by(id=cust_id).first()
+        if not cust:
+            cust = db.query(Customer).filter_by(external_id=f"CUST_EXT_{idx+1:03d}").first()
+        if not cust:
+            cust = Customer(
+                id=cust_id,
+                merchant_id=sc["merchant_id"],
+                external_id=f"CUST_EXT_{idx+1:03d}",
+                name=cust_data["name"],
+                email=cust_data["email"],
+                phone=cust_data["phone"],
+                payment_method_type=cust_data["payment_method_type"],
+                card_last4=cust_data["card_last4"],
+                card_expiry=cust_data["card_expiry"],
+                is_opted_out=cust_data["is_opted_out"],
+                risk_score=cust_data["risk_score"],
+            )
+            db.add(cust)
+            db.flush()
 
         tx_data = sc["transaction"]
-        tx = Transaction(
-            id=uuid.uuid4(),
-            customer_id=cust.id,
-            amount=tx_data["amount"],
-            currency=tx_data["currency"],
-            status=tx_data["status"],
-            failure_code=tx_data["failure_code"],
-            failure_reason=tx_data["failure_reason"],
-            gateway_name=tx_data["gateway_name"],
-            payment_method=tx_data["payment_method"],
-            gateway_payload={"issuer_response": tx_data["failure_code"]},
-        )
-        db.add(tx)
-        db.flush()
+        tx = db.query(Transaction).filter_by(id=tx_id).first()
+        if not tx:
+            tx = Transaction(
+                id=tx_id,
+                customer_id=cust.id,
+                amount=tx_data["amount"],
+                currency=tx_data["currency"],
+                status=tx_data["status"],
+                failure_code=tx_data["failure_code"],
+                failure_reason=tx_data["failure_reason"],
+                gateway_name=tx_data["gateway_name"],
+                payment_method=tx_data["payment_method"],
+                gateway_payload={"issuer_response": tx_data["failure_code"]},
+            )
+            db.add(tx)
+            db.flush()
 
-        risk = RiskEngine.process_failed_transaction(db, tx.id)
+        risk = db.query(RevenueRisk).filter_by(id=risk_id).first()
+        if not risk:
+            risk = db.query(RevenueRisk).filter_by(transaction_id=tx.id).first()
+        if not risk:
+            risk = RiskEngine.process_failed_transaction(db, tx.id, risk_id=risk_id)
         created_risks.append(risk)
 
     # 4. Seed Active Payment Incident
-    incident = PaymentIncident(
-        id=uuid.uuid4(),
-        incident_code="INC-20260901-01",
-        title="Payment Gateway Degradation — Gateway A Timeout Spike",
-        severity="HIGH",
-        status="ACTIVE",
-        affected_gateway="Gateway A",
-        affected_payment_method="UPI",
-        failure_types=["network_error", "temporary_decline"],
-        estimated_revenue_impact=Decimal("870000.00"),
-        root_cause_summary="Upstream processor network communication timeout surge on Gateway A (North India routing cluster).",
-        confidence=Decimal("0.780"),
-        evidence_list=[
-            "Failure rate increased 4.8× in the last 30 minutes (current: 18.2% vs baseline: 3.8%)",
-            "Timeout failures +340% concentrated in Gateway A",
-            "Gateway B and Razorpay rails remain unaffected (<1.1% timeout rates)",
-            "Anomaly started 31 minutes ago during peak business transaction window",
-        ],
-        detected_at=datetime.now(timezone.utc),
-    )
-    db.add(incident)
-    db.flush()
+    incident = db.query(PaymentIncident).filter_by(id=INCIDENT_ID).first()
+    if not incident:
+        incident = PaymentIncident(
+            id=INCIDENT_ID,
+            incident_code="INC-20260901-01",
+            title="Payment Gateway Degradation — Gateway A Timeout Spike",
+            severity="HIGH",
+            status="ACTIVE",
+            affected_gateway="Gateway A",
+            affected_payment_method="UPI",
+            failure_types=["network_error", "temporary_decline"],
+            estimated_revenue_impact=Decimal("870000.00"),
+            root_cause_summary="Upstream processor network communication timeout surge on Gateway A (North India routing cluster).",
+            confidence=Decimal("0.780"),
+            evidence_list=[
+                "Failure rate increased 4.8× in the last 30 minutes (current: 18.2% vs baseline: 3.8%)",
+                "Timeout failures +340% concentrated in Gateway A",
+                "Gateway B and Razorpay rails remain unaffected (<1.1% timeout rates)",
+                "Anomaly started 31 minutes ago during peak business transaction window",
+            ],
+            detected_at=datetime.now(timezone.utc),
+        )
+        db.add(incident)
+        db.flush()
 
     # 5. Seed A/B Experiment & Assignments
-    experiment = RecoveryExperiment(
-        id=uuid.uuid4(),
-        name="Retry Timing Optimization — Immediate vs 6-Hour Smart Delay",
-        description="Comparing immediate re-attempt against 6-hour intelligent delayed retry for transient declines.",
-        strategy_a="immediate_retry",
-        strategy_b="timed_retry_6h",
-        traffic_percentage=50,
-        status="ACTIVE",
-    )
-    db.add(experiment)
-    db.flush()
+    experiment = db.query(RecoveryExperiment).filter_by(id=EXPERIMENT_ID).first()
+    if not experiment:
+        experiment = RecoveryExperiment(
+            id=EXPERIMENT_ID,
+            name="Retry Timing Optimization — Immediate vs 6-Hour Smart Delay",
+            description="Comparing immediate re-attempt against 6-hour intelligent delayed retry for transient declines.",
+            strategy_a="immediate_retry",
+            strategy_b="timed_retry_6h",
+            traffic_percentage=50,
+            status="ACTIVE",
+        )
+        db.add(experiment)
+        db.flush()
 
     # Assign risks to experiment
     for idx, r in enumerate(created_risks):
-        variant = "treatment" if idx % 2 == 0 else "control"
-        strat = experiment.strategy_b if variant == "treatment" else experiment.strategy_a
-        assignment = RecoveryExperimentAssignment(
-            id=uuid.uuid4(),
-            experiment_id=experiment.id,
-            revenue_risk_id=r.id,
-            assigned_strategy=strat,
-            variant=variant,
-        )
-        db.add(assignment)
+        assign_id = uuid.uuid5(DETERMINISTIC_NAMESPACE, f"assignment.{idx}")
+        assignment = db.query(RecoveryExperimentAssignment).filter_by(id=assign_id).first()
+        if not assignment:
+            variant = "treatment" if idx % 2 == 0 else "control"
+            strat = experiment.strategy_b if variant == "treatment" else experiment.strategy_a
+            assignment = RecoveryExperimentAssignment(
+                id=assign_id,
+                experiment_id=experiment.id,
+                revenue_risk_id=r.id,
+                assigned_strategy=strat,
+                variant=variant,
+            )
+            db.add(assignment)
 
     db.commit()
 
