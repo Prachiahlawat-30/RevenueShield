@@ -15,6 +15,7 @@ import {
   ExternalLink,
   Copy,
   Check,
+  RefreshCw,
 } from 'lucide-react';
 import { getRevenueRisks, getRevenueRiskDetail } from '../api/risks';
 import {
@@ -294,7 +295,7 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
         </div>
 
         {/* Case Switcher Dropdown */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2">
           <span className="text-xs text-slate-500 dark:text-[#6B7280]">Case:</span>
           <select
             value={selectedRiskId || ''}
@@ -307,6 +308,13 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
               </option>
             ))}
           </select>
+          <button
+            onClick={loadRisks}
+            title="Refresh Active Cases from Server"
+            className="flex items-center justify-center p-1.5 rounded-lg border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-[#12161F] text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer shadow-xs"
+          >
+            <RefreshCw className="h-3.5 w-3.5" />
+          </button>
         </div>
       </div>
 
