@@ -32,7 +32,9 @@ class RazorpayService:
         if not settings.is_razorpay_configured:
             return None
         try:
-            return razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+            key_id = settings.RAZORPAY_KEY_ID.strip() if settings.RAZORPAY_KEY_ID else ""
+            key_secret = settings.RAZORPAY_KEY_SECRET.strip() if settings.RAZORPAY_KEY_SECRET else ""
+            return razorpay.Client(auth=(key_id, key_secret))
         except Exception as e:
             logger.error(f"Failed to initialize Razorpay client: {e}")
             return None
