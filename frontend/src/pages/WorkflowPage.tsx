@@ -102,8 +102,11 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
     try {
       await createRecoveryPaymentLink(currentRisk.id);
       await loadRiskDetail(currentRisk.id);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to create Razorpay payment link:', err);
+      if (err?.response?.status === 404) {
+        await loadRisks();
+      }
     } finally {
       setIsCreatingLink(false);
     }
@@ -157,8 +160,12 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
           suggested_cooldown_hours: 24,
         });
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to fetch risk detail', err);
+      if (err?.response?.status === 404) {
+        // Case was purged or server restarted with fresh seeds - auto-sync
+        await loadRisks();
+      }
     }
   };
 
@@ -195,8 +202,11 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
       const diag = await runAIDiagnosis(selectedRiskId);
       setLatestDiagnosis(diag);
       setCurrentStage('ACTION_SELECTED');
-    } catch (err) {
+    } catch (err: any) {
       console.error('Diagnosis failed', err);
+      if (err?.response?.status === 404) {
+        await loadRisks();
+      }
     } finally {
       setIsDiagnosing(false);
     }
@@ -218,8 +228,11 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
       }
 
       await loadRiskDetail(selectedRiskId);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Execute step failed', err);
+      if (err?.response?.status === 404) {
+        await loadRisks();
+      }
     } finally {
       setIsExecutingStep(false);
     }
@@ -237,8 +250,11 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
       }
       setCurrentStage('OUTCOME');
       await loadRiskDetail(selectedRiskId);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Full workflow failed', err);
+      if (err?.response?.status === 404) {
+        await loadRisks();
+      }
     } finally {
       setIsExecutingFull(false);
     }
@@ -250,8 +266,13 @@ export const WorkflowPage: React.FC<WorkflowPageProps> = ({
       const updated = await manualResolveRisk(selectedRiskId, action, 'Resolved via Interactive Stepper by Operator');
       setCurrentRisk(updated);
       setCurrentStage('OUTCOME');
-    } catch (err) {
+      await loadRisks();
+    } catch (err: any) {
       console.error('Manual resolve failed', err);
+      if (err?.response?.status === 404) {
+        // Case was purged or server reseeded - auto re-sync risks
+        await loadRisks();
+      }
     }
   };
 
